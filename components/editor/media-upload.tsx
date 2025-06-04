@@ -113,7 +113,7 @@ export function MediaUpload({ editor }: MediaUploadProps) {
 
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogTrigger asChild>
-          <Button variant="outline" className="m-3 border-[#864AF9] text-[#864AF9] hover:bg-[#864AF9] hover:text-white">
+          <Button variant="outline" className="m-3 border-primary text-primary hover:bg-primary hover:text-primary-foreground">
             <ImageIcon className="h-4 w-4 mr-2" />
             Dodaj multimedia
           </Button>
@@ -169,7 +169,7 @@ export function MediaUpload({ editor }: MediaUploadProps) {
 
                 <Button
                   onClick={() => insertImage(imageUrl)}
-                  className="w-full bg-[#864AF9] hover:bg-[#7c42e8]"
+                  className="w-full bg-primary hover:bg-primary/90"
                   disabled={!imageUrl}
                 >
                   Wstaw obraz
@@ -187,10 +187,10 @@ export function MediaUpload({ editor }: MediaUploadProps) {
                     onChange={(e) => setVideoUrl(e.target.value)}
                     placeholder="https://youtube.com/watch?v=... lub https://vimeo.com/..."
                   />
-                  <p className="text-sm text-gray-500 mt-1">Obsługiwane platformy: YouTube, Vimeo</p>
+                  <p className="text-sm text-muted-foreground mt-1">Obsługiwane platformy: YouTube, Vimeo</p>
                 </div>
 
-                <Button onClick={insertVideo} className="w-full bg-[#864AF9] hover:bg-[#7c42e8]" disabled={!videoUrl}>
+                <Button onClick={insertVideo} className="w-full bg-primary hover:bg-primary/90" disabled={!videoUrl}>
                   <Video className="h-4 w-4 mr-2" />
                   Wstaw wideo
                 </Button>
@@ -199,13 +199,13 @@ export function MediaUpload({ editor }: MediaUploadProps) {
 
             <TabsContent value="upload" className="space-y-4">
               <div className="space-y-4">
-                <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
-                  <Upload className="h-12 w-12 mx-auto text-gray-400 mb-4" />
-                  <p className="text-gray-600 mb-4">Przeciągnij i upuść obraz lub kliknij aby wybrać</p>
+                <div className="border-2 border-dashed border-border rounded-lg p-8 text-center">
+                  <Upload className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
+                  <p className="text-muted-foreground mb-4">Przeciągnij i upuść obraz lub kliknij aby wybrać</p>
                   <Button onClick={() => fileInputRef.current?.click()} variant="outline">
                     Wybierz plik
                   </Button>
-                  <p className="text-sm text-gray-500 mt-2">Obsługiwane formaty: JPG, PNG, GIF, WEBP (max 5MB)</p>
+                  <p className="text-sm text-muted-foreground mt-2">Obsługiwane formaty: JPG, PNG, GIF, WEBP (max 5MB)</p>
                 </div>
               </div>
             </TabsContent>

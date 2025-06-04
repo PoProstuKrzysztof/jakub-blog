@@ -1,7 +1,7 @@
 "use client"
 
 import React from "react"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -13,6 +13,14 @@ import { Upload, X, FileText, ImageIcon, File, ArrowLeft, CheckCircle, Eye, Save
 import Link from "next/link"
 import { RichTextEditor } from "@/components/editor/rich-text-editor"
 import { SEOSettings } from "@/components/editor/seo-settings"
+import { createClientPostService } from "@/lib/services/post-service"
+import { CategoryService } from "@/lib/services/category-service"
+import { TagService } from "@/lib/services/tag-service"
+import { CategoryFull } from "@/lib/models/category"
+import { TagWithPostCount } from "@/lib/models/tag"
+import { POST_STATUS } from "@/lib/models/post"
+import { useToast } from "@/hooks/use-toast"
+import { useAuth } from "@/hooks/use-auth"
 
 interface Attachment {
   id: string
@@ -24,12 +32,17 @@ interface Attachment {
 export default function NewPostPage() {
   const [title, setTitle] = useState("")
   const [content, setContent] = useState("")
+  const [excerpt, setExcerpt] = useState("")
   const [category, setCategory] = useState("")
+  const [selectedTags, setSelectedTags] = useState<string[]>([])
   const [mainImage, setMainImage] = useState<string | null>(null)
   const [attachments, setAttachments] = useState<Attachment[]>([])
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isSubmitted, setIsSubmitted] = useState(false)
   const [isDraft, setIsDraft] = useState(false)
+  const [status, setStatus] = useState<'draft' | 'published' | 'scheduled'>('published')
+  const [isFeatured, setIsFeatured] = useState(false)
+  const [allowComments, setAllowComments] = useState(true)
 
   // SEO Settings
   const [metaDescription, setMetaDescription] = useState("")
@@ -38,6 +51,88 @@ export default function NewPostPage() {
 
   // Preview mode
   const [isPreview, setIsPreview] = useState(false)
+
+  // Data from services
+  const [categories, setCategories] = useState<CategoryFull[]>([])
+  const [availableTags, setAvailableTags] = useState<TagWithPostCount[]>([])
+  const [isLoading, setIsLoading] = useState(true)
+
+  // Services
+  const postService = createClientPostService()
+  const categoryService = new CategoryService()
+  const tagService = new TagService()
+  const { toast } = useToast()
+  const { user, loading: authLoading } = useAuth()
+
+  // Load categories and tags on component mount
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        setIsLoading(true)
+        
+        // Load categories
+        const categoriesResult = await categoryService.getCategories()
+        if (categoriesResult.data) {
+          setCategories(categoriesResult.data)
+        }
+
+        // Load tags
+        const tagsResult = await tagService.getTags()
+        if (tagsResult.data) {
+          setAvailableTags(tagsResult.data)
+        }
+      } catch (error) {
+        console.error('Error loading data:', error)
+        toast({
+          title: "Błąd",
+          description: "Nie udało się załadować kategorii i tagów",
+          variant: "destructive"
+        })
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    loadData()
+  }, [])
+
+  // Auto-generate slug from title
+  useEffect(() => {
+    if (title && !slug) {
+      const generatedSlug = title
+        .toLowerCase()
+        .replace(/[^a-z0-9\s-]/g, '')
+        .replace(/\s+/g, '-')
+        .replace(/-+/g, '-')
+        .trim()
+      setSlug(generatedSlug)
+    }
+  }, [title, slug])
+
+  // Load draft on component mount
+  useEffect(() => {
+    const savedDraft = localStorage.getItem("post-draft")
+    if (savedDraft) {
+      try {
+        const draftData = JSON.parse(savedDraft)
+        setTitle(draftData.title || "")
+        setContent(draftData.content || "")
+        setExcerpt(draftData.excerpt || "")
+        setCategory(draftData.category || "")
+        setSelectedTags(draftData.selectedTags || [])
+        setMetaDescription(draftData.metaDescription || "")
+        setSlug(draftData.slug || "")
+        setTags(draftData.tags || [])
+        setMainImage(draftData.mainImage || null)
+        setAttachments(draftData.attachments || [])
+        setStatus(draftData.status || 'published')
+        setIsFeatured(draftData.isFeatured || false)
+        setAllowComments(draftData.allowComments !== false)
+      } catch (error) {
+        console.error('Error loading draft:', error)
+      }
+    }
+  }, [])
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
@@ -82,99 +177,201 @@ export default function NewPostPage() {
       case "image":
         return <ImageIcon className="h-4 w-4 text-blue-500" />
       default:
-        return <File className="h-4 w-4 text-gray-500" />
+        return <File className="h-4 w-4 text-muted-foreground" />
     }
   }
 
   const saveDraft = async () => {
     setIsDraft(true)
-    // Simulate saving draft
-    await new Promise((resolve) => setTimeout(resolve, 1000))
-    setIsDraft(false)
-
-    // Save to localStorage
-    const draftData = {
-      title,
-      content,
-      category,
-      metaDescription,
-      slug,
-      tags,
-      mainImage,
-      attachments,
-      savedAt: new Date().toISOString(),
+    
+    try {
+      // Save to localStorage
+      const draftData = {
+        title,
+        content,
+        excerpt,
+        category,
+        selectedTags,
+        metaDescription,
+        slug,
+        tags,
+        mainImage,
+        attachments,
+        status,
+        isFeatured,
+        allowComments,
+        savedAt: new Date().toISOString(),
+      }
+      localStorage.setItem("post-draft", JSON.stringify(draftData))
+      
+      toast({
+        title: "Szkic zapisany",
+        description: "Twój post został zapisany jako szkic",
+      })
+    } catch (error) {
+      console.error('Error saving draft:', error)
+      toast({
+        title: "Błąd",
+        description: "Nie udało się zapisać szkicu",
+        variant: "destructive"
+      })
+    } finally {
+      setIsDraft(false)
     }
-    localStorage.setItem("post-draft", JSON.stringify(draftData))
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    
+    if (!title.trim()) {
+      toast({
+        title: "Błąd",
+        description: "Tytuł posta jest wymagany",
+        variant: "destructive"
+      })
+      return
+    }
+
+    if (!slug.trim()) {
+      toast({
+        title: "Błąd", 
+        description: "Slug posta jest wymagany",
+        variant: "destructive"
+      })
+      return
+    }
+
     setIsSubmitting(true)
 
-    // Simulate form submission
-    await new Promise((resolve) => setTimeout(resolve, 2000))
+    try {
+      // Prepare post data
+      const postData = {
+        title: title.trim(),
+        slug: slug.trim(),
+        content: content || '',
+        excerpt: excerpt || '',
+        featured_image_url: mainImage || undefined,
+        meta_title: title.trim(),
+        meta_description: metaDescription || '',
+        status: status as 'draft' | 'published' | 'scheduled',
+        published_at: status === 'published' ? new Date().toISOString() : undefined,
+        is_featured: isFeatured,
+        allow_comments: allowComments,
+        categories: category ? [category] : [],
+        tags: selectedTags,
+        // TODO: Handle attachments upload to Supabase Storage
+        attachments: []
+      }
 
-    setIsSubmitting(false)
-    setIsSubmitted(true)
+      // Check if user is authenticated
+      if (!user) {
+        toast({
+          title: "Błąd uwierzytelniania",
+          description: "Musisz być zalogowany, aby utworzyć post",
+          variant: "destructive"
+        })
+        return
+      }
+      
+      const result = await postService.createPost(postData, user.id)
+      
+      if (result.error) {
+        throw new Error(result.error)
+      }
 
-    // Clear draft
-    localStorage.removeItem("post-draft")
+      setIsSubmitted(true)
+      
+      // Clear draft
+      localStorage.removeItem("post-draft")
+      
+      toast({
+        title: "Sukces!",
+        description: "Post został pomyślnie opublikowany",
+      })
 
-    // Reset form after 3 seconds
-    setTimeout(() => {
-      setIsSubmitted(false)
-      setTitle("")
-      setContent("")
-      setCategory("")
-      setMetaDescription("")
-      setSlug("")
-      setTags([])
-      setMainImage(null)
-      setAttachments([])
-    }, 3000)
+      // Reset form after 3 seconds
+      setTimeout(() => {
+        setIsSubmitted(false)
+        setTitle("")
+        setContent("")
+        setExcerpt("")
+        setCategory("")
+        setSelectedTags([])
+        setMetaDescription("")
+        setSlug("")
+        setTags([])
+        setMainImage(null)
+        setAttachments([])
+        setStatus('published')
+        setIsFeatured(false)
+        setAllowComments(true)
+      }, 3000)
+      
+    } catch (error) {
+      console.error('Error creating post:', error)
+      toast({
+        title: "Błąd",
+        description: error instanceof Error ? error.message : "Nie udało się utworzyć posta",
+        variant: "destructive"
+      })
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
-  // Load draft on component mount
-  React.useEffect(() => {
-    const savedDraft = localStorage.getItem("post-draft")
-    if (savedDraft) {
-      const draftData = JSON.parse(savedDraft)
-      setTitle(draftData.title || "")
-      setContent(draftData.content || "")
-      setCategory(draftData.category || "")
-      setMetaDescription(draftData.metaDescription || "")
-      setSlug(draftData.slug || "")
-      setTags(draftData.tags || [])
-      setMainImage(draftData.mainImage || null)
-      setAttachments(draftData.attachments || [])
-    }
-  }, [])
+  if (isLoading || authLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <div className="text-primary-foreground text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto mb-4"></div>
+          <p>Ładowanie...</p>
+        </div>
+      </div>
+    )
+  }
+
+  // Redirect to login if not authenticated
+  if (!user) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <div className="text-primary-foreground text-center">
+          <h2 className="text-2xl font-bold mb-4">Wymagane uwierzytelnienie</h2>
+          <p className="mb-6">Musisz być zalogowany, aby utworzyć nowy post.</p>
+          <Link href="/admin/login">
+            <Button className="bg-primary hover:bg-primary/90 text-primary-foreground">
+              Przejdź do logowania
+            </Button>
+          </Link>
+        </div>
+      </div>
+    )
+  }
 
   if (isSubmitted) {
     return (
-      <div className="min-h-screen" style={{ backgroundColor: "#413B61" }}>
-        <header className="bg-[#332941] shadow-lg border-b border-[#3B3486]">
+      <div className="min-h-screen bg-background">
+        <header className="bg-accent shadow-lg border-b border-accent">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex justify-between items-center h-16">
               <div className="flex items-center space-x-4">
-                <Link href="/" className="text-2xl font-bold text-white">
+                <Link href="/" className="text-2xl font-bold text-primary-foreground">
                   Jakub Inwestycje
                 </Link>
-                <Badge className="bg-[#864AF9] text-white rounded-xl">Panel Twórcy</Badge>
+                <Badge className="bg-primary text-primary-foreground rounded-xl">Panel Twórcy</Badge>
               </div>
             </div>
           </div>
         </header>
 
         <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <Card className="bg-white/95 rounded-2xl shadow-2xl">
+          <Card className="bg-card/95 rounded-2xl shadow-2xl">
             <CardContent className="p-12 text-center">
               <div className="animate-fade-in">
                 <CheckCircle className="h-16 w-16 text-green-500 mx-auto mb-4" />
-                <h3 className="text-2xl font-bold text-[#332941] mb-2">Post został opublikowany!</h3>
-                <p className="text-gray-600 mb-6">Twój post został pomyślnie dodany do bloga.</p>
+                <h3 className="text-2xl font-bold text-foreground mb-2">Post został opublikowany!</h3>
+                <p className="text-muted-foreground mb-6">Twój post został pomyślnie dodany do bloga.</p>
                 <Link href="/">
-                  <Button className="bg-[#864AF9] hover:bg-[#7c42e8] text-white transition-all duration-300 rounded-xl">
+                  <Button className="bg-primary hover:bg-primary/90 text-primary-foreground transition-all duration-300 rounded-xl">
                     Powrót do strony głównej
                   </Button>
                 </Link>
@@ -187,22 +384,22 @@ export default function NewPostPage() {
   }
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: "#413B61" }}>
+    <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="bg-[#332941] shadow-lg border-b border-[#3B3486] sticky top-0 z-40">
+      <header className="bg-accent shadow-lg border-b border-accent sticky top-0 z-40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center space-x-4">
-              <Link href="/" className="text-2xl font-bold text-white">
+              <Link href="/" className="text-2xl font-bold text-primary-foreground">
                 Jakub Inwestycje
               </Link>
-              <Badge className="bg-[#864AF9] text-white rounded-xl">Panel Twórcy</Badge>
+              <Badge className="bg-primary text-primary-foreground rounded-xl">Panel Twórcy</Badge>
             </div>
             <div className="flex items-center space-x-2">
               <Button
                 onClick={() => setIsPreview(!isPreview)}
                 variant="outline"
-                className="border-[#864AF9] text-[#864AF9] hover:bg-[#864AF9] hover:text-white transition-all duration-300 rounded-xl"
+                className="border-primary text-primary hover:bg-primary hover:text-primary-foreground transition-all duration-300 rounded-xl"
               >
                 <Eye className="h-4 w-4 mr-2" />
                 {isPreview ? "Edycja" : "Podgląd"}
@@ -210,7 +407,7 @@ export default function NewPostPage() {
               <Link href="/">
                 <Button
                   variant="outline"
-                  className="border-gray-300 text-gray-300 hover:bg-gray-100 hover:text-gray-800 transition-all duration-300 rounded-xl"
+                  className="border-border text-muted-foreground hover:bg-muted hover:text-foreground transition-all duration-300 rounded-xl"
                 >
                   <ArrowLeft className="h-4 w-4 mr-2" />
                   Powrót
@@ -223,10 +420,10 @@ export default function NewPostPage() {
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-white mb-2 animate-fade-in">
+          <h1 className="text-3xl font-bold text-primary-foreground mb-2 animate-fade-in">
             {isPreview ? "Podgląd posta" : "Nowy post"}
           </h1>
-          <p className="text-gray-300 animate-fade-in-delay">
+          <p className="text-muted-foreground animate-fade-in-delay">
             {isPreview ? "Zobacz jak będzie wyglądał Twój post" : "Utwórz nowy post z zaawansowanym edytorem"}
           </p>
         </div>
@@ -234,12 +431,12 @@ export default function NewPostPage() {
         {isPreview ? (
           // Preview Mode
           <div className="space-y-8">
-            <Card className="bg-white/95 rounded-2xl shadow-2xl">
+            <Card className="bg-card/95 rounded-2xl shadow-2xl">
               <CardContent className="p-8">
                 <div className="mb-6">
-                  <Badge className="bg-[#3B3486] text-white rounded-xl mb-4">{category || "Kategoria"}</Badge>
-                  <h1 className="text-4xl font-bold text-[#332941] mb-4">{title || "Tytuł posta"}</h1>
-                  <p className="text-gray-600">{metaDescription || "Meta opis posta"}</p>
+                  <Badge className="bg-accent text-primary-foreground rounded-xl mb-4">{category || "Kategoria"}</Badge>
+                  <h1 className="text-4xl font-bold text-foreground mb-4">{title || "Tytuł posta"}</h1>
+                  <p className="text-muted-foreground">{metaDescription || "Meta opis posta"}</p>
                 </div>
 
                 {mainImage && (
@@ -258,7 +455,7 @@ export default function NewPostPage() {
                 />
 
                 {tags.length > 0 && (
-                  <div className="mt-8 pt-8 border-t border-gray-200">
+                  <div className="mt-8 pt-8 border-t border-border">
                     <h3 className="text-lg font-semibold mb-4">Tagi:</h3>
                     <div className="flex flex-wrap gap-2">
                       {tags.map((tag, index) => (
@@ -276,7 +473,7 @@ export default function NewPostPage() {
           // Edit Mode
           <form onSubmit={handleSubmit} className="space-y-8">
             <Tabs defaultValue="content" className="w-full">
-              <TabsList className="grid w-full grid-cols-4 bg-white/95 rounded-xl">
+              <TabsList className="grid w-full grid-cols-4 bg-card/95 rounded-xl">
                 <TabsTrigger value="content">Treść</TabsTrigger>
                 <TabsTrigger value="media">Multimedia</TabsTrigger>
                 <TabsTrigger value="seo">SEO</TabsTrigger>
@@ -285,15 +482,15 @@ export default function NewPostPage() {
 
               <TabsContent value="content" className="space-y-6">
                 {/* Basic Information */}
-                <Card className="bg-white/95 rounded-2xl shadow-2xl">
+                <Card className="bg-card/95 rounded-2xl shadow-2xl">
                   <CardHeader>
-                    <CardTitle className="text-[#332941]">Podstawowe informacje</CardTitle>
+                    <CardTitle className="text-foreground">Podstawowe informacje</CardTitle>
                     <CardDescription>Wprowadź tytuł, kategorię i treść swojego posta</CardDescription>
                   </CardHeader>
                   <CardContent className="space-y-6">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div className="space-y-2">
-                        <Label htmlFor="title" className="text-[#332941] font-medium">
+                        <Label htmlFor="title" className="text-foreground font-medium">
                           Tytuł posta
                         </Label>
                         <Input
@@ -302,24 +499,24 @@ export default function NewPostPage() {
                           onChange={(e) => setTitle(e.target.value)}
                           placeholder="np. Analiza fundamentalna spółki XYZ"
                           required
-                          className="border-[#3B3486] rounded-xl focus:border-[#864AF9] transition-colors duration-300"
+                          className="border-accent rounded-xl focus:border-primary transition-colors duration-300"
                         />
                       </div>
 
                       <div className="space-y-2">
-                        <Label htmlFor="category" className="text-[#332941] font-medium">
+                        <Label htmlFor="category" className="text-foreground font-medium">
                           Kategoria
                         </Label>
                         <Select value={category} onValueChange={setCategory} required>
-                          <SelectTrigger className="border-[#3B3486] rounded-xl focus:border-[#864AF9]">
+                          <SelectTrigger className="border-accent rounded-xl focus:border-primary">
                             <SelectValue placeholder="Wybierz kategorię" />
                           </SelectTrigger>
-                          <SelectContent className="bg-white border-[#3B3486] rounded-xl shadow-xl">
-                            <SelectItem value="analizy">Analizy spółek</SelectItem>
-                            <SelectItem value="edukacja">Edukacja</SelectItem>
-                            <SelectItem value="rynek">Przegląd rynku</SelectItem>
-                            <SelectItem value="crypto">Kryptowaluty</SelectItem>
-                            <SelectItem value="narzedzia">Narzędzia</SelectItem>
+                          <SelectContent className="bg-card border-accent rounded-xl shadow-xl">
+                            {categories.map((cat) => (
+                              <SelectItem key={cat.id} value={cat.id}>
+                                {cat.name}
+                              </SelectItem>
+                            ))}
                           </SelectContent>
                         </Select>
                       </div>
@@ -333,9 +530,9 @@ export default function NewPostPage() {
 
               <TabsContent value="media" className="space-y-6">
                 {/* Main Image */}
-                <Card className="bg-white/95 rounded-2xl shadow-2xl">
+                <Card className="bg-card/95 rounded-2xl shadow-2xl">
                   <CardHeader>
-                    <CardTitle className="text-[#332941]">Główne zdjęcie</CardTitle>
+                    <CardTitle className="text-foreground">Główne zdjęcie</CardTitle>
                     <CardDescription>Wybierz obraz, który będzie reprezentował Twój post</CardDescription>
                   </CardHeader>
                   <CardContent>
@@ -343,7 +540,7 @@ export default function NewPostPage() {
                       <div className="flex items-center justify-center w-full">
                         <label
                           htmlFor="main-image"
-                          className="flex flex-col items-center justify-center w-full h-64 border-2 border-[#3B3486] border-dashed rounded-2xl cursor-pointer bg-gray-50 hover:bg-gray-100 transition-colors duration-300"
+                          className="flex flex-col items-center justify-center w-full h-64 border-2 border-accent border-dashed rounded-2xl cursor-pointer bg-background hover:bg-muted transition-colors duration-300"
                         >
                           {mainImage ? (
                             <img
@@ -353,11 +550,11 @@ export default function NewPostPage() {
                             />
                           ) : (
                             <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                              <Upload className="w-8 h-8 mb-4 text-[#864AF9]" />
-                              <p className="mb-2 text-sm text-gray-500">
+                              <Upload className="w-8 h-8 mb-4 text-primary" />
+                              <p className="mb-2 text-sm text-muted-foreground">
                                 <span className="font-semibold">Kliknij aby wybrać</span> lub przeciągnij plik
                               </p>
-                              <p className="text-xs text-gray-500">PNG, JPG lub WEBP (MAX. 5MB)</p>
+                              <p className="text-xs text-muted-foreground">PNG, JPG lub WEBP (MAX. 5MB)</p>
                             </div>
                           )}
                           <input
@@ -374,7 +571,7 @@ export default function NewPostPage() {
                           type="button"
                           variant="outline"
                           onClick={() => setMainImage(null)}
-                          className="w-full border-[#864AF9] text-[#864AF9] hover:bg-[#864AF9] hover:text-white transition-all duration-300 rounded-xl"
+                          className="w-full border-primary text-primary hover:bg-primary hover:text-primary-foreground transition-all duration-300 rounded-xl"
                         >
                           Usuń zdjęcie
                         </Button>
@@ -384,9 +581,9 @@ export default function NewPostPage() {
                 </Card>
 
                 {/* Attachments */}
-                <Card className="bg-white/95 rounded-2xl shadow-2xl">
+                <Card className="bg-card/95 rounded-2xl shadow-2xl">
                   <CardHeader>
-                    <CardTitle className="text-[#332941]">Załączniki</CardTitle>
+                    <CardTitle className="text-foreground">Załączniki</CardTitle>
                     <CardDescription>Dodaj pliki wspierające - raporty PDF, arkusze Excel, screenshoty</CardDescription>
                   </CardHeader>
                   <CardContent>
@@ -394,14 +591,14 @@ export default function NewPostPage() {
                       <div className="flex items-center justify-center w-full">
                         <label
                           htmlFor="attachments"
-                          className="flex flex-col items-center justify-center w-full h-32 border-2 border-[#3B3486] border-dashed rounded-2xl cursor-pointer bg-gray-50 hover:bg-gray-100 transition-colors duration-300"
+                          className="flex flex-col items-center justify-center w-full h-32 border-2 border-accent border-dashed rounded-2xl cursor-pointer bg-background hover:bg-muted transition-colors duration-300"
                         >
                           <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                            <Upload className="w-6 h-6 mb-2 text-[#864AF9]" />
-                            <p className="text-sm text-gray-500">
+                            <Upload className="w-6 h-6 mb-2 text-primary" />
+                            <p className="text-sm text-muted-foreground">
                               <span className="font-semibold">Dodaj załączniki</span>
                             </p>
-                            <p className="text-xs text-gray-500">PDF, Excel, obrazy</p>
+                            <p className="text-xs text-muted-foreground">PDF, Excel, obrazy</p>
                           </div>
                           <input
                             id="attachments"
@@ -416,18 +613,18 @@ export default function NewPostPage() {
 
                       {attachments.length > 0 && (
                         <div className="space-y-2">
-                          <h4 className="font-medium text-[#332941]">Dodane załączniki:</h4>
+                          <h4 className="font-medium text-foreground">Dodane załączniki:</h4>
                           <div className="space-y-2">
                             {attachments.map((attachment) => (
                               <div
                                 key={attachment.id}
-                                className="flex items-center justify-between p-3 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors duration-300"
+                                className="flex items-center justify-between p-3 bg-background rounded-xl hover:bg-muted transition-colors duration-300"
                               >
                                 <div className="flex items-center space-x-3">
                                   {getAttachmentIcon(attachment.type)}
                                   <div>
-                                    <p className="text-sm font-medium text-[#332941]">{attachment.name}</p>
-                                    <p className="text-xs text-gray-500">{attachment.size}</p>
+                                    <p className="text-sm font-medium text-foreground">{attachment.name}</p>
+                                    <p className="text-xs text-muted-foreground">{attachment.size}</p>
                                   </div>
                                 </div>
                                 <Button
@@ -463,18 +660,25 @@ export default function NewPostPage() {
               </TabsContent>
 
               <TabsContent value="settings" className="space-y-6">
-                <Card className="bg-white/95 rounded-2xl shadow-2xl">
+                <Card className="bg-card/95 rounded-2xl shadow-2xl">
                   <CardHeader>
-                    <CardTitle className="text-[#332941]">Ustawienia publikacji</CardTitle>
+                    <CardTitle className="text-foreground">Ustawienia publikacji</CardTitle>
                     <CardDescription>Dodatkowe opcje dla Twojego posta</CardDescription>
                   </CardHeader>
                   <CardContent className="space-y-6">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div className="space-y-4">
-                        <h4 className="font-medium text-[#332941]">Status publikacji</h4>
+                        <h4 className="font-medium text-foreground">Status publikacji</h4>
                         <div className="space-y-2">
                           <label className="flex items-center space-x-2">
-                            <input type="radio" name="status" value="draft" className="text-[#864AF9]" />
+                            <input 
+                              type="radio" 
+                              name="status" 
+                              value="draft" 
+                              checked={status === 'draft'}
+                              onChange={(e) => setStatus(e.target.value as 'draft' | 'published' | 'scheduled')}
+                              className="text-primary" 
+                            />
                             <span>Szkic</span>
                           </label>
                           <label className="flex items-center space-x-2">
@@ -482,35 +686,108 @@ export default function NewPostPage() {
                               type="radio"
                               name="status"
                               value="published"
-                              className="text-[#864AF9]"
-                              defaultChecked
+                              checked={status === 'published'}
+                              onChange={(e) => setStatus(e.target.value as 'draft' | 'published' | 'scheduled')}
+                              className="text-primary"
                             />
                             <span>Opublikowany</span>
                           </label>
                           <label className="flex items-center space-x-2">
-                            <input type="radio" name="status" value="scheduled" className="text-[#864AF9]" />
+                            <input 
+                              type="radio" 
+                              name="status" 
+                              value="scheduled" 
+                              checked={status === 'scheduled'}
+                              onChange={(e) => setStatus(e.target.value as 'draft' | 'published' | 'scheduled')}
+                              className="text-primary" 
+                            />
                             <span>Zaplanowany</span>
                           </label>
                         </div>
                       </div>
 
                       <div className="space-y-4">
-                        <h4 className="font-medium text-[#332941]">Opcje dodatkowe</h4>
+                        <h4 className="font-medium text-foreground">Opcje dodatkowe</h4>
                         <div className="space-y-2">
                           <label className="flex items-center space-x-2">
-                            <input type="checkbox" className="text-[#864AF9]" />
+                            <input 
+                              type="checkbox" 
+                              checked={isFeatured}
+                              onChange={(e) => setIsFeatured(e.target.checked)}
+                              className="text-primary" 
+                            />
                             <span>Przypnij post</span>
                           </label>
                           <label className="flex items-center space-x-2">
-                            <input type="checkbox" className="text-[#864AF9]" />
+                            <input 
+                              type="checkbox" 
+                              checked={!allowComments}
+                              onChange={(e) => setAllowComments(!e.target.checked)}
+                              className="text-primary" 
+                            />
                             <span>Wyłącz komentarze</span>
-                          </label>
-                          <label className="flex items-center space-x-2">
-                            <input type="checkbox" className="text-[#864AF9]" defaultChecked />
-                            <span>Wyślij powiadomienie</span>
                           </label>
                         </div>
                       </div>
+                    </div>
+
+                    {/* Tags Selection */}
+                    <div className="space-y-4">
+                      <h4 className="font-medium text-foreground">Tagi</h4>
+                      <div className="space-y-2">
+                        <Label className="text-sm text-muted-foreground">Wybierz tagi dla swojego posta</Label>
+                        <div className="flex flex-wrap gap-2 max-h-32 overflow-y-auto p-2 border border-accent rounded-xl">
+                          {availableTags.map((tag) => (
+                            <label key={tag.id} className="flex items-center space-x-2 cursor-pointer">
+                              <input
+                                type="checkbox"
+                                checked={selectedTags.includes(tag.id)}
+                                onChange={(e) => {
+                                  if (e.target.checked) {
+                                    setSelectedTags([...selectedTags, tag.id])
+                                  } else {
+                                    setSelectedTags(selectedTags.filter(id => id !== tag.id))
+                                  }
+                                }}
+                                className="text-primary"
+                              />
+                              <Badge variant="outline" className="text-xs">
+                                {tag.name}
+                              </Badge>
+                            </label>
+                          ))}
+                        </div>
+                        {selectedTags.length > 0 && (
+                          <div className="mt-2">
+                            <Label className="text-sm text-muted-foreground">Wybrane tagi:</Label>
+                            <div className="flex flex-wrap gap-1 mt-1">
+                              {selectedTags.map((tagId) => {
+                                const tag = availableTags.find(t => t.id === tagId)
+                                return tag ? (
+                                  <Badge key={tagId} className="bg-primary text-primary-foreground">
+                                    {tag.name}
+                                  </Badge>
+                                ) : null
+                              })}
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Excerpt */}
+                    <div className="space-y-2">
+                      <Label htmlFor="excerpt" className="text-foreground font-medium">
+                        Krótki opis (excerpt)
+                      </Label>
+                      <textarea
+                        id="excerpt"
+                        value={excerpt}
+                        onChange={(e) => setExcerpt(e.target.value)}
+                        placeholder="Krótki opis posta, który będzie wyświetlany na liście postów..."
+                        rows={3}
+                        className="w-full border border-accent rounded-xl p-3 focus:border-primary transition-colors duration-300 resize-none"
+                      />
                     </div>
                   </CardContent>
                 </Card>
@@ -524,7 +801,7 @@ export default function NewPostPage() {
                   <Button
                     type="button"
                     variant="outline"
-                    className="border-gray-300 text-gray-600 hover:bg-gray-100 transition-all duration-300 rounded-xl"
+                    className="border-border text-muted-foreground hover:bg-muted transition-all duration-300 rounded-xl"
                   >
                     Anuluj
                   </Button>
@@ -533,7 +810,7 @@ export default function NewPostPage() {
                   type="button"
                   onClick={saveDraft}
                   disabled={isDraft}
-                  className="bg-[#3B3486] hover:bg-[#332941] text-white transition-all duration-300 rounded-xl"
+                  className="bg-accent hover:bg-accent text-primary-foreground transition-all duration-300 rounded-xl"
                 >
                   {isDraft ? (
                     <div className="flex items-center">
@@ -552,7 +829,7 @@ export default function NewPostPage() {
               <Button
                 type="submit"
                 disabled={isSubmitting}
-                className="bg-[#864AF9] hover:bg-[#7c42e8] text-white transition-all duration-300 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 disabled:transform-none disabled:opacity-70"
+                className="bg-primary hover:bg-primary/90 text-primary-foreground transition-all duration-300 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 disabled:transform-none disabled:opacity-70"
               >
                 {isSubmitting ? (
                   <div className="flex items-center">

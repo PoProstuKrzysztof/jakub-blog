@@ -86,14 +86,14 @@ export function Toolbar({ editor, isFullscreen, onToggleFullscreen }: ToolbarPro
       onClick={onClick}
       disabled={disabled}
       title={title}
-      className={`h-8 w-8 p-0 ${isActive ? "bg-[#864AF9] text-white" : "hover:bg-gray-100"}`}
+      className={`h-8 w-8 p-0 ${isActive ? "bg-primary text-primary-foreground" : "hover:bg-muted"}`}
     >
       {children}
     </Button>
   )
 
   return (
-    <div className="border-b border-gray-200 p-3 bg-gray-50 rounded-t-2xl">
+    <div className="border-b border-border p-3 bg-background rounded-t-2xl">
       <div className="flex flex-wrap items-center gap-1">
         {/* Text Formatting */}
         <div className="flex items-center space-x-1">
@@ -256,7 +256,7 @@ export function Toolbar({ editor, isFullscreen, onToggleFullscreen }: ToolbarPro
         <div className="flex items-center space-x-1">
           <Dialog open={isLinkDialogOpen} onOpenChange={setIsLinkDialogOpen}>
             <DialogTrigger asChild>
-              <Button variant="ghost" size="sm" className="h-8 w-8 p-0 hover:bg-gray-100" title="Dodaj link">
+              <Button variant="ghost" size="sm" className="h-8 w-8 p-0 hover:bg-muted" title="Dodaj link">
                 <Link className="h-4 w-4" />
               </Button>
             </DialogTrigger>
@@ -292,7 +292,7 @@ export function Toolbar({ editor, isFullscreen, onToggleFullscreen }: ToolbarPro
                 </div>
               </div>
               <DialogFooter>
-                <Button onClick={addLink} className="bg-[#864AF9] hover:bg-[#7c42e8]">
+                <Button onClick={addLink} className="bg-primary hover:bg-primary/90">
                   Dodaj link
                 </Button>
               </DialogFooter>

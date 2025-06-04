@@ -39,7 +39,7 @@ export function RichTextEditor({ content, onChange, placeholder = "Zacznij pisaÄ
       Link.configure({
         openOnClick: false,
         HTMLAttributes: {
-          class: "text-[#864AF9] hover:text-[#7c42e8] underline",
+          class: "text-primary hover:text-[#7c42e8] underline",
         },
       }),
       TextAlign.configure({
@@ -90,11 +90,11 @@ export function RichTextEditor({ content, onChange, placeholder = "Zacznij pisaÄ
 
   if (!editor) {
     return (
-      <Card className="bg-white/95 rounded-2xl shadow-2xl">
+      <Card className="bg-card/95 rounded-2xl shadow-2xl">
         <CardContent className="p-6">
           <div className="animate-pulse">
-            <div className="h-12 bg-gray-200 rounded mb-4"></div>
-            <div className="h-64 bg-gray-200 rounded"></div>
+            <div className="h-12 bg-border rounded mb-4"></div>
+            <div className="h-64 bg-border rounded"></div>
           </div>
         </CardContent>
       </Card>
@@ -102,8 +102,8 @@ export function RichTextEditor({ content, onChange, placeholder = "Zacznij pisaÄ
   }
 
   return (
-    <div className={`${isFullscreen ? "fixed inset-0 z-50 bg-white" : ""}`}>
-      <Card className="bg-white/95 rounded-2xl shadow-2xl h-full">
+    <div className={`${isFullscreen ? "fixed inset-0 z-50 bg-card" : ""}`}>
+      <Card className="bg-card/95 rounded-2xl shadow-2xl h-full">
         <CardContent className="p-0 h-full flex flex-col">
           {/* Toolbar */}
           <Toolbar
@@ -121,8 +121,8 @@ export function RichTextEditor({ content, onChange, placeholder = "Zacznij pisaÄ
           <MediaUpload editor={editor} />
 
           {/* Status Bar */}
-          <div className="border-t border-gray-200 px-6 py-3 bg-gray-50 rounded-b-2xl">
-            <div className="flex justify-between items-center text-sm text-gray-600">
+          <div className="border-t border-border px-6 py-3 bg-background rounded-b-2xl">
+            <div className="flex justify-between items-center text-sm text-muted-foreground">
               <div className="flex space-x-4">
                 <span>{wordCount} sÅ‚Ã³w</span>
                 <span>{charCount} znakÃ³w</span>

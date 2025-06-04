@@ -81,28 +81,28 @@ const stats = [
     value: "12,450",
     change: "+12%",
     icon: Eye,
-    color: "#864AF9",
+    color: "#33D2A4",
   },
   {
     title: "Opublikowane posty",
     value: "24",
     change: "+3",
     icon: FileText,
-    color: "#3B3486",
+    color: "#2C3E50",
   },
   {
     title: "Szkice",
     value: "5",
     change: "+2",
     icon: Edit,
-    color: "#332941",
+    color: "#BDC3C7",
   },
   {
     title: "Średnie wyświetlenia",
     value: "518",
     change: "+8%",
     icon: TrendingUp,
-    color: "#864AF9",
+    color: "#33D2A4",
   },
 ]
 
@@ -164,20 +164,20 @@ export default function AdminDashboard() {
   }
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: "#413B61" }}>
+    <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="bg-[#332941] shadow-lg border-b border-[#3B3486]">
+      <header className="bg-accent shadow-lg border-b border-accent">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center space-x-4">
-              <Link href="/" className="text-2xl font-bold text-white">
+              <Link href="/" className="text-2xl font-bold text-primary-foreground">
                 Jakub Inwestycje
               </Link>
-              <Badge className="bg-[#864AF9] text-white rounded-xl">Panel Twórcy</Badge>
+              <Badge className="bg-primary text-primary-foreground rounded-xl">Panel Twórcy</Badge>
             </div>
             <div className="flex items-center space-x-4">
               <Link href="/admin/analytics">
-                <Button className="bg-[#3B3486] hover:bg-[#332941] text-white transition-all duration-300 rounded-xl">
+                <Button className="bg-accent hover:bg-accent text-primary-foreground transition-all duration-300 rounded-xl">
                   <BarChart3 className="h-4 w-4 mr-2" />
                   Analytics
                 </Button>
@@ -185,13 +185,13 @@ export default function AdminDashboard() {
               <Link href="/">
                 <Button
                   variant="outline"
-                  className="border-[#864AF9] text-[#864AF9] hover:bg-[#864AF9] hover:text-white transition-all duration-300 rounded-xl"
+                  className="border-primary text-primary hover:bg-primary hover:text-primary-foreground transition-all duration-300 rounded-xl"
                 >
                   Podgląd bloga
                 </Button>
               </Link>
               <Link href="/admin/nowy-post">
-                <Button className="bg-[#864AF9] hover:bg-[#7c42e8] text-white transition-all duration-300 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105">
+                <Button className="bg-primary hover:bg-primary/90 text-primary-foreground transition-all duration-300 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105">
                   <Plus className="h-4 w-4 mr-2" />
                   Nowy post
                 </Button>
@@ -204,8 +204,8 @@ export default function AdminDashboard() {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Page Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-white mb-2 animate-fade-in">Panel Twórcy</h1>
-          <p className="text-gray-300 animate-fade-in-delay">Zarządzaj swoimi postami i treścią</p>
+          <h1 className="text-3xl font-bold text-primary-foreground mb-2 animate-fade-in">Panel Twórcy</h1>
+          <p className="text-muted-foreground animate-fade-in-delay">Zarządzaj swoimi postami i treścią</p>
         </div>
 
         {/* Stats Cards */}
@@ -213,21 +213,21 @@ export default function AdminDashboard() {
           {stats.map((stat, index) => (
             <Card
               key={index}
-              className="bg-white/95 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105"
+              className="bg-card/95 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105"
               style={{ animationDelay: `${index * 100}ms` }}
             >
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-medium text-gray-600">{stat.title}</p>
-                    <p className="text-2xl font-bold text-[#332941]">{stat.value}</p>
+                    <p className="text-sm font-medium text-muted-foreground">{stat.title}</p>
+                    <p className="text-2xl font-bold text-foreground">{stat.value}</p>
                     <p className="text-sm text-green-600">{stat.change}</p>
                   </div>
                   <div
                     className="h-12 w-12 rounded-xl flex items-center justify-center shadow-lg"
                     style={{ backgroundColor: stat.color }}
                   >
-                    <stat.icon className="h-6 w-6 text-white" />
+                    <stat.icon className="h-6 w-6 text-primary-foreground" />
                   </div>
                 </div>
               </CardContent>
@@ -236,15 +236,15 @@ export default function AdminDashboard() {
         </div>
 
         {/* Posts Management */}
-        <Card className="bg-white/95 rounded-2xl shadow-2xl">
+        <Card className="bg-card/95 rounded-2xl shadow-2xl">
           <CardHeader>
             <div className="flex justify-between items-center">
               <div>
-                <CardTitle className="text-[#332941]">Zarządzanie postami</CardTitle>
+                <CardTitle className="text-foreground">Zarządzanie postami</CardTitle>
                 <CardDescription>Przeglądaj, edytuj i zarządzaj swoimi postami</CardDescription>
               </div>
               <Link href="/admin/nowy-post">
-                <Button className="bg-[#864AF9] hover:bg-[#7c42e8] text-white transition-all duration-300 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105">
+                <Button className="bg-primary hover:bg-primary/90 text-primary-foreground transition-all duration-300 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105">
                   <Plus className="h-4 w-4 mr-2" />
                   Dodaj post
                 </Button>
@@ -255,12 +255,12 @@ export default function AdminDashboard() {
             {/* Search */}
             <div className="mb-6">
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
                 <Input
                   placeholder="Szukaj postów..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10 border-[#3B3486] rounded-xl focus:border-[#864AF9] transition-colors duration-300"
+                  className="pl-10 border-accent rounded-xl focus:border-primary transition-colors duration-300"
                 />
               </div>
             </div>
@@ -270,7 +270,7 @@ export default function AdminDashboard() {
               {filteredPosts.map((post, index) => (
                 <div
                   key={post.id}
-                  className="flex items-center space-x-4 p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-all duration-300 transform hover:scale-[1.02]"
+                  className="flex items-center space-x-4 p-4 bg-background rounded-xl hover:bg-muted transition-all duration-300 transform hover:scale-[1.02]"
                   style={{ animationDelay: `${index * 100}ms` }}
                 >
                   {/* Thumbnail */}
@@ -280,18 +280,18 @@ export default function AdminDashboard() {
 
                   {/* Content */}
                   <div className="flex-1 min-w-0">
-                    <h3 className="font-semibold text-[#332941] truncate">{post.title}</h3>
+                    <h3 className="font-semibold text-foreground truncate">{post.title}</h3>
                     <div className="flex items-center space-x-4 mt-1">
-                      <span className="text-sm text-gray-500">{post.category}</span>
+                      <span className="text-sm text-muted-foreground">{post.category}</span>
                       {getStatusBadge(post.status)}
-                      <span className="text-sm text-gray-500">
+                      <span className="text-sm text-muted-foreground">
                         {post.attachments} załącznik{post.attachments !== 1 ? "i" : ""}
                       </span>
                     </div>
                   </div>
 
                   {/* Stats */}
-                  <div className="flex items-center space-x-6 text-sm text-gray-500">
+                  <div className="flex items-center space-x-6 text-sm text-muted-foreground">
                     <div className="flex items-center">
                       <Eye className="h-4 w-4 mr-1" />
                       {post.views}
@@ -308,12 +308,12 @@ export default function AdminDashboard() {
                       <Button
                         variant="ghost"
                         size="sm"
-                        className="hover:bg-[#864AF9] hover:text-white transition-all duration-300 rounded-lg"
+                        className="hover:bg-primary hover:text-primary-foreground transition-all duration-300 rounded-lg"
                       >
                         <MoreHorizontal className="h-4 w-4" />
                       </Button>
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end" className="bg-white border-[#3B3486] rounded-xl shadow-xl">
+                    <DropdownMenuContent align="end" className="bg-card border-accent rounded-xl shadow-xl">
                       <DropdownMenuItem asChild>
                         <Link href={`/post/${post.id}`}>
                           <Eye className="h-4 w-4 mr-2" />
@@ -345,7 +345,7 @@ export default function AdminDashboard() {
 
             {filteredPosts.length === 0 && (
               <div className="text-center py-12">
-                <p className="text-gray-500">Nie znaleziono postów spełniających kryteria wyszukiwania.</p>
+                <p className="text-muted-foreground">Nie znaleziono postów spełniających kryteria wyszukiwania.</p>
               </div>
             )}
           </CardContent>
@@ -411,7 +411,7 @@ export default function AdminDashboard() {
             <Button variant="outline" onClick={() => setEditModalOpen(false)}>
               Anuluj
             </Button>
-            <Button onClick={saveEdit} className="bg-[#864AF9] hover:bg-[#7c42e8]">
+            <Button onClick={saveEdit} className="bg-primary hover:bg-primary/90">
               Zapisz zmiany
             </Button>
           </DialogFooter>

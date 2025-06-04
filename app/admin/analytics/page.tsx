@@ -33,7 +33,7 @@ const overviewStats = [
     change: "+12.5%",
     trend: "up",
     icon: Eye,
-    color: "#864AF9",
+    color: "#33D2A4",
   },
   {
     title: "Unikalni użytkownicy",
@@ -41,7 +41,7 @@ const overviewStats = [
     change: "+8.2%",
     trend: "up",
     icon: Users,
-    color: "#3B3486",
+    color: "#2C3E50",
   },
   {
     title: "Średni czas na stronie",
@@ -49,7 +49,7 @@ const overviewStats = [
     change: "+15.3%",
     trend: "up",
     icon: Clock,
-    color: "#332941",
+    color: "#BDC3C7",
   },
   {
     title: "Współczynnik odrzuceń",
@@ -57,7 +57,7 @@ const overviewStats = [
     change: "-5.2%",
     trend: "down",
     icon: Eye,
-    color: "#864AF9",
+    color: "#33D2A4",
   },
 ]
 
@@ -130,17 +130,17 @@ const topPosts = [
 ]
 
 const categoryData = [
-  { name: "Analiza spółek", value: 35, views: 15680, color: "#864AF9" },
-  { name: "Edukacja", value: 28, views: 12540, color: "#3B3486" },
-  { name: "Kryptowaluty", value: 20, views: 8960, color: "#332941" },
-  { name: "Przegląd rynku", value: 12, views: 5380, color: "#7c42e8" },
-  { name: "Narzędzia", value: 5, views: 2240, color: "#9f7aea" },
+  { name: "Analiza spółek", value: 35, views: 15680, color: "#33D2A4" },
+  { name: "Edukacja", value: 28, views: 12540, color: "#2C3E50" },
+  { name: "Kryptowaluty", value: 20, views: 8960, color: "#BDC3C7" },
+  { name: "Przegląd rynku", value: 12, views: 5380, color: "#33D2A4" },
+  { name: "Narzędzia", value: 5, views: 2240, color: "#2C3E50" },
 ]
 
 const deviceData = [
-  { name: "Desktop", value: 45, users: 3820, color: "#864AF9" },
-  { name: "Mobile", value: 38, users: 3230, color: "#3B3486" },
-  { name: "Tablet", value: 17, users: 1442, color: "#332941" },
+  { name: "Desktop", value: 45, users: 3820, color: "#33D2A4" },
+  { name: "Mobile", value: 38, users: 3230, color: "#2C3E50" },
+  { name: "Tablet", value: 17, users: 1442, color: "#BDC3C7" },
 ]
 
 const trafficSources = [
@@ -176,23 +176,23 @@ export default function AnalyticsPage() {
   }
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: "#413B61" }}>
+    <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="bg-[#332941] shadow-lg border-b border-[#3B3486] sticky top-0 z-50">
+      <header className="bg-accent shadow-lg border-b border-accent sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center space-x-4">
-              <Link href="/" className="text-2xl font-bold text-white">
+              <Link href="/" className="text-2xl font-bold text-primary-foreground">
                 Jakub Inwestycje
               </Link>
-              <Badge className="bg-[#864AF9] text-white rounded-xl">Analytics</Badge>
+              <Badge className="bg-primary text-primary-foreground rounded-xl">Analytics</Badge>
             </div>
             <div className="flex items-center space-x-4">
               <Select value={timeRange} onValueChange={setTimeRange}>
-                <SelectTrigger className="w-32 bg-white/10 border-[#864AF9] text-white rounded-xl">
+                <SelectTrigger className="w-32 bg-card/10 border-primary text-primary-foreground rounded-xl">
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent className="bg-white border-[#3B3486] rounded-xl shadow-xl">
+                <SelectContent className="bg-card border-accent rounded-xl shadow-xl">
                   <SelectItem value="7d">7 dni</SelectItem>
                   <SelectItem value="30d">30 dni</SelectItem>
                   <SelectItem value="90d">90 dni</SelectItem>
@@ -202,7 +202,7 @@ export default function AnalyticsPage() {
               <Link href="/admin">
                 <Button
                   variant="outline"
-                  className="border-[#864AF9] text-[#864AF9] hover:bg-[#864AF9] hover:text-white transition-all duration-300 rounded-xl"
+                  className="border-primary text-primary hover:bg-primary hover:text-primary-foreground transition-all duration-300 rounded-xl"
                 >
                   <ArrowLeft className="h-4 w-4 mr-2" />
                   Panel Twórcy
@@ -214,7 +214,7 @@ export default function AnalyticsPage() {
       </header>
 
       {/* Hero Banner */}
-      <section className="bg-gradient-to-r from-[#332941] to-[#3B3486] text-white py-12 shadow-2xl">
+      <section className="bg-gradient-to-r from-[#332941] to-accent text-primary-foreground py-12 shadow-2xl">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between">
             <div>
@@ -225,8 +225,8 @@ export default function AnalyticsPage() {
               </p>
             </div>
             <div className="flex items-center space-x-2">
-              <Pie className="h-8 w-8 text-[#864AF9]" />
-              <Pie className="h-8 w-8 text-[#864AF9]" />
+              <Pie className="h-8 w-8 text-primary" />
+              <Pie className="h-8 w-8 text-primary" />
             </div>
           </div>
         </div>
@@ -235,19 +235,19 @@ export default function AnalyticsPage() {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Overview Stats */}
         <section className="mb-8">
-          <h2 className="text-2xl font-bold text-white mb-6">Przegląd</h2>
+          <h2 className="text-2xl font-bold text-primary-foreground mb-6">Przegląd</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {overviewStats.map((stat, index) => (
               <Card
                 key={stat.title}
-                className="bg-white/95 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105"
+                className="bg-card/95 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105"
                 style={{ animationDelay: `${index * 100}ms` }}
               >
                 <CardContent className="p-6">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-sm font-medium text-gray-600">{stat.title}</p>
-                      <p className="text-2xl font-bold text-[#332941] mt-1">{stat.value}</p>
+                      <p className="text-sm font-medium text-muted-foreground">{stat.title}</p>
+                      <p className="text-2xl font-bold text-foreground mt-1">{stat.value}</p>
                       <div className="flex items-center mt-2">
                         {stat.trend === "up" ? (
                           <TrendingUp className="h-4 w-4 text-green-500 mr-1" />
@@ -265,7 +265,7 @@ export default function AnalyticsPage() {
                       className="h-12 w-12 rounded-xl flex items-center justify-center shadow-lg"
                       style={{ backgroundColor: stat.color }}
                     >
-                      <stat.icon className="h-6 w-6 text-white" />
+                      <stat.icon className="h-6 w-6 text-primary-foreground" />
                     </div>
                   </div>
                 </CardContent>
@@ -276,18 +276,18 @@ export default function AnalyticsPage() {
 
         {/* Traffic Chart */}
         <section className="mb-8">
-          <Card className="bg-white/95 rounded-2xl shadow-2xl">
+          <Card className="bg-card/95 rounded-2xl shadow-2xl">
             <CardHeader>
               <div className="flex items-center justify-between">
                 <div>
-                  <CardTitle className="text-[#332941]">Ruch na stronie</CardTitle>
+                  <CardTitle className="text-foreground">Ruch na stronie</CardTitle>
                   <CardDescription>Wyświetlenia, użytkownicy i sesje w czasie</CardDescription>
                 </div>
                 <Select value={selectedMetric} onValueChange={setSelectedMetric}>
-                  <SelectTrigger className="w-40 border-[#3B3486] rounded-xl">
+                  <SelectTrigger className="w-40 border-accent rounded-xl">
                     <SelectValue />
                   </SelectTrigger>
-                  <SelectContent className="bg-white border-[#3B3486] rounded-xl shadow-xl">
+                  <SelectContent className="bg-card border-accent rounded-xl shadow-xl">
                     <SelectItem value="views">Wyświetlenia</SelectItem>
                     <SelectItem value="users">Użytkownicy</SelectItem>
                     <SelectItem value="sessions">Sesje</SelectItem>
@@ -301,8 +301,8 @@ export default function AnalyticsPage() {
                   <AreaChart data={viewsData}>
                     <defs>
                       <linearGradient id="colorViews" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor="#864AF9" stopOpacity={0.8} />
-                        <stop offset="95%" stopColor="#864AF9" stopOpacity={0.1} />
+                        <stop offset="5%" stopColor="#33D2A4" stopOpacity={0.8} />
+                        <stop offset="95%" stopColor="#33D2A4" stopOpacity={0.1} />
                       </linearGradient>
                       <linearGradient id="colorUsers" x1="0" y1="0" x2="0" y2="1">
                         <stop offset="5%" stopColor="#3B3486" stopOpacity={0.8} />
@@ -329,7 +329,7 @@ export default function AnalyticsPage() {
                       <Area
                         type="monotone"
                         dataKey="views"
-                        stroke="#864AF9"
+                        stroke="#33D2A4"
                         fillOpacity={1}
                         fill="url(#colorViews)"
                         strokeWidth={3}
@@ -367,9 +367,9 @@ export default function AnalyticsPage() {
 
         <div className="grid lg:grid-cols-2 gap-8 mb-8">
           {/* Category Performance */}
-          <Card className="bg-white/95 rounded-2xl shadow-2xl">
+          <Card className="bg-card/95 rounded-2xl shadow-2xl">
             <CardHeader>
-              <CardTitle className="text-[#332941]">Wydajność kategorii</CardTitle>
+              <CardTitle className="text-foreground">Wydajność kategorii</CardTitle>
               <CardDescription>Rozkład wyświetleń według kategorii</CardDescription>
             </CardHeader>
             <CardContent>
@@ -405,11 +405,11 @@ export default function AnalyticsPage() {
                   <div key={category.name} className="flex items-center justify-between">
                     <div className="flex items-center space-x-2">
                       <div className="w-3 h-3 rounded-full" style={{ backgroundColor: category.color }} />
-                      <span className="text-sm font-medium text-[#332941]">{category.name}</span>
+                      <span className="text-sm font-medium text-foreground">{category.name}</span>
                     </div>
                     <div className="text-right">
-                      <span className="text-sm font-bold text-[#332941]">{category.value}%</span>
-                      <p className="text-xs text-gray-500">{category.views.toLocaleString()} wyświetleń</p>
+                      <span className="text-sm font-bold text-foreground">{category.value}%</span>
+                      <p className="text-xs text-muted-foreground">{category.views.toLocaleString()} wyświetleń</p>
                     </div>
                   </div>
                 ))}
@@ -418,9 +418,9 @@ export default function AnalyticsPage() {
           </Card>
 
           {/* Device Analytics */}
-          <Card className="bg-white/95 rounded-2xl shadow-2xl">
+          <Card className="bg-card/95 rounded-2xl shadow-2xl">
             <CardHeader>
-              <CardTitle className="text-[#332941]">Urządzenia użytkowników</CardTitle>
+              <CardTitle className="text-foreground">Urządzenia użytkowników</CardTitle>
               <CardDescription>Rozkład ruchu według typu urządzenia</CardDescription>
             </CardHeader>
             <CardContent>
@@ -438,22 +438,22 @@ export default function AnalyticsPage() {
                         boxShadow: "0 10px 25px rgba(0,0,0,0.1)",
                       }}
                     />
-                    <Bar dataKey="value" fill="#864AF9" radius={[0, 8, 8, 0]} />
+                    <Bar dataKey="value" fill="#33D2A4" radius={[0, 8, 8, 0]} />
                   </BarChart>
                 </ResponsiveContainer>
               </div>
               <div className="space-y-3">
                 {deviceData.map((device) => (
-                  <div key={device.name} className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
+                  <div key={device.name} className="flex items-center justify-between p-3 bg-background rounded-xl">
                     <div className="flex items-center space-x-3">
                       <div className="p-2 rounded-lg" style={{ backgroundColor: device.color, color: "white" }}>
                         {getDeviceIcon(device.name)}
                       </div>
-                      <span className="font-medium text-[#332941]">{device.name}</span>
+                      <span className="font-medium text-foreground">{device.name}</span>
                     </div>
                     <div className="text-right">
-                      <span className="font-bold text-[#332941]">{device.value}%</span>
-                      <p className="text-sm text-gray-500">{device.users.toLocaleString()} użytkowników</p>
+                      <span className="font-bold text-foreground">{device.value}%</span>
+                      <p className="text-sm text-muted-foreground">{device.users.toLocaleString()} użytkowników</p>
                     </div>
                   </div>
                 ))}
@@ -464,9 +464,9 @@ export default function AnalyticsPage() {
 
         {/* Top Posts Performance */}
         <section className="mb-8">
-          <Card className="bg-white/95 rounded-2xl shadow-2xl">
+          <Card className="bg-card/95 rounded-2xl shadow-2xl">
             <CardHeader>
-              <CardTitle className="text-[#332941]">Najlepsze posty</CardTitle>
+              <CardTitle className="text-foreground">Najlepsze posty</CardTitle>
               <CardDescription>Ranking postów według wydajności</CardDescription>
             </CardHeader>
             <CardContent>
@@ -474,36 +474,36 @@ export default function AnalyticsPage() {
                 {topPosts.map((post, index) => (
                   <div
                     key={post.id}
-                    className="flex items-center justify-between p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors duration-300"
+                    className="flex items-center justify-between p-4 bg-background rounded-xl hover:bg-muted transition-colors duration-300"
                   >
                     <div className="flex items-center space-x-4">
-                      <div className="flex items-center justify-center w-8 h-8 bg-[#864AF9] text-white rounded-lg font-bold">
+                      <div className="flex items-center justify-center w-8 h-8 bg-primary text-primary-foreground rounded-lg font-bold">
                         {index + 1}
                       </div>
                       <div>
-                        <h4 className="font-semibold text-[#332941] line-clamp-1">{post.title}</h4>
+                        <h4 className="font-semibold text-foreground line-clamp-1">{post.title}</h4>
                         <div className="flex items-center space-x-4 mt-1">
-                          <Badge className="bg-[#3B3486] text-white rounded-lg text-xs">{post.category}</Badge>
-                          <span className="text-xs text-gray-500">Zmiana: {post.change}</span>
+                          <Badge className="bg-accent text-primary-foreground rounded-lg text-xs">{post.category}</Badge>
+                          <span className="text-xs text-muted-foreground">Zmiana: {post.change}</span>
                         </div>
                       </div>
                     </div>
                     <div className="grid grid-cols-4 gap-6 text-center">
                       <div>
-                        <p className="text-sm font-bold text-[#332941]">{post.views.toLocaleString()}</p>
-                        <p className="text-xs text-gray-500">Wyświetlenia</p>
+                        <p className="text-sm font-bold text-foreground">{post.views.toLocaleString()}</p>
+                        <p className="text-xs text-muted-foreground">Wyświetlenia</p>
                       </div>
                       <div>
-                        <p className="text-sm font-bold text-[#332941]">{post.users.toLocaleString()}</p>
-                        <p className="text-xs text-gray-500">Użytkownicy</p>
+                        <p className="text-sm font-bold text-foreground">{post.users.toLocaleString()}</p>
+                        <p className="text-xs text-muted-foreground">Użytkownicy</p>
                       </div>
                       <div>
-                        <p className="text-sm font-bold text-[#332941]">{post.avgTime}</p>
-                        <p className="text-xs text-gray-500">Śr. czas</p>
+                        <p className="text-sm font-bold text-foreground">{post.avgTime}</p>
+                        <p className="text-xs text-muted-foreground">Śr. czas</p>
                       </div>
                       <div>
-                        <p className="text-sm font-bold text-[#332941]">{post.bounceRate}</p>
-                        <p className="text-xs text-gray-500">Odrzucenia</p>
+                        <p className="text-sm font-bold text-foreground">{post.bounceRate}</p>
+                        <p className="text-xs text-muted-foreground">Odrzucenia</p>
                       </div>
                     </div>
                   </div>
@@ -515,9 +515,9 @@ export default function AnalyticsPage() {
 
         <div className="grid lg:grid-cols-2 gap-8">
           {/* Traffic Sources */}
-          <Card className="bg-white/95 rounded-2xl shadow-2xl">
+          <Card className="bg-card/95 rounded-2xl shadow-2xl">
             <CardHeader>
-              <CardTitle className="text-[#332941]">Źródła ruchu</CardTitle>
+              <CardTitle className="text-foreground">Źródła ruchu</CardTitle>
               <CardDescription>Skąd przychodzą Twoi użytkownicy</CardDescription>
             </CardHeader>
             <CardContent>
@@ -526,20 +526,20 @@ export default function AnalyticsPage() {
                   <div key={source.source} className="flex items-center justify-between">
                     <div className="flex-1">
                       <div className="flex items-center justify-between mb-1">
-                        <span className="text-sm font-medium text-[#332941]">{source.source}</span>
-                        <span className="text-sm font-bold text-[#332941]">{source.percentage}%</span>
+                        <span className="text-sm font-medium text-foreground">{source.source}</span>
+                        <span className="text-sm font-bold text-foreground">{source.percentage}%</span>
                       </div>
-                      <div className="w-full bg-gray-200 rounded-full h-2">
+                      <div className="w-full bg-border rounded-full h-2">
                         <div
                           className="h-2 rounded-full transition-all duration-500"
                           style={{
                             width: `${source.percentage}%`,
-                            backgroundColor: index === 0 ? "#864AF9" : index === 1 ? "#3B3486" : "#332941",
+                            backgroundColor: index === 0 ? "#33D2A4" : index === 1 ? "#2C3E50" : "#BDC3C7",
                           }}
                         />
                       </div>
                       <div className="flex items-center justify-between mt-1">
-                        <span className="text-xs text-gray-500">{source.users.toLocaleString()} użytkowników</span>
+                        <span className="text-xs text-muted-foreground">{source.users.toLocaleString()} użytkowników</span>
                         <span className="text-xs text-green-600">{source.change}</span>
                       </div>
                     </div>
@@ -550,18 +550,18 @@ export default function AnalyticsPage() {
           </Card>
 
           {/* Engagement Metrics */}
-          <Card className="bg-white/95 rounded-2xl shadow-2xl">
+          <Card className="bg-card/95 rounded-2xl shadow-2xl">
             <CardHeader>
-              <CardTitle className="text-[#332941]">Metryki zaangażowania</CardTitle>
+              <CardTitle className="text-foreground">Metryki zaangażowania</CardTitle>
               <CardDescription>Jak użytkownicy wchodzą w interakcję z treścią</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-6">
                 {engagementData.map((metric, index) => (
-                  <div key={metric.metric} className="flex items-center justify-between p-4 bg-gray-50 rounded-xl">
+                  <div key={metric.metric} className="flex items-center justify-between p-4 bg-background rounded-xl">
                     <div>
-                      <p className="text-sm font-medium text-gray-600">{metric.metric}</p>
-                      <p className="text-xl font-bold text-[#332941] mt-1">{metric.value}</p>
+                      <p className="text-sm font-medium text-muted-foreground">{metric.metric}</p>
+                      <p className="text-xl font-bold text-foreground mt-1">{metric.value}</p>
                     </div>
                     <div className="text-right">
                       <div className="flex items-center">

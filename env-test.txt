@@ -1,0 +1,18 @@
+# Przykładowa konfiguracja .env.local dla projektu jakub-blog
+# Skopiuj ten plik jako .env.local i uzupełnij własnymi wartościami
+
+# Supabase Configuration
+NEXT_PUBLIC_SUPABASE_URL=https://jmtmhwzgvqnsitdgdgwa.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-supabase-anon-key-here
+
+# Opcjonalne - dla środowiska serwera (jeśli używane)
+SUPABASE_SERVICE_ROLE_KEY=your-service-role-key-here
+
+# Opcjonalne - dla OAuth providers
+NEXT_PUBLIC_SITE_URL=http://localhost:3000
+
+# Uwagi:
+# 1. NEXT_PUBLIC_SUPABASE_URL - URL Twojego projektu Supabase
+# 2. NEXT_PUBLIC_SUPABASE_ANON_KEY - Publiczny klucz API z Supabase Dashboard
+# 3. Klucze można znaleźć w Supabase Dashboard -> Settings -> API
+# 4. Nie commituj tego pliku z prawdziwymi kluczami do repozytorium! 

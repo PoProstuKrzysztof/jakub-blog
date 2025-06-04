@@ -68,9 +68,9 @@ export function SEOSettings({
   }
 
   return (
-    <Card className="bg-white/95 rounded-2xl shadow-2xl">
+    <Card className="bg-card/95 rounded-2xl shadow-2xl">
       <CardHeader>
-        <CardTitle className="text-[#332941] flex items-center">
+        <CardTitle className="text-foreground flex items-center">
           <Search className="h-5 w-5 mr-2" />
           Optymalizacja SEO
         </CardTitle>
@@ -79,7 +79,7 @@ export function SEOSettings({
       <CardContent className="space-y-6">
         {/* Meta Title */}
         <div className="space-y-2">
-          <Label htmlFor="meta-title" className="text-[#332941] font-medium">
+          <Label htmlFor="meta-title" className="text-foreground font-medium">
             Tytuł SEO
           </Label>
           <Input
@@ -87,10 +87,10 @@ export function SEOSettings({
             value={title}
             onChange={(e) => handleTitleChange(e.target.value)}
             placeholder="Wprowadź tytuł dla SEO"
-            className="border-[#3B3486] rounded-xl focus:border-[#864AF9]"
+            className="border-accent rounded-xl focus:border-primary"
           />
           <div className="flex justify-between text-sm">
-            <span className="text-gray-500">Długość: {title.length} znaków</span>
+            <span className="text-muted-foreground">Długość: {title.length} znaków</span>
             <span
               className={`${title.length > 60 ? "text-red-500" : title.length > 50 ? "text-yellow-500" : "text-green-500"}`}
             >
@@ -101,7 +101,7 @@ export function SEOSettings({
 
         {/* Meta Description */}
         <div className="space-y-2">
-          <Label htmlFor="meta-description" className="text-[#332941] font-medium">
+          <Label htmlFor="meta-description" className="text-foreground font-medium">
             Meta opis
           </Label>
           <Textarea
@@ -109,10 +109,10 @@ export function SEOSettings({
             value={metaDescription}
             onChange={(e) => onMetaDescriptionChange(e.target.value)}
             placeholder="Krótki opis posta, który pojawi się w wynikach wyszukiwania"
-            className="border-[#3B3486] rounded-xl focus:border-[#864AF9] min-h-[80px]"
+            className="border-accent rounded-xl focus:border-primary min-h-[80px]"
           />
           <div className="flex justify-between text-sm">
-            <span className="text-gray-500">Długość: {metaDescription.length} znaków</span>
+            <span className="text-muted-foreground">Długość: {metaDescription.length} znaków</span>
             <span
               className={`${metaDescription.length > 160 ? "text-red-500" : metaDescription.length > 140 ? "text-yellow-500" : "text-green-500"}`}
             >
@@ -123,26 +123,26 @@ export function SEOSettings({
 
         {/* URL Slug */}
         <div className="space-y-2">
-          <Label htmlFor="url-slug" className="text-[#332941] font-medium flex items-center">
+          <Label htmlFor="url-slug" className="text-foreground font-medium flex items-center">
             <Globe className="h-4 w-4 mr-2" />
             URL posta
           </Label>
           <div className="flex items-center space-x-2">
-            <span className="text-gray-500 text-sm">jakub-inwestycje.com/post/</span>
+            <span className="text-muted-foreground text-sm">jakub-inwestycje.com/post/</span>
             <Input
               id="url-slug"
               value={slug}
               onChange={(e) => onSlugChange(e.target.value)}
               placeholder="url-posta"
-              className="border-[#3B3486] rounded-xl focus:border-[#864AF9]"
+              className="border-accent rounded-xl focus:border-primary"
             />
           </div>
-          <p className="text-sm text-gray-500">URL powinien być krótki, opisowy i zawierać słowa kluczowe</p>
+          <p className="text-sm text-muted-foreground">URL powinien być krótki, opisowy i zawierać słowa kluczowe</p>
         </div>
 
         {/* Tags */}
         <div className="space-y-2">
-          <Label htmlFor="tags" className="text-[#332941] font-medium flex items-center">
+          <Label htmlFor="tags" className="text-foreground font-medium flex items-center">
             <Tag className="h-4 w-4 mr-2" />
             Tagi
           </Label>
@@ -153,7 +153,7 @@ export function SEOSettings({
               onChange={(e) => setNewTag(e.target.value)}
               onKeyPress={handleKeyPress}
               placeholder="Dodaj tag i naciśnij Enter"
-              className="border-[#3B3486] rounded-xl focus:border-[#864AF9]"
+              className="border-accent rounded-xl focus:border-primary"
             />
           </div>
 
@@ -163,7 +163,7 @@ export function SEOSettings({
                 <Badge
                   key={index}
                   variant="secondary"
-                  className="bg-[#864AF9] text-white hover:bg-[#7c42e8] cursor-pointer"
+                  className="bg-primary text-primary-foreground hover:bg-primary/90 cursor-pointer"
                   onClick={() => removeTag(tag)}
                 >
                   {tag} ×
@@ -172,16 +172,16 @@ export function SEOSettings({
             </div>
           )}
 
-          <p className="text-sm text-gray-500">Dodaj tagi związane z tematem posta. Kliknij tag aby go usunąć.</p>
+          <p className="text-sm text-muted-foreground">Dodaj tagi związane z tematem posta. Kliknij tag aby go usunąć.</p>
         </div>
 
         {/* SEO Preview */}
         <div className="space-y-2">
-          <Label className="text-[#332941] font-medium">Podgląd w Google</Label>
-          <div className="border border-gray-200 rounded-xl p-4 bg-gray-50">
+          <Label className="text-foreground font-medium">Podgląd w Google</Label>
+          <div className="border border-border rounded-xl p-4 bg-background">
             <div className="text-blue-600 text-lg hover:underline cursor-pointer">{title || "Tytuł posta"}</div>
             <div className="text-green-700 text-sm">jakub-inwestycje.com/post/{slug || "url-posta"}</div>
-            <div className="text-gray-600 text-sm mt-1">{metaDescription || "Meta opis posta pojawi się tutaj..."}</div>
+            <div className="text-muted-foreground text-sm mt-1">{metaDescription || "Meta opis posta pojawi się tutaj..."}</div>
           </div>
         </div>
       </CardContent>

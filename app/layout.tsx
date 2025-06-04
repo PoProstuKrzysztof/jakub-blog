@@ -1,10 +1,12 @@
 import type { Metadata } from 'next'
 import './globals.css'
+import { Toaster } from '@/components/ui/toaster'
+import { AuthProvider } from '@/components/auth-provider'
 
 export const metadata: Metadata = {
-  title: 'v0 App',
-  description: 'Created with v0',
-  generator: 'v0.dev',
+  title: 'Jakub Inwestycje - Blog Finansowy',
+  description: 'Profesjonalny blog o inwestowaniu, analizach spółek i edukacji finansowej',
+  generator: 'Next.js',
 }
 
 export default function RootLayout({
@@ -13,8 +15,13 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en">
-      <body>{children}</body>
+    <html lang="pl">
+      <body>
+        <AuthProvider>
+          {children}
+          <Toaster />
+        </AuthProvider>
+      </body>
     </html>
   )
 }

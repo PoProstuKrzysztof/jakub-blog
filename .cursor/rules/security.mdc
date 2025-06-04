@@ -1,0 +1,14 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+IDE powinno ZATRZYMAĆ commit i pokazać ostrzeżenie gdy wykryje:
+Always check if they are any vunlerabilities in code like:
+- passwords in plain text
+- api keys/tokens
+- connection strings with passwords
+- private keys
+
+Always make sure that site is secured against any popular attacks.
+
