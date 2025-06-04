@@ -1,0 +1,13 @@
+{
+  "buildCommand": "pnpm build",
+  "installCommand": "pnpm install --frozen-lockfile",
+  "framework": "nextjs",
+  "functions": {
+    "app/**/*.ts": {
+      "runtime": "nodejs18.x"
+    },
+    "app/**/*.js": {
+      "runtime": "nodejs18.x"
+    }
+  }
+} 
