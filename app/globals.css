@@ -14,73 +14,73 @@ body {
 
 @layer base {
   :root {
-    --background: 0 0% 99.8%; /* #FFFEFE */
-    --foreground: 210 22% 22%; /* #2C3E50 */
-    --card: 0 0% 99.8%; /* #FFFEFE */
-    --card-foreground: 210 22% 22%; /* #2C3E50 */
-    --popover: 0 0% 99.8%; /* #FFFEFE */
-    --popover-foreground: 210 22% 22%; /* #2C3E50 */
-    --primary: 162 64% 49%; /* #33D2A4 */
-    --primary-foreground: 0 0% 99.8%; /* #FFFEFE */
-    --secondary: 204 8% 76%; /* #BDC3C7 */
-    --secondary-foreground: 210 22% 22%; /* #2C3E50 */
-    --muted: 204 8% 76%; /* #BDC3C7 */
-    --muted-foreground: 210 22% 22%; /* #2C3E50 */
-    --accent: 210 22% 22%; /* #2C3E50 */
-    --accent-foreground: 0 0% 99.8%; /* #FFFEFE */
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 204 8% 76%; /* #BDC3C7 */
-    --input: 204 8% 76%; /* #BDC3C7 */
-    --ring: 162 64% 49%; /* #33D2A4 */
-    --chart-1: 12 76% 61%;
-    --chart-2: 173 58% 39%;
-    --chart-3: 197 37% 24%;
-    --chart-4: 43 74% 66%;
-    --chart-5: 27 87% 67%;
+    --background: 210 20% 98%; /* #F8FAFC - bardzo jasny szary/biały */
+    --foreground: 220 39% 11%; /* #111827 - ciemny szary dla głównego tekstu */
+    --card: 210 20% 98%; /* #F8FAFC - bardzo jasny szary/biały */
+    --card-foreground: 220 39% 11%; /* #111827 - ciemny szary dla głównego tekstu */
+    --popover: 210 20% 98%; /* #F8FAFC - bardzo jasny szary/biały */
+    --popover-foreground: 220 39% 11%; /* #111827 - ciemny szary dla głównego tekstu */
+    --primary: 220 91% 33%; /* #1E3A8A - ciemny niebieski (dominujący) */
+    --primary-foreground: 210 20% 98%; /* #F8FAFC - bardzo jasny szary/biały */
+    --secondary: 220 13% 69%; /* #6B7280 - średni szary dla drugorzędnego tekstu */
+    --secondary-foreground: 220 39% 11%; /* #111827 - ciemny szary dla głównego tekstu */
+    --muted: 220 13% 91%; /* Jaśniejszy odcień szarego dla tła */
+    --muted-foreground: 220 9% 46%; /* #6B7280 - średni szary dla drugorzędnego tekstu */
+    --accent: 158 64% 52%; /* #10B981 - zieleń akcentująca */
+    --accent-foreground: 210 20% 98%; /* #F8FAFC - bardzo jasny szary/biały */
+    --destructive: 0 84% 60%; /* #EF4444 - czerwień dla alertów */
+    --destructive-foreground: 210 20% 98%; /* #F8FAFC - bardzo jasny szary/biały */
+    --border: 220 13% 91%; /* Jaśniejszy odcień szarego dla obramowań */
+    --input: 220 13% 91%; /* Jaśniejszy odcień szarego dla inputów */
+    --ring: 158 64% 52%; /* #10B981 - zieleń akcentująca */
+    --chart-1: 220 91% 33%; /* #1E3A8A - ciemny niebieski */
+    --chart-2: 158 64% 52%; /* #10B981 - zieleń */
+    --chart-3: 0 84% 60%; /* #EF4444 - czerwień */
+    --chart-4: 220 9% 46%; /* #6B7280 - średni szary */
+    --chart-5: 220 39% 11%; /* #111827 - ciemny szary */
     --radius: 0.5rem;
-    --sidebar-background: 0 0% 98%;
-    --sidebar-foreground: 240 5.3% 26.1%;
-    --sidebar-primary: 240 5.9% 10%;
-    --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 240 4.8% 95.9%;
-    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-background: 210 20% 98%;
+    --sidebar-foreground: 220 39% 11%;
+    --sidebar-primary: 220 91% 33%;
+    --sidebar-primary-foreground: 210 20% 98%;
+    --sidebar-accent: 158 64% 52%;
+    --sidebar-accent-foreground: 210 20% 98%;
     --sidebar-border: 220 13% 91%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --sidebar-ring: 158 64% 52%;
   }
   .dark {
-    --background: 210 22% 15%; /* Dark version of #2C3E50 */
-    --foreground: 0 0% 99.8%; /* #FFFEFE */
-    --card: 210 22% 18%; /* Slightly lighter dark background */
-    --card-foreground: 0 0% 99.8%; /* #FFFEFE */
-    --popover: 210 22% 18%;
-    --popover-foreground: 0 0% 99.8%; /* #FFFEFE */
-    --primary: 162 64% 49%; /* #33D2A4 */
-    --primary-foreground: 210 22% 22%; /* #2C3E50 */
-    --secondary: 204 8% 40%; /* Darker version of #BDC3C7 */
-    --secondary-foreground: 0 0% 99.8%; /* #FFFEFE */
-    --muted: 204 8% 40%;
-    --muted-foreground: 204 8% 76%; /* #BDC3C7 */
-    --accent: 162 64% 49%; /* #33D2A4 */
-    --accent-foreground: 210 22% 22%; /* #2C3E50 */
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 204 8% 40%;
-    --input: 204 8% 40%;
-    --ring: 162 64% 49%; /* #33D2A4 */
-    --chart-1: 220 70% 50%;
-    --chart-2: 160 60% 45%;
-    --chart-3: 30 80% 55%;
-    --chart-4: 280 65% 60%;
-    --chart-5: 340 75% 55%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --background: 220 39% 11%; /* #111827 - ciemny szary dla tła w trybie ciemnym */
+    --foreground: 210 20% 98%; /* #F8FAFC - bardzo jasny szary/biały */
+    --card: 220 39% 15%; /* Nieco jaśniejszy odcień ciemnego szarego */
+    --card-foreground: 210 20% 98%; /* #F8FAFC - bardzo jasny szary/biały */
+    --popover: 220 39% 15%;
+    --popover-foreground: 210 20% 98%; /* #F8FAFC - bardzo jasny szary/biały */
+    --primary: 220 91% 33%; /* #1E3A8A - ciemny niebieski (dominujący) */
+    --primary-foreground: 210 20% 98%; /* #F8FAFC - bardzo jasny szary/biały */
+    --secondary: 220 13% 69%; /* #6B7280 - średni szary */
+    --secondary-foreground: 210 20% 98%; /* #F8FAFC - bardzo jasny szary/biały */
+    --muted: 220 13% 25%; /* Ciemniejszy odcień szarego dla tła */
+    --muted-foreground: 220 13% 69%; /* #6B7280 - średni szary */
+    --accent: 158 64% 52%; /* #10B981 - zieleń akcentująca */
+    --accent-foreground: 220 39% 11%; /* #111827 - ciemny szary */
+    --destructive: 0 84% 60%; /* #EF4444 - czerwień dla alertów */
+    --destructive-foreground: 210 20% 98%; /* #F8FAFC - bardzo jasny szary/biały */
+    --border: 220 13% 25%;
+    --input: 220 13% 25%;
+    --ring: 158 64% 52%; /* #10B981 - zieleń akcentująca */
+    --chart-1: 220 91% 45%; /* Jaśniejszy niebieski dla trybu ciemnego */
+    --chart-2: 158 64% 52%; /* #10B981 - zieleń */
+    --chart-3: 0 84% 60%; /* #EF4444 - czerwień */
+    --chart-4: 220 13% 69%; /* #6B7280 - średni szary */
+    --chart-5: 210 20% 98%; /* #F8FAFC - bardzo jasny szary/biały */
+    --sidebar-background: 220 39% 11%;
+    --sidebar-foreground: 210 20% 98%;
+    --sidebar-primary: 220 91% 33%;
+    --sidebar-primary-foreground: 210 20% 98%;
+    --sidebar-accent: 158 64% 52%;
+    --sidebar-accent-foreground: 220 39% 11%;
+    --sidebar-border: 220 13% 25%;
+    --sidebar-ring: 158 64% 52%;
   }
 }
 
@@ -90,6 +90,6 @@ body {
   }
   body {
     @apply bg-background text-foreground;
-    background-color: #FFFEFE; /* fallback using your Secondary Palette color */
+    background-color: #F8FAFC; /* fallback using new light background color */
   }
 }

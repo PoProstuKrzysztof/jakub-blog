@@ -12,18 +12,24 @@ import {
   Eye,
   Users,
   Clock,
-  PieChartIcon as RechartsPieChart,
-  PhoneIcon as Cell,
-  XIcon as XAxis,
-  Axis3dIcon as YAxis,
-  MapIcon as CartesianGrid,
-  InfoIcon as Tooltip,
-  StarIcon as Legend,
-  ContainerIcon as ResponsiveContainer,
-  PieChartIcon as Pie,
+  PieChart as PieChartIcon,
 } from "lucide-react"
 import Link from "next/link"
-import { AreaChart, Area, BarChart, Bar } from "recharts"
+import { 
+  AreaChart, 
+  Area, 
+  BarChart, 
+  Bar, 
+  PieChart, 
+  Pie, 
+  Cell, 
+  XAxis, 
+  YAxis, 
+  CartesianGrid, 
+  Tooltip, 
+  Legend, 
+  ResponsiveContainer 
+} from "recharts"
 
 // Mock analytics data
 const overviewStats = [
@@ -165,13 +171,13 @@ export default function AnalyticsPage() {
   const getDeviceIcon = (device: string) => {
     switch (device) {
       case "Desktop":
-        return <Pie className="h-4 w-4" />
+        return <PieChartIcon className="h-4 w-4" />
       case "Mobile":
-        return <Pie className="h-4 w-4" />
+        return <PieChartIcon className="h-4 w-4" />
       case "Tablet":
-        return <Pie className="h-4 w-4" />
+        return <PieChartIcon className="h-4 w-4" />
       default:
-        return <Pie className="h-4 w-4" />
+        return <PieChartIcon className="h-4 w-4" />
     }
   }
 
@@ -185,7 +191,7 @@ export default function AnalyticsPage() {
               <Link href="/" className="text-2xl font-bold text-primary-foreground">
                 Jakub Inwestycje
               </Link>
-              <Badge className="bg-primary text-primary-foreground rounded-xl">Analytics</Badge>
+              <Badge className="bg-primary text-primary-foreground rounded-xl">Analityka</Badge>
             </div>
             <div className="flex items-center space-x-4">
               <Select value={timeRange} onValueChange={setTimeRange}>
@@ -202,10 +208,13 @@ export default function AnalyticsPage() {
               <Link href="/admin">
                 <Button
                   variant="outline"
-                  className="border-primary text-primary hover:bg-primary hover:text-primary-foreground transition-all duration-300 rounded-xl"
+                  className="group relative overflow-hidden border-2 border-border bg-transparent text-foreground hover:text-white hover:border-primary transition-all duration-300 rounded-xl shadow-sm hover:shadow-lg transform hover:scale-105"
                 >
-                  <ArrowLeft className="h-4 w-4 mr-2" />
-                  Panel Twórcy
+                  <div className="absolute inset-0 bg-gradient-to-r from-primary to-accent translate-x-[-100%] group-hover:translate-x-0 transition-transform duration-300 ease-out"></div>
+                  <div className="relative flex items-center">
+                    <ArrowLeft className="h-4 w-4 mr-2 transition-transform duration-300 group-hover:-translate-x-1" />
+                    Panel Twórcy
+                  </div>
                 </Button>
               </Link>
             </div>
@@ -218,15 +227,15 @@ export default function AnalyticsPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-3xl font-bold mb-2 animate-fade-in">Analytics Dashboard</h1>
+              <h1 className="text-3xl font-bold mb-2 animate-fade-in"></h1>
               <p className="text-gray-200 animate-fade-in-delay">
                 Szczegółowe statystyki wydajności Twojego bloga za ostatnie{" "}
                 {timeRange === "7d" ? "7 dni" : timeRange === "30d" ? "30 dni" : timeRange === "90d" ? "90 dni" : "rok"}
               </p>
             </div>
             <div className="flex items-center space-x-2">
-              <Pie className="h-8 w-8 text-primary" />
-              <Pie className="h-8 w-8 text-primary" />
+              <PieChartIcon className="h-8 w-8 text-primary" />
+              <PieChartIcon className="h-8 w-8 text-primary" />
             </div>
           </div>
         </div>
@@ -375,7 +384,7 @@ export default function AnalyticsPage() {
             <CardContent>
               <div className="h-64 mb-4">
                 <ResponsiveContainer width="100%" height="100%">
-                  <RechartsPieChart>
+                  <PieChart>
                     <Pie
                       data={categoryData}
                       cx="50%"
@@ -397,7 +406,7 @@ export default function AnalyticsPage() {
                         boxShadow: "0 10px 25px rgba(0,0,0,0.1)",
                       }}
                     />
-                  </RechartsPieChart>
+                  </PieChart>
                 </ResponsiveContainer>
               </div>
               <div className="space-y-2">

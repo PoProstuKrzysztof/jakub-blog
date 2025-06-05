@@ -166,36 +166,14 @@ export default function AdminDashboard() {
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="bg-accent shadow-lg border-b border-accent">
+      <header className="bg-card shadow-lg border-b border-border">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center space-x-4">
-              <Link href="/" className="text-2xl font-bold text-primary-foreground">
+              <Link href="/" className="text-2xl font-bold text-foreground">
                 Jakub Inwestycje
               </Link>
               <Badge className="bg-primary text-primary-foreground rounded-xl">Panel Twórcy</Badge>
-            </div>
-            <div className="flex items-center space-x-4">
-              <Link href="/admin/analytics">
-                <Button className="bg-accent hover:bg-accent text-primary-foreground transition-all duration-300 rounded-xl">
-                  <BarChart3 className="h-4 w-4 mr-2" />
-                  Analytics
-                </Button>
-              </Link>
-              <Link href="/">
-                <Button
-                  variant="outline"
-                  className="border-primary text-primary hover:bg-primary hover:text-primary-foreground transition-all duration-300 rounded-xl"
-                >
-                  Podgląd bloga
-                </Button>
-              </Link>
-              <Link href="/admin/nowy-post">
-                <Button className="bg-primary hover:bg-primary/90 text-primary-foreground transition-all duration-300 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105">
-                  <Plus className="h-4 w-4 mr-2" />
-                  Nowy post
-                </Button>
-              </Link>
             </div>
           </div>
         </div>
@@ -207,34 +185,6 @@ export default function AdminDashboard() {
           <h1 className="text-3xl font-bold text-primary-foreground mb-2 animate-fade-in">Panel Twórcy</h1>
           <p className="text-muted-foreground animate-fade-in-delay">Zarządzaj swoimi postami i treścią</p>
         </div>
-
-        {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          {stats.map((stat, index) => (
-            <Card
-              key={index}
-              className="bg-card/95 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105"
-              style={{ animationDelay: `${index * 100}ms` }}
-            >
-              <CardContent className="p-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-muted-foreground">{stat.title}</p>
-                    <p className="text-2xl font-bold text-foreground">{stat.value}</p>
-                    <p className="text-sm text-green-600">{stat.change}</p>
-                  </div>
-                  <div
-                    className="h-12 w-12 rounded-xl flex items-center justify-center shadow-lg"
-                    style={{ backgroundColor: stat.color }}
-                  >
-                    <stat.icon className="h-6 w-6 text-primary-foreground" />
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-
         {/* Posts Management */}
         <Card className="bg-card/95 rounded-2xl shadow-2xl">
           <CardHeader>
@@ -243,12 +193,32 @@ export default function AdminDashboard() {
                 <CardTitle className="text-foreground">Zarządzanie postami</CardTitle>
                 <CardDescription>Przeglądaj, edytuj i zarządzaj swoimi postami</CardDescription>
               </div>
-              <Link href="/admin/nowy-post">
-                <Button className="bg-primary hover:bg-primary/90 text-primary-foreground transition-all duration-300 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105">
-                  <Plus className="h-4 w-4 mr-2" />
-                  Dodaj post
-                </Button>
-              </Link>
+              <div className="flex items-center gap-3">
+                <Link href="/admin/analytics">
+                  <Button 
+                    variant="outline"
+                    className="group relative overflow-hidden border-2 border-border bg-transparent text-foreground hover:text-white hover:border-primary transition-all duration-300 rounded-xl px-6 py-2.5 font-medium shadow-sm hover:shadow-lg transform hover:scale-105"
+                  >
+                    <div className="absolute inset-0 bg-gradient-to-r from-primary to-accent translate-x-[-100%] group-hover:translate-x-0 transition-transform duration-300 ease-out"></div>
+                    <div className="relative flex items-center">
+                      <BarChart3 className="h-5 w-5 mr-2 transition-transform duration-300 group-hover:rotate-12" />
+                      Analytics
+                    </div>
+                  </Button>
+                </Link>
+                <Link href="/admin/nowy-post">
+                  <Button 
+                    variant="outline"
+                    className="group relative overflow-hidden border-2 border-border bg-transparent text-foreground hover:text-white hover:border-primary transition-all duration-300 rounded-xl px-6 py-2.5 font-medium shadow-sm hover:shadow-lg transform hover:scale-105"
+                  >
+                    <div className="absolute inset-0 bg-gradient-to-r from-primary to-accent translate-x-[-100%] group-hover:translate-x-0 transition-transform duration-300 ease-out"></div>
+                    <div className="relative flex items-center">
+                      <Plus className="h-5 w-5 mr-2 transition-transform duration-300 group-hover:rotate-180" />
+                      Nowy post
+                    </div>
+                  </Button>
+                </Link>
+              </div>
             </div>
           </CardHeader>
           <CardContent>
@@ -308,9 +278,9 @@ export default function AdminDashboard() {
                       <Button
                         variant="ghost"
                         size="sm"
-                        className="hover:bg-primary hover:text-primary-foreground transition-all duration-300 rounded-lg"
+                        className="group relative overflow-hidden hover:bg-gradient-to-r hover:from-purple-500 hover:to-pink-500 hover:text-white transition-all duration-300 rounded-xl border-2 border-transparent hover:border-purple-300 hover:shadow-lg transform hover:scale-105"
                       >
-                        <MoreHorizontal className="h-4 w-4" />
+                        <MoreHorizontal className="h-4 w-4 transition-transform duration-300 group-hover:rotate-90" />
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end" className="bg-card border-accent rounded-xl shadow-xl">
@@ -362,10 +332,17 @@ export default function AdminDashboard() {
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setDeleteModalOpen(false)}>
+            <Button 
+              variant="outline" 
+              onClick={() => setDeleteModalOpen(false)}
+              className="rounded-xl border-2 hover:bg-gray-50 transition-all duration-300"
+            >
               Anuluj
             </Button>
-            <Button variant="destructive" onClick={confirmDelete} className="bg-red-600 hover:bg-red-700">
+            <Button 
+              onClick={confirmDelete} 
+              className="bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
+            >
               Usuń post
             </Button>
           </DialogFooter>
@@ -408,10 +385,17 @@ export default function AdminDashboard() {
             </div>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setEditModalOpen(false)}>
+            <Button 
+              variant="outline" 
+              onClick={() => setEditModalOpen(false)}
+              className="rounded-xl border-2 hover:bg-gray-50 transition-all duration-300"
+            >
               Anuluj
             </Button>
-            <Button onClick={saveEdit} className="bg-primary hover:bg-primary/90">
+            <Button 
+              onClick={saveEdit} 
+              className="bg-gradient-to-r from-gray-600 to-gray-700 hover:from-gray-700 hover:to-gray-800 text-white rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
+            >
               Zapisz zmiany
             </Button>
           </DialogFooter>

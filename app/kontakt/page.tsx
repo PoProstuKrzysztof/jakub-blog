@@ -23,6 +23,7 @@ import {
   Instagram,
   Rss,
   Settings,
+  LogOut,
 } from "lucide-react"
 import Link from "next/link"
 
@@ -73,9 +74,12 @@ export default function ContactPage() {
       <div className="fixed bottom-6 right-6 z-50 flex flex-col gap-3">
         <Button
           size="lg"
-          className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-110"
+          className="group relative overflow-hidden bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 hover:from-blue-600 hover:via-purple-600 hover:to-pink-600 text-white rounded-full shadow-xl hover:shadow-2xl transition-all duration-500 transform hover:scale-110 border-0"
         >
-          <MessageCircle className="h-5 w-5" />
+          <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+          <div className="relative">
+            <MessageCircle className="h-5 w-5 transition-transform duration-300 group-hover:rotate-12" />
+          </div>
         </Button>
       </div>
 
@@ -85,29 +89,48 @@ export default function ContactPage() {
       </div>
 
       {/* Header with Social Icons */}
-      <header className="bg-accent text-accent-foreground py-3">
+      <header className="bg-card shadow-sm py-3 border-b border-border">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center">
             <div className="flex items-center space-x-2 text-sm"></div>
             <div className="flex items-center space-x-4">
               <div className="flex items-center space-x-3">
-                <Mail className="h-4 w-4 hover:text-primary cursor-pointer transition-colors" />
-                <Facebook className="h-4 w-4 hover:text-primary cursor-pointer transition-colors" />
-                <Youtube className="h-4 w-4 hover:text-primary cursor-pointer transition-colors" />
-                <Instagram className="h-4 w-4 hover:text-primary cursor-pointer transition-colors" />
-                <Rss className="h-4 w-4 hover:text-primary cursor-pointer transition-colors" />
+                <Mail className="h-4 w-4 text-text-gray hover:text-navy-blue cursor-pointer transition-colors" />
+                <Facebook className="h-4 w-4 text-text-gray hover:text-navy-blue cursor-pointer transition-colors" />
+                <Youtube className="h-4 w-4 text-text-gray hover:text-navy-blue cursor-pointer transition-colors" />
+                <Instagram className="h-4 w-4 text-text-gray hover:text-navy-blue cursor-pointer transition-colors" />
+                <Rss className="h-4 w-4 text-text-gray hover:text-navy-blue cursor-pointer transition-colors" />
               </div>
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
-                <Input placeholder="Szukaj..." className="pl-10 w-48 bg-card text-foreground border-0 rounded-md" />
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-text-gray h-4 w-4" />
+                <Input placeholder="Szukaj..." className="pl-10 w-48 bg-background text-foreground border border-border rounded-md shadow-sm focus:border-navy-blue focus:ring-1 focus:ring-navy-blue" />
               </div>
+              {isAdmin && (
+                <Button
+                  onClick={() => {
+                    localStorage.removeItem("isAdmin")
+                    setIsAdmin(false)
+                  }}
+                  size="sm"
+                  className="group relative overflow-hidden border-2 border-border bg-transparent text-foreground hover:text-white hover:border-destructive transition-all duration-300 rounded-xl shadow-sm hover:shadow-lg transform hover:scale-105"
+                >
+                  <div className="absolute inset-0 bg-gradient-to-r from-destructive to-destructive/80 translate-x-[-100%] group-hover:translate-x-0 transition-transform duration-300 ease-out"></div>
+                  <div className="relative flex items-center">
+                    <LogOut className="h-4 w-4 mr-1 transition-transform duration-300 group-hover:rotate-12" />
+                    Wyloguj
+                  </div>
+                </Button>
+              )}
               <Link href="/admin/login">
                 <Button
                   size="sm"
-                  className="bg-accent hover:bg-accent/90 text-primary-foreground transition-all duration-300 rounded-md"
+                  className="group relative overflow-hidden border-2 border-border bg-transparent text-foreground hover:text-white hover:border-primary transition-all duration-300 rounded-xl shadow-sm hover:shadow-lg transform hover:scale-105"
                 >
-                  <Settings className="h-4 w-4 mr-1" />
-                  Panel administratora
+                  <div className="absolute inset-0 bg-gradient-to-r from-primary to-accent translate-x-[-100%] group-hover:translate-x-0 transition-transform duration-300 ease-out"></div>
+                  <div className="relative flex items-center">
+                    <Settings className="h-4 w-4 mr-1 transition-transform duration-300 group-hover:rotate-90" />
+                    Panel administratora
+                  </div>
                 </Button>
               </Link>
             </div>
@@ -129,7 +152,7 @@ export default function ContactPage() {
           <div className="flex justify-between items-center h-14">
             <div className="flex justify-center items-center flex-1">
               <div className="flex space-x-2">
-                <Link href="/" className="relative group">
+                <Link href="/" className="relative group" prefetch={true}>
                   <div className="text-foreground hover:text-primary font-medium px-6 py-2 rounded-lg transition-all duration-300 hover:bg-primary/10 hover:shadow-md transform hover:scale-105">
                     BLOG
                     <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-accent/20 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10"></div>
@@ -149,22 +172,13 @@ export default function ContactPage() {
               </div>
             </div>
             {isAdmin && (
-              <div className="flex items-center space-x-2">
+              <div className="flex items-center space-x-2 ml-auto">
                 <Link href="/admin">
-                  <Button className="bg-primary hover:bg-primary/90 text-primary-foreground px-4 py-2 rounded-lg font-medium transition-all duration-300 text-sm">
-                    Panel twórcy
+                  <Button className="group relative overflow-hidden bg-gradient-to-r from-gray-600 to-gray-700 hover:from-gray-700 hover:to-gray-800 text-white px-4 py-2 rounded-xl font-medium transition-all duration-300 text-sm shadow-lg hover:shadow-xl transform hover:scale-105 border-0">
+                    <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    <div className="relative">Panel twórcy</div>
                   </Button>
                 </Link>
-                <Button
-                  onClick={() => {
-                    localStorage.removeItem("isAdmin")
-                    setIsAdmin(false)
-                  }}
-                  variant="outline"
-                  className="border-border text-muted-foreground hover:bg-muted px-4 py-2 rounded-lg font-medium transition-all duration-300 text-sm"
-                >
-                  Wyloguj
-                </Button>
               </div>
             )}
           </div>
@@ -343,19 +357,22 @@ export default function ContactPage() {
                     <Button
                       type="submit"
                       disabled={isSubmitting}
-                      className="w-full bg-primary hover:bg-primary/90 text-primary-foreground transition-all duration-300 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 disabled:transform-none disabled:opacity-70"
+                      className="group relative overflow-hidden w-full bg-gradient-to-r from-gray-600 via-gray-700 to-gray-800 hover:from-gray-700 hover:via-gray-800 hover:to-gray-900 text-white transition-all duration-500 rounded-2xl px-8 py-3 font-semibold shadow-xl hover:shadow-2xl transform hover:scale-105 disabled:transform-none disabled:opacity-70 border-0"
                     >
-                      {isSubmitting ? (
-                        <div className="flex items-center">
-                          <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                          Wysyłanie...
-                        </div>
-                      ) : (
-                        <div className="flex items-center">
-                          <Send className="h-4 w-4 mr-2" />
-                          Wyślij wiadomość
-                        </div>
-                      )}
+                      <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                      <div className="relative">
+                        {isSubmitting ? (
+                          <div className="flex items-center justify-center">
+                            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                            Wysyłanie...
+                          </div>
+                        ) : (
+                          <div className="flex items-center justify-center">
+                            <Send className="h-4 w-4 mr-2 transition-transform duration-300 group-hover:rotate-12" />
+                            Wyślij wiadomość
+                          </div>
+                        )}
+                      </div>
                     </Button>
                   </form>
                 )}
@@ -376,8 +393,9 @@ export default function ContactPage() {
             <div>
               <h4 className="text-lg font-semibold mb-4 text-foreground">Kontakt</h4>
               <p className="text-muted-foreground mb-4">Masz pytania? Skontaktuj się ze mną poprzez formularz kontaktowy.</p>
-              <Button className="bg-primary hover:bg-primary/90 text-primary-foreground transition-all duration-300 rounded-xl">
-                Formularz kontaktowy
+              <Button className="group relative overflow-hidden bg-gradient-to-r from-primary to-accent hover:from-primary/90 hover:to-accent/90 text-primary-foreground transition-all duration-300 rounded-xl px-6 py-2.5 font-medium shadow-lg hover:shadow-xl transform hover:scale-105 border-0">
+                <div className="absolute inset-0 bg-gradient-to-r from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <div className="relative">Formularz kontaktowy</div>
               </Button>
             </div>
           </div>
