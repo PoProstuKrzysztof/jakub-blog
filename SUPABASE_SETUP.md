@@ -4,11 +4,6 @@
 
 Stwórz plik `.env.local` w głównym katalogu projektu i dodaj:
 
-```env
-NEXT_PUBLIC_SUPABASE_URL=https://jmtmhwzgvqnsitdgdgwa.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpteG1od3pndnFuc2l0ZGdkZ3dhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzU2NjI0NzQsImV4cCI6MjA1MTIzODQ3NH0.Ej8Ej8Ej8Ej8Ej8Ej8Ej8Ej8Ej8Ej8Ej8Ej8Ej8
-```
-
 ## 2. Struktura bazy danych
 
 Baza danych zawiera następujące tabele:

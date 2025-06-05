@@ -125,6 +125,64 @@ export class PostService {
   }
 
   /**
+   * Pobiera opublikowane posty z podstawowymi danymi (bez pełnych relacji) - szybsza wersja
+   */
+  async getPublishedPostsBasic(
+    limit = 10,
+    offset = 0
+  ): Promise<PostsResponse> {
+    try {
+      const supabase = await this.getSupabaseClient()
+      let query = supabase
+        .from('posts')
+        .select(`
+          id,
+          title,
+          slug,
+          excerpt,
+          featured_image_url,
+          published_at,
+          created_at,
+          view_count,
+          is_featured,
+          profiles:author_id (
+            username,
+            full_name
+          ),
+          post_categories (
+            categories (
+              name,
+              slug,
+              color
+            )
+          )
+        `, { count: 'exact' })
+        .eq('status', POST_STATUS.PUBLISHED)
+        .order('published_at', { ascending: false })
+        .range(offset, offset + limit - 1)
+
+      const { data, error, count } = await query
+
+      if (error) {
+        throw error
+      }
+
+      const totalPages = Math.ceil((count || 0) / limit)
+
+      return {
+        data: data as PostFull[],
+        count: count || 0,
+        page: Math.floor(offset / limit) + 1,
+        limit,
+        total_pages: totalPages
+      }
+    } catch (error) {
+      console.error('Error fetching basic published posts:', error)
+      throw error
+    }
+  }
+
+  /**
    * Pobiera opublikowane posty (dla strony publicznej)
    */
   async getPublishedPosts(

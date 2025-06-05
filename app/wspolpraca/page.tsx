@@ -18,17 +18,34 @@ import {
   Instagram,
   Rss,
   Settings,
+  Edit,
+  Trash2,
+  Plus,
+  LogOut,
+  BarChart3,
 } from "lucide-react"
 import Link from "next/link"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
-import { useState, useEffect } from "react"
+import { useState } from "react"
+import { useAuth } from "@/hooks/use-auth"
+
+interface Service {
+  id: number
+  title: string
+  description: string
+  price: string
+  priceNote: string
+  features: string[]
+  color: string
+  icon: string
+}
 
 export default function CooperationPage() {
-  const [isAdmin, setIsAdmin] = useState(false)
+  const { user, signOut } = useAuth()
   const [isEditing, setIsEditing] = useState(false)
-  const [services, setServices] = useState([
+  const [services, setServices] = useState<Service[]>([
     {
       id: 1,
       title: "Indywidualna analiza strategii",
@@ -42,7 +59,7 @@ export default function CooperationPage() {
         "Plan dywersyfikacji i optymalizacji",
         "Konsultacja online (60 min)",
       ],
-                            color: "#33D2A4",
+      color: "#33D2A4",
       icon: "Users",
     },
     {
@@ -58,17 +75,11 @@ export default function CooperationPage() {
         "Wycena i potencjał wzrostu",
         "Szczegółowy raport PDF",
       ],
-              color: "#2C3E50",
+      color: "#2C3E50",
       icon: "TrendingUp",
     },
   ])
-  const [editingService, setEditingService] = useState(null)
-
-  // Check admin status on component mount
-  useEffect(() => {
-    const adminStatus = localStorage.getItem("isAdmin")
-    setIsAdmin(adminStatus === "true")
-  }, [])
+  const [editingService, setEditingService] = useState<Service | null>(null)
 
   return (
     <div className="min-h-screen bg-card">
@@ -77,9 +88,12 @@ export default function CooperationPage() {
         <Link href="/kontakt">
           <Button
             size="lg"
-            className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-110"
+            className="group relative overflow-hidden bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 hover:from-blue-600 hover:via-purple-600 hover:to-pink-600 text-white rounded-full shadow-xl hover:shadow-2xl transition-all duration-500 transform hover:scale-110 border-0"
           >
-            <MessageCircle className="h-5 w-5" />
+            <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            <div className="relative">
+              <MessageCircle className="h-5 w-5 transition-transform duration-300 group-hover:rotate-12" />
+            </div>
           </Button>
         </Link>
       </div>
@@ -90,29 +104,49 @@ export default function CooperationPage() {
       </div>
 
       {/* Header with Social Icons */}
-      <header className="bg-accent text-primary-foreground py-3">
+      <header className="bg-card shadow-sm py-3 border-b border-border">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center">
             <div className="flex items-center space-x-2 text-sm"></div>
             <div className="flex items-center space-x-4">
               <div className="flex items-center space-x-3">
-                <Mail className="h-4 w-4 hover:text-primary cursor-pointer transition-colors" />
-                <Facebook className="h-4 w-4 hover:text-primary cursor-pointer transition-colors" />
-                <Youtube className="h-4 w-4 hover:text-primary cursor-pointer transition-colors" />
-                <Instagram className="h-4 w-4 hover:text-primary cursor-pointer transition-colors" />
-                <Rss className="h-4 w-4 hover:text-primary cursor-pointer transition-colors" />
+                <Mail className="h-4 w-4 text-text-gray hover:text-navy-blue cursor-pointer transition-colors" />
+                <Facebook className="h-4 w-4 text-text-gray hover:text-navy-blue cursor-pointer transition-colors" />
+                <Youtube className="h-4 w-4 text-text-gray hover:text-navy-blue cursor-pointer transition-colors" />
+                <Instagram className="h-4 w-4 text-text-gray hover:text-navy-blue cursor-pointer transition-colors" />
+                <Rss className="h-4 w-4 text-text-gray hover:text-navy-blue cursor-pointer transition-colors" />
               </div>
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
-                <Input placeholder="Szukaj..." className="pl-10 w-48 bg-card text-foreground border-0 rounded-md" />
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-text-gray h-4 w-4" />
+                <Input placeholder="Szukaj..." className="pl-10 w-48 bg-background text-foreground border border-border rounded-md shadow-sm focus:border-navy-blue focus:ring-1 focus:ring-navy-blue" />
               </div>
+              {user && (
+                <Button
+                  size="sm"
+                  className="group relative overflow-hidden border-2 border-border bg-transparent text-foreground hover:text-white hover:border-destructive transition-all duration-300 rounded-xl shadow-sm hover:shadow-lg transform hover:scale-105"
+                  onClick={async () => {
+                    await signOut()
+                    setIsEditing(false)
+                    window.location.reload()
+                  }}
+                >
+                  <div className="absolute inset-0 bg-gradient-to-r from-destructive to-destructive/80 translate-x-[-100%] group-hover:translate-x-0 transition-transform duration-300 ease-out"></div>
+                  <div className="relative flex items-center">
+                    <LogOut className="h-4 w-4 mr-1 transition-transform duration-300 group-hover:rotate-12" />
+                    Wyloguj
+                  </div>
+                </Button>
+              )}
               <Link href="/admin/login">
                 <Button
                   size="sm"
-                  className="bg-accent hover:bg-accent/90 text-primary-foreground transition-all duration-300 rounded-md"
+                  className="group relative overflow-hidden border-2 border-border bg-transparent text-foreground hover:text-white hover:border-primary transition-all duration-300 rounded-xl shadow-sm hover:shadow-lg transform hover:scale-105"
                 >
-                  <Settings className="h-4 w-4 mr-1" />
-                  Panel administratora
+                  <div className="absolute inset-0 bg-gradient-to-r from-primary to-accent translate-x-[-100%] group-hover:translate-x-0 transition-transform duration-300 ease-out"></div>
+                  <div className="relative flex items-center">
+                    <Settings className="h-4 w-4 mr-1 transition-transform duration-300 group-hover:rotate-90" />
+                    Panel administratora
+                  </div>
                 </Button>
               </Link>
             </div>
@@ -132,53 +166,60 @@ export default function CooperationPage() {
       <nav className="bg-card border-b border-border sticky top-0 z-40 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-14">
-            <div className="flex justify-center items-center flex-1">
-              <div className="flex space-x-2">
-                <Link href="/" className="relative group">
-                  <div className="text-foreground hover:text-primary font-medium px-6 py-2 rounded-lg transition-all duration-300 hover:bg-primary/10 hover:shadow-md transform hover:scale-105">
-                    BLOG
-                    <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-accent/20 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10"></div>
-                  </div>
-                </Link>
-                <Link href="/wspolpraca" className="relative group">
-                  <div className="bg-primary text-primary-foreground px-6 py-2 rounded-lg font-medium transition-all duration-300 hover:bg-primary/90 hover:shadow-lg transform hover:scale-105">
-                    WSPÓŁPRACA
-                  </div>
-                </Link>
-                <Link href="/kontakt" className="relative group">
-                  <div className="text-foreground hover:text-primary font-medium px-6 py-2 rounded-lg transition-all duration-300 hover:bg-primary/10 hover:shadow-md transform hover:scale-105">
-                    KONTAKT
-                    <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-accent/20 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10"></div>
-                  </div>
-                </Link>
-              </div>
+            {/* Spacer for left side */}
+            <div className="flex-1"></div>
+            
+            {/* Main Navigation - Centered */}
+            <div className="flex space-x-2">
+              <Link href="/" className="relative group" prefetch={true}>
+                <div className="text-foreground hover:text-primary font-medium px-6 py-2 rounded-lg transition-all duration-300 hover:bg-primary/10 hover:shadow-md transform hover:scale-105">
+                  BLOG
+                  <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-accent/20 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10"></div>
+                </div>
+              </Link>
+              <Link href="/wspolpraca" className="relative group">
+                <div className="bg-primary text-primary-foreground px-6 py-2 rounded-lg font-medium transition-all duration-300 hover:bg-primary/90 hover:shadow-lg transform hover:scale-105">
+                  WSPÓŁPRACA
+                </div>
+              </Link>
+              <Link href="/kontakt" className="relative group">
+                <div className="text-foreground hover:text-primary font-medium px-6 py-2 rounded-lg transition-all duration-300 hover:bg-primary/10 hover:shadow-md transform hover:scale-105">
+                  KONTAKT
+                  <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-accent/20 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10"></div>
+                </div>
+              </Link>
             </div>
-            {isAdmin && (
-              <div className="flex items-center space-x-2">
-                <Link href="/admin">
-                  <Button className="bg-primary hover:bg-primary/90 text-primary-foreground px-4 py-2 rounded-lg font-medium transition-all duration-300 text-sm">
-                    Panel twórcy
+
+            {/* Admin buttons - Right side */}
+            <div className="flex-1 flex justify-end">
+              {user && (
+                <div className="flex items-center space-x-2">
+                  <Link href="/admin/nowy-post">
+                    <Button
+                      size="sm"
+                      className="group relative overflow-hidden border-2 border-border bg-transparent text-foreground hover:text-white hover:border-primary transition-all duration-300 rounded-xl shadow-sm hover:shadow-lg transform hover:scale-105"
+                    >
+                      <div className="absolute inset-0 bg-gradient-to-r from-primary to-accent translate-x-[-100%] group-hover:translate-x-0 transition-transform duration-300 ease-out"></div>
+                      <div className="relative flex items-center">
+                        <Plus className="h-4 w-4 mr-1 transition-transform duration-300 group-hover:rotate-180" />
+                        Nowy post
+                      </div>
+                    </Button>
+                  </Link>
+                  <Button
+                    onClick={() => setIsEditing(!isEditing)}
+                    size="sm"
+                    className="group relative overflow-hidden border-2 border-border bg-transparent text-foreground hover:text-white hover:border-accent transition-all duration-300 rounded-xl shadow-sm hover:shadow-lg transform hover:scale-105"
+                  >
+                    <div className="absolute inset-0 bg-gradient-to-r from-accent to-accent/80 translate-x-[-100%] group-hover:translate-x-0 transition-transform duration-300 ease-out"></div>
+                    <div className="relative flex items-center">
+                      <Edit className="h-4 w-4 mr-1 transition-transform duration-300 group-hover:rotate-12" />
+                      {isEditing ? "Zakończ edycję" : "Edytuj usługi"}
+                    </div>
                   </Button>
-                </Link>
-                <Button
-                  onClick={() => setIsEditing(!isEditing)}
-                  className="bg-green-600 hover:bg-green-700 text-primary-foreground px-4 py-2 rounded-lg font-medium transition-all duration-300 text-sm"
-                >
-                  {isEditing ? "Zakończ edycję" : "Edytuj usługi"}
-                </Button>
-                <Button
-                  onClick={() => {
-                    localStorage.removeItem("isAdmin")
-                    setIsAdmin(false)
-                    setIsEditing(false)
-                  }}
-                  variant="outline"
-                  className="border-border text-muted-foreground hover:bg-muted px-4 py-2 rounded-lg font-medium transition-all duration-300 text-sm"
-                >
-                  Wyloguj
-                </Button>
-              </div>
-            )}
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </nav>
@@ -199,10 +240,10 @@ export default function CooperationPage() {
         <section className="mb-16">
           <div className="flex justify-between items-center mb-8">
             <h2 className="text-3xl font-bold text-foreground">Moje usługi</h2>
-            {isAdmin && isEditing && (
+            {user && isEditing && (
               <Button
                 onClick={() => {
-                  const newService = {
+                  const newService: Service = {
                     id: Date.now(),
                     title: "Nowa usługa",
                     description: "Opis nowej usługi",
@@ -214,9 +255,13 @@ export default function CooperationPage() {
                   }
                   setServices([...services, newService])
                 }}
-                className="bg-green-600 hover:bg-green-700 text-primary-foreground"
+                className="group relative overflow-hidden bg-gradient-to-r from-gray-600 via-gray-700 to-gray-800 hover:from-gray-700 hover:via-gray-800 hover:to-gray-900 text-white transition-all duration-500 rounded-2xl px-6 py-2.5 font-semibold shadow-xl hover:shadow-2xl transform hover:scale-105 border-0"
               >
-                Dodaj usługę
+                <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <div className="relative flex items-center">
+                  <Plus className="h-4 w-4 mr-1 transition-transform duration-300 group-hover:rotate-180" />
+                  Dodaj usługę
+                </div>
               </Button>
             )}
           </div>
@@ -227,21 +272,21 @@ export default function CooperationPage() {
                 key={service.id}
                 className="overflow-hidden group cursor-pointer border-0 shadow-xl hover:shadow-2xl transition-all duration-500 transform hover:scale-[1.02] relative"
               >
-                {isAdmin && isEditing && (
+                {user && isEditing && (
                   <div className="absolute top-2 right-2 z-10 flex space-x-1">
                     <Button
                       size="sm"
                       onClick={() => setEditingService(service)}
-                      className="bg-blue-600 hover:bg-blue-700 text-primary-foreground p-1 h-8 w-8"
+                      className="group relative overflow-hidden bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white p-1 h-8 w-8 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-110 transition-all duration-300 border-0"
                     >
-                      ✏️
+                      <Edit className="h-3 w-3 transition-transform duration-300 group-hover:rotate-12" />
                     </Button>
                     <Button
                       size="sm"
                       onClick={() => setServices(services.filter((s) => s.id !== service.id))}
-                      className="bg-red-600 hover:bg-red-700 text-primary-foreground p-1 h-8 w-8"
+                      className="group relative overflow-hidden bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white p-1 h-8 w-8 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-110 transition-all duration-300 border-0"
                     >
-                      🗑️
+                      <Trash2 className="h-3 w-3 transition-transform duration-300 group-hover:rotate-12" />
                     </Button>
                   </div>
                 )}
@@ -274,10 +319,15 @@ export default function CooperationPage() {
                   <div className="flex justify-center">
                     <Link href="/kontakt">
                       <Button
-                        className="text-primary-foreground transition-all duration-300 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105"
-                        style={{ backgroundColor: service.color }}
+                        className="group relative overflow-hidden text-white transition-all duration-500 rounded-2xl px-8 py-2.5 font-semibold shadow-xl hover:shadow-2xl transform hover:scale-105 border-0"
+                        style={{ 
+                          background: `linear-gradient(135deg, ${service.color}, ${service.color}dd)`,
+                        }}
                       >
-                        {index === 0 ? "Zamów analizę" : "Zamów przegląd"}
+                        <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                        <div className="relative">
+                          {index === 0 ? "Zamów analizę" : "Zamów przegląd"}
+                        </div>
                       </Button>
                     </Link>
                   </div>
@@ -399,8 +449,11 @@ export default function CooperationPage() {
                 pomogę wybrać najlepszą opcję dla Ciebie.
               </p>
               <Link href="/kontakt">
-                <Button className="bg-card text-primary hover:bg-muted transition-all duration-300 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105">
-                  Skontaktuj się ze mną
+                <Button className="group relative overflow-hidden bg-card text-primary hover:text-white transition-all duration-500 rounded-2xl px-8 py-3 font-semibold shadow-xl hover:shadow-2xl transform hover:scale-105 border-2 border-white/20">
+                  <div className="absolute inset-0 bg-gradient-to-r from-primary/80 to-accent/80 translate-x-[-100%] group-hover:translate-x-0 transition-transform duration-500 ease-out"></div>
+                  <div className="relative">
+                    Skontaktuj się ze mną
+                  </div>
                 </Button>
               </Link>
             </CardContent>
@@ -468,17 +521,22 @@ export default function CooperationPage() {
               </div>
             </div>
             <div className="flex justify-end space-x-2 mt-6">
-              <Button variant="outline" onClick={() => setEditingService(null)}>
-                Anuluj
+              <Button 
+                onClick={() => setEditingService(null)}
+                className="group relative overflow-hidden border-2 border-gray-300 bg-white text-gray-700 hover:text-white hover:border-gray-400 transition-all duration-300 rounded-xl px-6 py-2 font-medium shadow-lg hover:shadow-xl transform hover:scale-105"
+              >
+                <div className="absolute inset-0 bg-gradient-to-r from-gray-500 to-gray-600 translate-x-[-100%] group-hover:translate-x-0 transition-transform duration-300 ease-out"></div>
+                <div className="relative">Anuluj</div>
               </Button>
               <Button
                 onClick={() => {
                   setServices(services.map((s) => (s.id === editingService.id ? editingService : s)))
                   setEditingService(null)
                 }}
-                className="bg-primary hover:bg-primary/90 text-primary-foreground"
+                className="group relative overflow-hidden bg-gradient-to-r from-gray-600 to-gray-700 hover:from-gray-700 hover:to-gray-800 text-white transition-all duration-300 rounded-xl px-6 py-2 font-medium shadow-lg hover:shadow-xl transform hover:scale-105 border-0"
               >
-                Zapisz
+                <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <div className="relative">Zapisz</div>
               </Button>
             </div>
           </div>
@@ -497,8 +555,9 @@ export default function CooperationPage() {
               <h4 className="text-lg font-semibold mb-4 text-foreground">Kontakt</h4>
               <p className="text-muted-foreground mb-4">Masz pytania? Skontaktuj się ze mną poprzez formularz kontaktowy.</p>
               <Link href="/kontakt">
-                <Button className="bg-primary hover:bg-primary/90 text-primary-foreground transition-all duration-300 rounded-xl">
-                  Formularz kontaktowy
+                <Button className="group relative overflow-hidden bg-gradient-to-r from-primary to-accent hover:from-primary/90 hover:to-accent/90 text-primary-foreground transition-all duration-300 rounded-xl px-6 py-2.5 font-medium shadow-lg hover:shadow-xl transform hover:scale-105 border-0">
+                  <div className="absolute inset-0 bg-gradient-to-r from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                  <div className="relative">Formularz kontaktowy</div>
                 </Button>
               </Link>
             </div>
