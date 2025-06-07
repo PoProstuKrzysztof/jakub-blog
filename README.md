@@ -92,6 +92,12 @@ Sekcja zarządzania treścią dostępna dla administratorów:
 - Automatyczne przekierowanie po uwierzytelnieniu
 - Obsługa błędów uwierzytelniania
 
+#### `/app/o-autorze` - Strona O Autorze
+- Nowoczesny landing page prezentujący autora bloga
+- Możliwość edycji treści przez zalogowanych administratorów
+- Responsywny design z smooth scrolling między sekcjami
+- Sekcje: Hero, Doświadczenie, Wykształcenie, Filozofia, Osiągnięcia, Kontakt
+
 #### `/app/kontakt` - Strona Kontaktowa
 - Formularz kontaktowy
 - Informacje o autorze
@@ -342,6 +348,7 @@ pnpm start
 - ✅ **Ochrona tras** - Middleware zabezpieczający panel administratora
 - ✅ **Zarządzanie sesjami** - Automatyczne odświeżanie i walidacja
 - ✅ **OAuth callback** - Obsługa zewnętrznych dostawców uwierzytelniania
+- ✅ **Strona O Autorze** - Landing page z możliwością edycji treści przez administratorów
 
 ### Planowane Funkcjonalności
 - System komentarzy

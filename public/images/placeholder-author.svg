@@ -1,0 +1,28 @@
+<svg width="400" height="400" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background gradient -->
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1E3A8A;stop-opacity:0.1" />
+      <stop offset="100%" style="stop-color:#10B981;stop-opacity:0.1" />
+    </linearGradient>
+    <linearGradient id="person" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1E3A8A;stop-opacity:0.8" />
+      <stop offset="100%" style="stop-color:#1E3A8A;stop-opacity:0.6" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="400" height="400" fill="url(#bg)"/>
+  
+  <!-- Person silhouette -->
+  <circle cx="200" cy="140" r="50" fill="url(#person)"/>
+  <path d="M130 320C130 280 160.817 250 200 250C239.183 250 270 280 270 320V350H130V320Z" fill="url(#person)"/>
+  
+  <!-- Professional elements -->
+  <circle cx="320" cy="80" r="3" fill="#10B981" opacity="0.6"/>
+  <circle cx="80" cy="320" r="2" fill="#1E3A8A" opacity="0.4"/>
+  <circle cx="350" cy="300" r="2" fill="#10B981" opacity="0.5"/>
+  
+  <!-- Text -->
+  <text x="200" y="380" text-anchor="middle" fill="#1E3A8A" font-family="Arial, sans-serif" font-size="16" font-weight="600">JAKUB INWESTYCJE</text>
+</svg> 

@@ -1,36 +1,64 @@
-import { createServerPostService } from '@/lib/services/post-service-server'
-import { HomePageClient } from '@/components/home-page-client'
-import { PostsLoading } from '@/components/posts-loading'
 import { Suspense } from 'react'
+import { createClient } from '@/lib/supabase-server'
+import { AuthorPageClient } from '@/components/author-page-client'
+import { SimpleLoading } from '@/components/simple-loading'
 
-async function PostsData() {
-  // Fetch published posts using basic method for better performance
-  const postService = await createServerPostService()
+export const metadata = {
+  title: 'Jakub Inwestycje - O Autorze',
+  description: 'Poznaj autora bloga Jakub Inwestycje - doświadczenie, wykształcenie i pasja do inwestowania.',
+}
+
+async function getAuthorContent() {
+  const supabase = await createClient()
   
   try {
-    const postsResponse = await postService.getPublishedPostsBasic(15, 0)
-    
-    return (
-      <HomePageClient 
-        initialPosts={postsResponse.data} 
-        user={null} // Nie używamy już tego prop, ale zachowujemy dla kompatybilności
-      />
-    )
+    const { data, error } = await supabase
+      .from('author_content')
+      .select('*')
+      .order('section_order', { ascending: true })
+
+    if (error) {
+      console.error('Error fetching author content:', error)
+      return []
+    }
+
+    return data || []
   } catch (error) {
-    console.error('Error fetching posts:', error)
-    return (
-      <HomePageClient 
-        initialPosts={[]} 
-        user={null}
-      />
-    )
+    console.error('Error in getAuthorContent:', error)
+    return []
   }
 }
 
-export default function HomePage() {
+async function getCurrentUser() {
+  const supabase = await createClient()
+  
+  try {
+    const { data: { user }, error } = await supabase.auth.getUser()
+    if (error) {
+      console.error('Error getting user:', error)
+      return null
+    }
+    return user
+  } catch (error) {
+    console.error('Error in getCurrentUser:', error)
+    return null
+  }
+}
+
+export default async function HomePage() {
+  const [authorContent, user] = await Promise.all([
+    getAuthorContent(),
+    getCurrentUser()
+  ])
+
   return (
-    <Suspense fallback={<PostsLoading />}>
-      <PostsData />
-    </Suspense>
+    <div className="min-h-screen bg-background">
+      <Suspense fallback={<SimpleLoading />}>
+        <AuthorPageClient 
+          initialContent={authorContent}
+          user={user}
+        />
+      </Suspense>
+    </div>
   )
 }

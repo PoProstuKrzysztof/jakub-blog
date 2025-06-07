@@ -1,4 +1,4 @@
-import { createClient } from '../supabase'
+import { SupabaseClient } from '@supabase/supabase-js'
 import {
   Post,
   PostFull,
@@ -15,9 +15,9 @@ import {
 } from '../models/post'
 
 export class PostService {
-  private supabase: any
+  private supabase: SupabaseClient
 
-  constructor(supabaseClient: any) {
+  constructor(supabaseClient: SupabaseClient) {
     this.supabase = supabaseClient
   }
 
@@ -133,7 +133,7 @@ export class PostService {
   ): Promise<PostsResponse> {
     try {
       const supabase = await this.getSupabaseClient()
-      let query = supabase
+      const query = supabase
         .from('posts')
         .select(`
           id,

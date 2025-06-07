@@ -1,4 +1,4 @@
-import { createClient } from '../supabase'
+import { SupabaseClient } from '@supabase/supabase-js'
 import {
   Tag,
   TagInsert,
@@ -13,12 +13,16 @@ import {
 } from '../models/tag'
 
 export class TagService {
-  private supabase: any
+  private supabase: SupabaseClient
 
-  constructor(isServer = false) {
-    // For now, always use client-side Supabase
-    // Server-side functionality will be implemented later
-    this.supabase = createClient()
+  constructor(supabaseClient?: SupabaseClient) {
+    if (supabaseClient) {
+      this.supabase = supabaseClient
+    } else {
+      // For client-side usage, import createClient dynamically
+      const { createClient } = require('../supabase')
+      this.supabase = createClient()
+    }
   }
 
   private async getSupabaseClient() {

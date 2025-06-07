@@ -54,7 +54,7 @@ export function MediaUpload({ editor }: MediaUploadProps) {
         .setImage({
           src: url,
           alt: imageAlt || "Obraz",
-          class: alignClass,
+          title: alignClass,
         })
         .run()
 

@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { SiteHeader } from "@/components/site-header"
 import {
   ArrowLeft,
   TrendingUp,
@@ -13,6 +14,7 @@ import {
   Users,
   Clock,
   PieChart as PieChartIcon,
+  MessageSquare
 } from "lucide-react"
 import Link from "next/link"
 import { 
@@ -28,8 +30,11 @@ import {
   CartesianGrid, 
   Tooltip, 
   Legend, 
-  ResponsiveContainer 
+  ResponsiveContainer,
+  LineChart,
+  Line
 } from "recharts"
+import { createClient } from '@/lib/supabase-server'
 
 // Mock analytics data
 const overviewStats = [
@@ -165,447 +170,280 @@ const engagementData = [
 ]
 
 export default function AnalyticsPage() {
-  const [timeRange, setTimeRange] = useState("7d")
-  const [selectedMetric, setSelectedMetric] = useState("views")
-
-  const getDeviceIcon = (device: string) => {
-    switch (device) {
-      case "Desktop":
-        return <PieChartIcon className="h-4 w-4" />
-      case "Mobile":
-        return <PieChartIcon className="h-4 w-4" />
-      case "Tablet":
-        return <PieChartIcon className="h-4 w-4" />
-      default:
-        return <PieChartIcon className="h-4 w-4" />
-    }
+  // Mock data - replace with real data from Supabase
+  const mockData = {
+    totalViews: 12543,
+    totalPosts: 45,
+    totalUsers: 234,
+    avgReadTime: 4.2,
+    
+    // Views over time
+    viewsData: [
+      { date: '2024-01-01', views: 120 },
+      { date: '2024-01-02', views: 150 },
+      { date: '2024-01-03', views: 180 },
+      { date: '2024-01-04', views: 200 },
+      { date: '2024-01-05', views: 170 },
+      { date: '2024-01-06', views: 220 },
+      { date: '2024-01-07', views: 250 },
+    ],
+    
+    // Popular posts
+    popularPosts: [
+      { title: 'Jak zacząć inwestować w akcje', views: 1250, slug: 'jak-zaczac-inwestowac' },
+      { title: 'Analiza spółki PKO BP', views: 980, slug: 'analiza-pko-bp' },
+      { title: 'Portfel inwestycyjny dla początkujących', views: 850, slug: 'portfel-dla-poczatkujacych' },
+      { title: 'Dywidendy - co warto wiedzieć', views: 720, slug: 'dywidendy-podstawy' },
+      { title: 'ETF vs akcje - co wybrać', views: 650, slug: 'etf-vs-akcje' },
+    ],
+    
+    // Traffic sources
+    trafficSources: [
+      { name: 'Organiczny', value: 45, color: '#8884d8' },
+      { name: 'Social Media', value: 25, color: '#82ca9d' },
+      { name: 'Bezpośredni', value: 20, color: '#ffc658' },
+      { name: 'Email', value: 10, color: '#ff7300' },
+    ],
+    
+    // Device types
+    deviceData: [
+      { device: 'Desktop', users: 60 },
+      { device: 'Mobile', users: 35 },
+      { device: 'Tablet', users: 5 },
+    ]
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="container mx-auto p-6 space-y-8">
       {/* Header */}
-      <header className="bg-accent shadow-lg border-b border-accent sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center space-x-4">
-              <Link href="/" className="text-2xl font-bold text-primary-foreground">
-                Jakub Inwestycje
-              </Link>
-              <Badge className="bg-primary text-primary-foreground rounded-xl">Analityka</Badge>
-            </div>
-            <div className="flex items-center space-x-4">
-              <Select value={timeRange} onValueChange={setTimeRange}>
-                <SelectTrigger className="w-32 bg-card/10 border-primary text-primary-foreground rounded-xl">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent className="bg-card border-accent rounded-xl shadow-xl">
-                  <SelectItem value="7d">7 dni</SelectItem>
-                  <SelectItem value="30d">30 dni</SelectItem>
-                  <SelectItem value="90d">90 dni</SelectItem>
-                  <SelectItem value="1y">1 rok</SelectItem>
-                </SelectContent>
-              </Select>
-              <Link href="/admin">
-                <Button
-                  variant="outline"
-                  className="group relative overflow-hidden border-2 border-border bg-transparent text-foreground hover:text-white hover:border-primary transition-all duration-300 rounded-xl shadow-sm hover:shadow-lg transform hover:scale-105"
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight">Analityka</h1>
+          <p className="text-muted-foreground">
+            Przegląd statystyk i wydajności bloga
+          </p>
+        </div>
+      </div>
+
+      {/* Key Metrics */}
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">
+              Całkowite wyświetlenia
+            </CardTitle>
+            <Eye className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{mockData.totalViews.toLocaleString()}</div>
+            <p className="text-xs text-muted-foreground">
+              +20.1% od ostatniego miesiąca
+            </p>
+          </CardContent>
+        </Card>
+        
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">
+              Opublikowane posty
+            </CardTitle>
+            <MessageSquare className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{mockData.totalPosts}</div>
+            <p className="text-xs text-muted-foreground">
+              +3 w tym miesiącu
+            </p>
+          </CardContent>
+        </Card>
+        
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">
+              Zarejestrowani użytkownicy
+            </CardTitle>
+            <Users className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{mockData.totalUsers}</div>
+            <p className="text-xs text-muted-foreground">
+              +12% od ostatniego miesiąca
+            </p>
+          </CardContent>
+        </Card>
+        
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">
+              Średni czas czytania
+            </CardTitle>
+            <Clock className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{mockData.avgReadTime} min</div>
+            <p className="text-xs text-muted-foreground">
+              +0.3 min od ostatniego miesiąca
+            </p>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Charts Row */}
+      <div className="grid gap-4 md:grid-cols-2">
+        {/* Views Over Time */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Wyświetlenia w czasie</CardTitle>
+            <CardDescription>
+              Ostatnie 7 dni
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <ResponsiveContainer width="100%" height={300}>
+              <LineChart data={mockData.viewsData}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis 
+                  dataKey="date" 
+                  tickFormatter={(value) => new Date(value).toLocaleDateString('pl-PL', { month: 'short', day: 'numeric' })}
+                />
+                <YAxis />
+                <Tooltip 
+                  labelFormatter={(value) => new Date(value).toLocaleDateString('pl-PL')}
+                  formatter={(value) => [value, 'Wyświetlenia']}
+                />
+                <Line 
+                  type="monotone" 
+                  dataKey="views" 
+                  stroke="#8884d8" 
+                  strokeWidth={2}
+                  dot={{ fill: '#8884d8' }}
+                />
+              </LineChart>
+            </ResponsiveContainer>
+          </CardContent>
+        </Card>
+
+        {/* Traffic Sources */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Źródła ruchu</CardTitle>
+            <CardDescription>
+              Rozkład źródeł odwiedzin
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <ResponsiveContainer width="100%" height={300}>
+              <PieChart>
+                <Pie
+                  data={mockData.trafficSources}
+                  cx="50%"
+                  cy="50%"
+                  labelLine={false}
+                  label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                  outerRadius={80}
+                  fill="#8884d8"
+                  dataKey="value"
                 >
-                  <div className="absolute inset-0 bg-gradient-to-r from-primary to-accent translate-x-[-100%] group-hover:translate-x-0 transition-transform duration-300 ease-out"></div>
-                  <div className="relative flex items-center">
-                    <ArrowLeft className="h-4 w-4 mr-2 transition-transform duration-300 group-hover:-translate-x-1" />
-                    Panel Twórcy
-                  </div>
-                </Button>
-              </Link>
-            </div>
-          </div>
-        </div>
-      </header>
+                  {mockData.trafficSources.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={entry.color} />
+                  ))}
+                </Pie>
+                <Tooltip />
+              </PieChart>
+            </ResponsiveContainer>
+          </CardContent>
+        </Card>
+      </div>
 
-      {/* Hero Banner */}
-      <section className="bg-gradient-to-r from-[#332941] to-accent text-primary-foreground py-12 shadow-2xl">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-3xl font-bold mb-2 animate-fade-in"></h1>
-              <p className="text-gray-200 animate-fade-in-delay">
-                Szczegółowe statystyki wydajności Twojego bloga za ostatnie{" "}
-                {timeRange === "7d" ? "7 dni" : timeRange === "30d" ? "30 dni" : timeRange === "90d" ? "90 dni" : "rok"}
-              </p>
-            </div>
-            <div className="flex items-center space-x-2">
-              <PieChartIcon className="h-8 w-8 text-primary" />
-              <PieChartIcon className="h-8 w-8 text-primary" />
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Overview Stats */}
-        <section className="mb-8">
-          <h2 className="text-2xl font-bold text-primary-foreground mb-6">Przegląd</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {overviewStats.map((stat, index) => (
-              <Card
-                key={stat.title}
-                className="bg-card/95 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105"
-                style={{ animationDelay: `${index * 100}ms` }}
-              >
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between">
+      {/* Popular Posts and Device Stats */}
+      <div className="grid gap-4 md:grid-cols-2">
+        {/* Popular Posts */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Najpopularniejsze posty</CardTitle>
+            <CardDescription>
+              Top 5 postów według wyświetleń
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {mockData.popularPosts.map((post, index) => (
+                <div key={post.slug} className="flex items-center justify-between">
+                  <div className="flex items-center space-x-3">
+                    <Badge variant="secondary" className="w-6 h-6 rounded-full p-0 flex items-center justify-center text-xs">
+                      {index + 1}
+                    </Badge>
                     <div>
-                      <p className="text-sm font-medium text-muted-foreground">{stat.title}</p>
-                      <p className="text-2xl font-bold text-foreground mt-1">{stat.value}</p>
-                      <div className="flex items-center mt-2">
-                        {stat.trend === "up" ? (
-                          <TrendingUp className="h-4 w-4 text-green-500 mr-1" />
-                        ) : (
-                          <TrendingDown className="h-4 w-4 text-red-500 mr-1" />
-                        )}
-                        <span
-                          className={`text-sm font-medium ${stat.trend === "up" ? "text-green-600" : "text-red-600"}`}
-                        >
-                          {stat.change}
-                        </span>
-                      </div>
-                    </div>
-                    <div
-                      className="h-12 w-12 rounded-xl flex items-center justify-center shadow-lg"
-                      style={{ backgroundColor: stat.color }}
-                    >
-                      <stat.icon className="h-6 w-6 text-primary-foreground" />
+                      <p className="font-medium text-sm leading-none">{post.title}</p>
+                      <p className="text-xs text-muted-foreground mt-1">/{post.slug}</p>
                     </div>
                   </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </section>
-
-        {/* Traffic Chart */}
-        <section className="mb-8">
-          <Card className="bg-card/95 rounded-2xl shadow-2xl">
-            <CardHeader>
-              <div className="flex items-center justify-between">
-                <div>
-                  <CardTitle className="text-foreground">Ruch na stronie</CardTitle>
-                  <CardDescription>Wyświetlenia, użytkownicy i sesje w czasie</CardDescription>
+                  <div className="flex items-center space-x-2">
+                    <Eye className="h-3 w-3 text-muted-foreground" />
+                    <span className="text-sm font-medium">{post.views.toLocaleString()}</span>
+                  </div>
                 </div>
-                <Select value={selectedMetric} onValueChange={setSelectedMetric}>
-                  <SelectTrigger className="w-40 border-accent rounded-xl">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent className="bg-card border-accent rounded-xl shadow-xl">
-                    <SelectItem value="views">Wyświetlenia</SelectItem>
-                    <SelectItem value="users">Użytkownicy</SelectItem>
-                    <SelectItem value="sessions">Sesje</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <div className="h-80">
-                <ResponsiveContainer width="100%" height="100%">
-                  <AreaChart data={viewsData}>
-                    <defs>
-                      <linearGradient id="colorViews" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor="#33D2A4" stopOpacity={0.8} />
-                        <stop offset="95%" stopColor="#33D2A4" stopOpacity={0.1} />
-                      </linearGradient>
-                      <linearGradient id="colorUsers" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor="#3B3486" stopOpacity={0.8} />
-                        <stop offset="95%" stopColor="#3B3486" stopOpacity={0.1} />
-                      </linearGradient>
-                      <linearGradient id="colorSessions" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor="#332941" stopOpacity={0.8} />
-                        <stop offset="95%" stopColor="#332941" stopOpacity={0.1} />
-                      </linearGradient>
-                    </defs>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-                    <XAxis dataKey="date" stroke="#6b7280" />
-                    <YAxis stroke="#6b7280" />
-                    <Tooltip
-                      contentStyle={{
-                        backgroundColor: "white",
-                        border: "1px solid #3B3486",
-                        borderRadius: "12px",
-                        boxShadow: "0 10px 25px rgba(0,0,0,0.1)",
-                      }}
-                    />
-                    <Legend />
-                    {selectedMetric === "views" && (
-                      <Area
-                        type="monotone"
-                        dataKey="views"
-                        stroke="#33D2A4"
-                        fillOpacity={1}
-                        fill="url(#colorViews)"
-                        strokeWidth={3}
-                        name="Wyświetlenia"
-                      />
-                    )}
-                    {selectedMetric === "users" && (
-                      <Area
-                        type="monotone"
-                        dataKey="users"
-                        stroke="#3B3486"
-                        fillOpacity={1}
-                        fill="url(#colorUsers)"
-                        strokeWidth={3}
-                        name="Użytkownicy"
-                      />
-                    )}
-                    {selectedMetric === "sessions" && (
-                      <Area
-                        type="monotone"
-                        dataKey="sessions"
-                        stroke="#332941"
-                        fillOpacity={1}
-                        fill="url(#colorSessions)"
-                        strokeWidth={3}
-                        name="Sesje"
-                      />
-                    )}
-                  </AreaChart>
-                </ResponsiveContainer>
-              </div>
-            </CardContent>
-          </Card>
-        </section>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
 
-        <div className="grid lg:grid-cols-2 gap-8 mb-8">
-          {/* Category Performance */}
-          <Card className="bg-card/95 rounded-2xl shadow-2xl">
-            <CardHeader>
-              <CardTitle className="text-foreground">Wydajność kategorii</CardTitle>
-              <CardDescription>Rozkład wyświetleń według kategorii</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="h-64 mb-4">
-                <ResponsiveContainer width="100%" height="100%">
-                  <PieChart>
-                    <Pie
-                      data={categoryData}
-                      cx="50%"
-                      cy="50%"
-                      innerRadius={60}
-                      outerRadius={100}
-                      paddingAngle={5}
-                      dataKey="value"
-                    >
-                      {categoryData.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={entry.color} />
-                      ))}
-                    </Pie>
-                    <Tooltip
-                      contentStyle={{
-                        backgroundColor: "white",
-                        border: "1px solid #3B3486",
-                        borderRadius: "12px",
-                        boxShadow: "0 10px 25px rgba(0,0,0,0.1)",
-                      }}
-                    />
-                  </PieChart>
-                </ResponsiveContainer>
-              </div>
-              <div className="space-y-2">
-                {categoryData.map((category) => (
-                  <div key={category.name} className="flex items-center justify-between">
-                    <div className="flex items-center space-x-2">
-                      <div className="w-3 h-3 rounded-full" style={{ backgroundColor: category.color }} />
-                      <span className="text-sm font-medium text-foreground">{category.name}</span>
-                    </div>
-                    <div className="text-right">
-                      <span className="text-sm font-bold text-foreground">{category.value}%</span>
-                      <p className="text-xs text-muted-foreground">{category.views.toLocaleString()} wyświetleń</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
+        {/* Device Statistics */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Statystyki urządzeń</CardTitle>
+            <CardDescription>
+              Rozkład użytkowników według typu urządzenia
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <ResponsiveContainer width="100%" height={300}>
+              <BarChart data={mockData.deviceData}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="device" />
+                <YAxis />
+                <Tooltip formatter={(value) => [value, 'Użytkownicy (%)']} />
+                <Bar dataKey="users" fill="#8884d8" />
+              </BarChart>
+            </ResponsiveContainer>
+          </CardContent>
+        </Card>
+      </div>
 
-          {/* Device Analytics */}
-          <Card className="bg-card/95 rounded-2xl shadow-2xl">
-            <CardHeader>
-              <CardTitle className="text-foreground">Urządzenia użytkowników</CardTitle>
-              <CardDescription>Rozkład ruchu według typu urządzenia</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="h-64 mb-4">
-                <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={deviceData} layout="horizontal">
-                    <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-                    <XAxis type="number" stroke="#6b7280" />
-                    <YAxis dataKey="name" type="category" stroke="#6b7280" width={80} />
-                    <Tooltip
-                      contentStyle={{
-                        backgroundColor: "white",
-                        border: "1px solid #3B3486",
-                        borderRadius: "12px",
-                        boxShadow: "0 10px 25px rgba(0,0,0,0.1)",
-                      }}
-                    />
-                    <Bar dataKey="value" fill="#33D2A4" radius={[0, 8, 8, 0]} />
-                  </BarChart>
-                </ResponsiveContainer>
+      {/* Recent Activity */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Ostatnia aktywność</CardTitle>
+          <CardDescription>
+            Najnowsze wydarzenia na blogu
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-4">
+            <div className="flex items-center space-x-4">
+              <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+              <div className="flex-1">
+                <p className="text-sm font-medium">Nowy post opublikowany</p>
+                <p className="text-xs text-muted-foreground">Analiza spółki CD Projekt - 2 godziny temu</p>
               </div>
-              <div className="space-y-3">
-                {deviceData.map((device) => (
-                  <div key={device.name} className="flex items-center justify-between p-3 bg-background rounded-xl">
-                    <div className="flex items-center space-x-3">
-                      <div className="p-2 rounded-lg" style={{ backgroundColor: device.color, color: "white" }}>
-                        {getDeviceIcon(device.name)}
-                      </div>
-                      <span className="font-medium text-foreground">{device.name}</span>
-                    </div>
-                    <div className="text-right">
-                      <span className="font-bold text-foreground">{device.value}%</span>
-                      <p className="text-sm text-muted-foreground">{device.users.toLocaleString()} użytkowników</p>
-                    </div>
-                  </div>
-                ))}
+            </div>
+            <div className="flex items-center space-x-4">
+              <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+              <div className="flex-1">
+                <p className="text-sm font-medium">Nowy użytkownik zarejestrowany</p>
+                <p className="text-xs text-muted-foreground">jan.kowalski@example.com - 4 godziny temu</p>
               </div>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Top Posts Performance */}
-        <section className="mb-8">
-          <Card className="bg-card/95 rounded-2xl shadow-2xl">
-            <CardHeader>
-              <CardTitle className="text-foreground">Najlepsze posty</CardTitle>
-              <CardDescription>Ranking postów według wydajności</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {topPosts.map((post, index) => (
-                  <div
-                    key={post.id}
-                    className="flex items-center justify-between p-4 bg-background rounded-xl hover:bg-muted transition-colors duration-300"
-                  >
-                    <div className="flex items-center space-x-4">
-                      <div className="flex items-center justify-center w-8 h-8 bg-primary text-primary-foreground rounded-lg font-bold">
-                        {index + 1}
-                      </div>
-                      <div>
-                        <h4 className="font-semibold text-foreground line-clamp-1">{post.title}</h4>
-                        <div className="flex items-center space-x-4 mt-1">
-                          <Badge className="bg-accent text-primary-foreground rounded-lg text-xs">{post.category}</Badge>
-                          <span className="text-xs text-muted-foreground">Zmiana: {post.change}</span>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="grid grid-cols-4 gap-6 text-center">
-                      <div>
-                        <p className="text-sm font-bold text-foreground">{post.views.toLocaleString()}</p>
-                        <p className="text-xs text-muted-foreground">Wyświetlenia</p>
-                      </div>
-                      <div>
-                        <p className="text-sm font-bold text-foreground">{post.users.toLocaleString()}</p>
-                        <p className="text-xs text-muted-foreground">Użytkownicy</p>
-                      </div>
-                      <div>
-                        <p className="text-sm font-bold text-foreground">{post.avgTime}</p>
-                        <p className="text-xs text-muted-foreground">Śr. czas</p>
-                      </div>
-                      <div>
-                        <p className="text-sm font-bold text-foreground">{post.bounceRate}</p>
-                        <p className="text-xs text-muted-foreground">Odrzucenia</p>
-                      </div>
-                    </div>
-                  </div>
-                ))}
+            </div>
+            <div className="flex items-center space-x-4">
+              <div className="w-2 h-2 bg-yellow-500 rounded-full"></div>
+              <div className="flex-1">
+                <p className="text-sm font-medium">Post zaktualizowany</p>
+                <p className="text-xs text-muted-foreground">Jak zacząć inwestować w akcje - wczoraj</p>
               </div>
-            </CardContent>
-          </Card>
-        </section>
-
-        <div className="grid lg:grid-cols-2 gap-8">
-          {/* Traffic Sources */}
-          <Card className="bg-card/95 rounded-2xl shadow-2xl">
-            <CardHeader>
-              <CardTitle className="text-foreground">Źródła ruchu</CardTitle>
-              <CardDescription>Skąd przychodzą Twoi użytkownicy</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {trafficSources.map((source, index) => (
-                  <div key={source.source} className="flex items-center justify-between">
-                    <div className="flex-1">
-                      <div className="flex items-center justify-between mb-1">
-                        <span className="text-sm font-medium text-foreground">{source.source}</span>
-                        <span className="text-sm font-bold text-foreground">{source.percentage}%</span>
-                      </div>
-                      <div className="w-full bg-border rounded-full h-2">
-                        <div
-                          className="h-2 rounded-full transition-all duration-500"
-                          style={{
-                            width: `${source.percentage}%`,
-                            backgroundColor: index === 0 ? "#33D2A4" : index === 1 ? "#2C3E50" : "#BDC3C7",
-                          }}
-                        />
-                      </div>
-                      <div className="flex items-center justify-between mt-1">
-                        <span className="text-xs text-muted-foreground">{source.users.toLocaleString()} użytkowników</span>
-                        <span className="text-xs text-green-600">{source.change}</span>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Engagement Metrics */}
-          <Card className="bg-card/95 rounded-2xl shadow-2xl">
-            <CardHeader>
-              <CardTitle className="text-foreground">Metryki zaangażowania</CardTitle>
-              <CardDescription>Jak użytkownicy wchodzą w interakcję z treścią</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-6">
-                {engagementData.map((metric, index) => (
-                  <div key={metric.metric} className="flex items-center justify-between p-4 bg-background rounded-xl">
-                    <div>
-                      <p className="text-sm font-medium text-muted-foreground">{metric.metric}</p>
-                      <p className="text-xl font-bold text-foreground mt-1">{metric.value}</p>
-                    </div>
-                    <div className="text-right">
-                      <div className="flex items-center">
-                        <TrendingUp className="h-4 w-4 text-green-500 mr-1" />
-                        <span className="text-sm font-medium text-green-600">{metric.change}</span>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-      </main>
-
-      <style jsx>{`
-        @keyframes fade-in {
-          from {
-            opacity: 0;
-            transform: translateY(20px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-
-        .animate-fade-in {
-          animation: fade-in 0.8s ease-out;
-        }
-
-        .animate-fade-in-delay {
-          animation: fade-in 0.8s ease-out 0.2s both;
-        }
-      `}</style>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   )
 }
