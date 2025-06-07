@@ -6,11 +6,6 @@ import { PostSkeleton } from "@/components/ui/post-skeleton"
 export function PostsLoading() {
   return (
     <div className="min-h-screen bg-background antialiased">
-      {/* Top Banner */}
-      <div className="bg-primary text-primary-foreground text-center py-2 text-sm font-medium">
-        PROFESJONALNA WIEDZA INWESTYCYJNA
-      </div>
-
       {/* Header Skeleton */}
       <header className="bg-card shadow-sm py-3 border-b border-border">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

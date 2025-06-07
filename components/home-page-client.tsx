@@ -8,20 +8,15 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Separator } from "@/components/ui/separator"
 import { LoadingCard } from "@/components/ui/loading-card"
 import { PostSkeleton } from "@/components/ui/post-skeleton"
+import { SiteHeader } from "@/components/site-header"
 import {
   CalendarDays,
   Eye,
   Search,
   ArrowRight,
-  Mail,
-  Facebook,
-  Youtube,
-  Instagram,
-  Rss,
-  Settings,
-  LogOut,
   Plus,
-  BarChart3,
+  Edit,
+  LogOut,
 } from "lucide-react"
 import Link from "next/link"
 import Image from "next/image"
@@ -36,7 +31,7 @@ interface HomePageClientProps {
 }
 
 export function HomePageClient({ initialPosts }: HomePageClientProps) {
-  const { user, signOut } = useAuth()
+  const { user } = useAuth()
   const [searchTerm, setSearchTerm] = useState("")
   const [sortBy, setSortBy] = useState("date-desc")
   const [selectedCategory, setSelectedCategory] = useState("all")
@@ -127,125 +122,14 @@ export function HomePageClient({ initialPosts }: HomePageClientProps) {
   }
 
   return (
-    <div className="min-h-screen bg-background antialiased">
-      {/* Top Banner */}
-      <div className="bg-navy-blue-900 text-white text-center py-2 text-sm font-medium">
-        PROFESJONALNA WIEDZA INWESTYCYJNA
-      </div>
-
-      {/* Header with Social Icons */}
-      <header className="bg-card shadow-sm py-3 border-b border-border">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center">
-            <div className="flex items-center space-x-2 text-sm"></div>
-            <div className="flex items-center space-x-4">
-              <div className="flex items-center space-x-3">
-                <Mail className="h-4 w-4 text-text-gray hover:text-navy-blue cursor-pointer transition-colors" />
-                <Facebook className="h-4 w-4 text-text-gray hover:text-navy-blue cursor-pointer transition-colors" />
-                <Youtube className="h-4 w-4 text-text-gray hover:text-navy-blue cursor-pointer transition-colors" />
-                <Instagram className="h-4 w-4 text-text-gray hover:text-navy-blue cursor-pointer transition-colors" />
-                <Rss className="h-4 w-4 text-text-gray hover:text-navy-blue cursor-pointer transition-colors" />
-              </div>
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-text-gray h-4 w-4" />
-                <Input
-                  placeholder="Szukaj..."
-                  value={searchTerm}
-                  onChange={(e) => handleSearchChange(e.target.value)}
-                  className="pl-10 w-48 bg-background text-foreground border border-border rounded-md shadow-sm focus:border-navy-blue focus:ring-1 focus:ring-navy-blue"
-                />
-              </div>
-              <Link href="/admin/login">
-                <Button
-                  size="sm"
-                  className="group relative overflow-hidden border-2 border-border bg-transparent text-foreground hover:text-white hover:border-primary transition-all duration-300 rounded-xl shadow-sm hover:shadow-lg transform hover:scale-105"
-                >
-                  <div className="absolute inset-0 bg-gradient-to-r from-primary to-accent translate-x-[-100%] group-hover:translate-x-0 transition-transform duration-300 ease-out"></div>
-                  <div className="relative flex items-center">
-                    <Settings className="h-4 w-4 mr-1 transition-transform duration-300 group-hover:rotate-90" />
-                    Panel administratora
-                  </div>
-                </Button>
-              </Link>
-              {user && (
-                <Button
-                  size="sm"
-                  className="group relative overflow-hidden border-2 border-border bg-transparent text-foreground hover:text-white hover:border-destructive transition-all duration-300 rounded-xl shadow-sm hover:shadow-lg transform hover:scale-105"
-                  onClick={async () => {
-                    await signOut()
-                    window.location.reload() // Odświeżamy stronę po wylogowaniu
-                  }}
-                >
-                  <div className="absolute inset-0 bg-gradient-to-r from-destructive to-destructive/80 translate-x-[-100%] group-hover:translate-x-0 transition-transform duration-300 ease-out"></div>
-                  <div className="relative flex items-center">
-                    <LogOut className="h-4 w-4 mr-1 transition-transform duration-300 group-hover:rotate-12" />
-                    Wyloguj
-                  </div>
-                </Button>
-              )}
-            </div>
-          </div>
-        </div>
-      </header>
-
-      {/* Logo Section */}
-      <div className="bg-card py-8 border-b border-border">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-3xl font-bold text-foreground mb-2">JAKUB INWESTYCJE</h1>
-          <p className="text-text-gray text-lg">FINANSE BARDZO OSOBISTE</p>
-        </div>
-      </div>
-
-      {/* Navigation Menu */}
-      <nav className="bg-card border-b border-border sticky top-0 z-40 shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-14">
-            {/* Spacer for left side */}
-            <div className="flex-1"></div>
-            
-            {/* Main Navigation - Centered */}
-            <div className="flex space-x-2">
-              <Link href="/" className="relative group" prefetch={true}>
-                <div className="bg-navy-blue text-white px-6 py-2 rounded-lg font-medium transition-all duration-300 hover:bg-navy-blue/90 hover:shadow-lg transform hover:scale-105">
-                  BLOG
-                </div>
-              </Link>
-              <Link href="/wspolpraca" className="relative group" prefetch={true}>
-                <div className="text-foreground hover:text-navy-blue font-medium px-6 py-2 rounded-lg transition-all duration-300 hover:bg-navy-blue/10 hover:shadow-md transform hover:scale-105">
-                  WSPÓŁPRACA
-                  <div className="absolute inset-0 bg-gradient-to-r from-navy-blue/20 to-success-green/20 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10"></div>
-                </div>
-              </Link>
-              <Link href="/kontakt" className="relative group" prefetch={true}>
-                <div className="text-foreground hover:text-navy-blue font-medium px-6 py-2 rounded-lg transition-all duration-300 hover:bg-navy-blue/10 hover:shadow-md transform hover:scale-105">
-                  KONTAKT
-                  <div className="absolute inset-0 bg-gradient-to-r from-navy-blue/20 to-success-green/20 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10"></div>
-                </div>
-              </Link>
-            </div>
-
-            {/* Admin buttons - Right side */}
-            <div className="flex-1 flex justify-end">
-              {user && (
-                <div className="flex items-center space-x-2">
-                  <Link href="/admin/nowy-post">
-                    <Button
-                      size="sm"
-                      className="group relative overflow-hidden border-2 border-border bg-transparent text-foreground hover:text-white hover:border-primary transition-all duration-300 rounded-xl shadow-sm hover:shadow-lg transform hover:scale-105"
-                    >
-                      <div className="absolute inset-0 bg-gradient-to-r from-primary to-accent translate-x-[-100%] group-hover:translate-x-0 transition-transform duration-300 ease-out"></div>
-                      <div className="relative flex items-center">
-                        <Plus className="h-4 w-4 mr-1 transition-transform duration-300 group-hover:rotate-180" />
-                        Nowy post
-                      </div>
-                    </Button>
-                  </Link>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-      </nav>
+    <div className="min-h-screen bg-background">
+      <SiteHeader 
+        currentPage="blog"
+        showSearch={true}
+        searchPlaceholder="Szukaj posty, kategorie..."
+        searchValue={searchTerm}
+        onSearchChange={handleSearchChange}
+      />
 
       {/* Main Content */}
       <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -265,7 +149,7 @@ export function HomePageClient({ initialPosts }: HomePageClientProps) {
                     <Link key={post.id} href={`/post/${post.id}`}>
                       <article className="bg-card rounded-2xl shadow-sm border border-border overflow-hidden hover:shadow-md transition-all duration-300 cursor-pointer relative group">
                         <div className="relative h-48 w-full">
-                          <Badge className="absolute top-4 left-4 z-10 bg-navy-blue text-white rounded-xl shadow-md">
+                          <Badge className="absolute top-4 left-4 z-10 bg-primary text-primary-foreground rounded-xl shadow-md">
                             Przypięty
                           </Badge>
                           <Image
@@ -274,7 +158,7 @@ export function HomePageClient({ initialPosts }: HomePageClientProps) {
                             fill
                             className="object-cover group-hover:scale-105 transition-transform duration-300"
                           />
-                          <Badge className="absolute bottom-4 left-4 bg-success-green text-white rounded-xl text-xs font-medium shadow-md">
+                          <Badge className="absolute bottom-4 left-4 bg-accent text-primary-foreground rounded-xl text-xs font-medium shadow-md">
                             {getMainCategory(post).toUpperCase()}
                           </Badge>
                         </div>
@@ -290,11 +174,11 @@ export function HomePageClient({ initialPosts }: HomePageClientProps) {
                             </div>
                           )}
                           
-                          <h4 className="text-lg font-bold text-foreground mb-3 hover:text-navy-blue transition-colors line-clamp-2 pr-12">
+                          <h4 className="text-lg font-bold text-foreground mb-3 hover:text-primary transition-colors line-clamp-2 pr-12">
                             {post.title}
                           </h4>
 
-                          <div className="flex items-center text-sm text-text-gray mb-4 space-x-4">
+                          <div className="flex items-center text-sm text-muted-foreground mb-4 space-x-4">
                             <div className="flex items-center">
                               <CalendarDays className="h-4 w-4 mr-1" />
                               {formatDate(post.published_at || post.created_at)}
@@ -305,7 +189,7 @@ export function HomePageClient({ initialPosts }: HomePageClientProps) {
                             </div>
                           </div>
 
-                          <p className="text-text-gray text-sm line-clamp-3 leading-relaxed">{post.excerpt}</p>
+                          <p className="text-muted-foreground text-sm line-clamp-3 leading-relaxed">{post.excerpt}</p>
                         </div>
                       </article>
                     </Link>
@@ -388,16 +272,16 @@ export function HomePageClient({ initialPosts }: HomePageClientProps) {
                       )}
                       
                       <div className="mb-3">
-                        <Badge className="bg-success-green text-white rounded-xl text-xs font-medium px-3 py-1 shadow-sm">
+                        <Badge className="bg-accent text-primary-foreground rounded-xl text-xs font-medium px-3 py-1 shadow-sm">
                           {getMainCategory(post).toUpperCase()}
                         </Badge>
                       </div>
 
-                      <h3 className="text-xl font-bold text-foreground mb-3 hover:text-navy-blue transition-colors pr-12">
+                      <h3 className="text-xl font-bold text-foreground mb-3 hover:text-primary transition-colors pr-12">
                         {post.title}
                       </h3>
 
-                      <div className="flex items-center text-sm text-text-gray mb-4 space-x-4">
+                      <div className="flex items-center text-sm text-muted-foreground mb-4 space-x-4">
                         <div className="flex items-center">
                           <CalendarDays className="h-4 w-4 mr-1" />
                           {formatDate(post.published_at || post.created_at)}
@@ -408,7 +292,7 @@ export function HomePageClient({ initialPosts }: HomePageClientProps) {
                         </div>
                       </div>
 
-                      <p className="text-text-gray mb-4 leading-relaxed">{post.excerpt}</p>
+                      <p className="text-muted-foreground mb-4 leading-relaxed">{post.excerpt}</p>
                     </div>
                   </div>
                 </article>
@@ -419,23 +303,22 @@ export function HomePageClient({ initialPosts }: HomePageClientProps) {
 
         {!isFiltering && filteredAndSortedPosts.filter((post) => !post.is_featured).length === 0 && (
           <div className="text-center py-12">
-            <p className="text-text-gray text-lg">Nie znaleziono postów spełniających kryteria wyszukiwania.</p>
+            <p className="text-muted-foreground text-lg">Nie znaleziono postów spełniających kryteria wyszukiwania.</p>
           </div>
         )}
       </main>
 
-
       {/* Telegram CTA Banner */}
-      <div className="bg-gradient-to-r from-navy-blue to-navy-blue/90 text-white py-6 mt-16">
+      <div className="bg-gradient-to-r from-primary to-primary/90 text-primary-foreground py-6 mt-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row items-center justify-between">
             <div className="text-center md:text-left mb-4 md:mb-0">
               <h3 className="text-xl font-bold mb-2">Dołącz do społeczności Kryptodegeneraci!</h3>
-              <p className="text-white/90">Otrzymuj najnowsze analizy, sygnały i dyskutuj z innymi inwestorami na Telegramie</p>
+              <p className="text-primary-foreground/90">Otrzymuj najnowsze analizy, sygnały i dyskutuj z innymi inwestorami na Telegramie</p>
             </div>
             <Button 
               asChild
-              className="bg-white text-navy-blue hover:bg-white/90 font-semibold px-8 py-3 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl"
+              className="bg-card text-primary hover:bg-card/90 font-semibold px-8 py-3 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl"
             >
               <a 
                 href="https://t.me/kryptodegeneraci" 
@@ -459,21 +342,20 @@ export function HomePageClient({ initialPosts }: HomePageClientProps) {
           <div className="grid md:grid-cols-2 gap-8">
             <div>
               <h4 className="text-lg font-semibold mb-4 text-foreground">Jakub Inwestycje</h4>
-              <p className="text-text-gray">Platforma edukacyjna dedykowana profesjonalnej wiedzy inwestycyjnej.</p>
+              <p className="text-muted-foreground">Blog o inwestowaniu i analizie rynków finansowych.</p>
             </div>
             <div>
               <h4 className="text-lg font-semibold mb-4 text-foreground">Kontakt</h4>
-              <p className="text-text-gray mb-4">Masz pytania? Skontaktuj się ze mną poprzez formularz kontaktowy.</p>
+              <p className="text-muted-foreground mb-4">Masz pytania? Skontaktuj się ze mną poprzez formularz kontaktowy.</p>
               <Link href="/kontakt">
-                <Button className="group relative overflow-hidden bg-gradient-to-r from-navy-blue to-navy-blue/90 hover:from-navy-blue/90 hover:to-navy-blue text-white transition-all duration-300 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 border-0">
-                  <div className="absolute inset-0 bg-gradient-to-r from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                  <div className="relative">Formularz kontaktowy</div>
+                <Button className="bg-primary hover:bg-primary/90 text-primary-foreground transition-all duration-300 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105">
+                  Formularz kontaktowy
                 </Button>
               </Link>
             </div>
           </div>
           <Separator className="my-8" />
-          <div className="text-center text-text-gray">
+          <div className="text-center text-muted-foreground">
             <p>&copy; 2024 Jakub Inwestycje. Wszystkie prawa zastrzeżone.</p>
           </div>
         </div>

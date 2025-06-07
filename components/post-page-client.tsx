@@ -4,6 +4,7 @@ import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
+import { SiteHeader } from "@/components/site-header"
 import { CalendarDays, Eye, Download, FileText, ArrowLeft, User, Share2, Check } from "lucide-react"
 import Link from "next/link"
 import Image from "next/image"
@@ -59,43 +60,14 @@ export function PostPageClient({ post, user }: PostPageClientProps) {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="bg-accent shadow-lg border-b border-border sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <Link href="/" className="text-2xl font-bold text-accent-foreground">
-              Jakub Inwestycje
-            </Link>
-            <div className="flex items-center space-x-4">
-              <Button
-                onClick={sharePost}
-                className="bg-primary hover:bg-primary/90 text-primary-foreground transition-all duration-300 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105"
-              >
-                {copied ? (
-                  <>
-                    <Check className="h-4 w-4 mr-2" />
-                    Skopiowano!
-                  </>
-                ) : (
-                  <>
-                    <Share2 className="h-4 w-4 mr-2" />
-                    Udostępnij
-                  </>
-                )}
-              </Button>
-              <Link href="/">
-                <Button
-                  variant="outline"
-                  className="border-primary text-primary hover:bg-primary hover:text-primary-foreground transition-all duration-300 rounded-xl"
-                >
-                  <ArrowLeft className="h-4 w-4 mr-2" />
-                  Powrót do bloga
-                </Button>
-              </Link>
-            </div>
-          </div>
-        </div>
-      </header>
+      <SiteHeader 
+        currentPage="post"
+        adminMode={true}
+        showShareButton={true}
+        onShare={sharePost}
+        shareButtonCopied={copied}
+        user={user}
+      />
 
       <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Post Header */}
