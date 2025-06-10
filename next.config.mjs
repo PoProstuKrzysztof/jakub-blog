@@ -24,6 +24,45 @@ const nextConfig = {
     // Wyłączam optymalizację CSS, która powoduje błąd z critters
     // optimizeCss: true,
   },
+  // Dodaję konfigurację webpack dla lepszego zarządzania chunkami
+  webpack: (config, { isServer, dev }) => {
+    // Fix dla problemów z ładowaniem chunków w React Server Components
+    if (!isServer && !dev) {
+      config.optimization = {
+        ...config.optimization,
+        splitChunks: {
+          ...config.optimization.splitChunks,
+          cacheGroups: {
+            ...config.optimization.splitChunks.cacheGroups,
+            default: {
+              minChunks: 1,
+              priority: -20,
+              reuseExistingChunk: true,
+            },
+            vendor: {
+              test: /[\\/]node_modules[\\/]/,
+              name: 'vendors',
+              priority: -10,
+              chunks: 'all',
+            },
+          },
+        },
+      }
+    }
+
+    // Fix dla problemów z TipTap i innymi bibliotekami
+    config.resolve = {
+      ...config.resolve,
+      fallback: {
+        ...config.resolve.fallback,
+        fs: false,
+        net: false,
+        tls: false,
+      },
+    }
+
+    return config
+  },
 }
 
 export default nextConfig

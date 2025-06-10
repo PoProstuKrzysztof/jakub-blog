@@ -19,7 +19,7 @@ import { PostService } from '@/lib/services/post-service'
 import { createClient } from '@/lib/supabase'
 import { Category } from '@/lib/models/category'
 import { Tag } from '@/lib/models/tag'
-import { RichTextEditor } from '@/components/editor/rich-text-editor'
+import { RichTextEditorDynamic } from '@/components/editor/rich-text-editor-dynamic'
 import Image from 'next/image'
 import Link from 'next/link'
 
@@ -475,7 +475,7 @@ export default function NewPostPage() {
                   </p>
                 </CardHeader>
                 <CardContent>
-                  <RichTextEditor
+                  <RichTextEditorDynamic
                     content={formData.content}
                     onChange={handleContentChange}
                     placeholder="Napisz treść posta..."

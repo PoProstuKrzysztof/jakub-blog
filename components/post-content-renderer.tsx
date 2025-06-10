@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useRef } from 'react'
-import { ChartComponent } from './editor/chart-component'
+import { ChartComponentDynamic } from './editor/chart-component-dynamic'
 
 interface PostContentRendererProps {
   content: string
