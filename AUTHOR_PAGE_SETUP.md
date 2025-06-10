@@ -2,7 +2,7 @@
 
 ## 📋 Opis
 
-Strona "O Autorze" to nowoczesny landing page prezentujący informacje o autorze bloga z możliwością edycji treści przez zalogowanych administratorów.
+Strona "O Autorze" to nowoczesny landing page prezentujący informacje o autorze bloga z możliwością edycji treści przez zalogowanych administratorów oraz **uploadu głównego zdjęcia autora**.
 
 ## 🛠️ Konfiguracja Bazy Danych
 
@@ -71,6 +71,46 @@ CREATE POLICY "Authenticated users can insert author content" ON author_content
   FOR INSERT WITH CHECK (auth.role() = 'authenticated');
 ```
 
+## 📸 Konfiguracja Storage dla Zdjęć Autora
+
+### 3. Utworzenie bucket 'images' (jeśli nie istnieje)
+
+W Supabase Dashboard przejdź do **Storage** i utwórz bucket o nazwie `images`:
+
+```sql
+-- Alternatywnie przez SQL:
+INSERT INTO storage.buckets (id, name, public)
+VALUES ('images', 'images', true);
+```
+
+### 4. Polityki Storage dla bucket 'images'
+
+Wykonaj poniższe polityki w Supabase SQL Editor:
+
+```sql
+-- Polityka odczytu - wszyscy mogą pobierać obrazy
+CREATE POLICY "Public Access" ON storage.objects FOR SELECT USING (bucket_id = 'images');
+
+-- Polityka uploadu - tylko zalogowani użytkownicy mogą przesyłać
+CREATE POLICY "Authenticated users can upload images" ON storage.objects 
+FOR INSERT WITH CHECK (bucket_id = 'images' AND auth.role() = 'authenticated');
+
+-- Polityka aktualizacji - tylko zalogowani użytkownicy mogą aktualizować
+CREATE POLICY "Authenticated users can update images" ON storage.objects 
+FOR UPDATE USING (bucket_id = 'images' AND auth.role() = 'authenticated');
+
+-- Polityka usuwania - tylko zalogowani użytkownicy mogą usuwać
+CREATE POLICY "Authenticated users can delete images" ON storage.objects 
+FOR DELETE USING (bucket_id = 'images' AND auth.role() = 'authenticated');
+```
+
+### 5. Struktura folderów w bucket
+
+Aplikacja automatycznie tworzy następujące foldery:
+- `avatars/` - Zdjęcia profilowe autorów
+- `posts/` - Obrazy wyróżniające postów  
+- `editor/` - Obrazy wstawiane przez edytor
+
 ## 🎨 Funkcjonalności
 
 ### Dla Wszystkich Użytkowników
@@ -78,9 +118,11 @@ CREATE POLICY "Authenticated users can insert author content" ON author_content
 - **Smooth scrolling** - Płynne przewijanie między sekcjami
 - **Nawigacja sticky** - Nawigacja pozostaje na górze podczas przewijania
 - **Animacje** - Subtelne animacje hover i przejść
+- **Dynamiczne zdjęcie autora** - Wyświetlanie rzeczywistego zdjęcia lub placeholder
 
 ### Dla Zalogowanych Administratorów
 - **Edycja treści** - Możliwość edycji każdej sekcji przez modal
+- **Upload zdjęcia autora** - Przesyłanie i zarządzanie głównym zdjęciem
 - **Automatyczne zapisywanie** - Zmiany są natychmiast zapisywane w bazie
 - **Walidacja** - Sprawdzanie poprawności danych przed zapisem
 - **Powiadomienia** - Toast notifications o statusie operacji
@@ -88,14 +130,17 @@ CREATE POLICY "Authenticated users can insert author content" ON author_content
 ## 📁 Struktura Plików
 
 ```
-app/o-autorze/
+app/
 ├── page.tsx                    # Główna strona (Server Component)
 
 components/
-├── author-page-client.tsx      # Komponent kliencki z logiką edycji
+├── author-page-client.tsx      # Komponent kliencki z logiką edycji i uploadu
+├── author-image.tsx           # Komponent fallback dla zdjęcia autora
 └── ui/
-    ├── loading-card.tsx        # Komponent ładowania
     └── placeholder-author.svg  # Placeholder dla zdjęcia autora
+
+public/images/
+└── placeholder-author.svg     # Domyślne zdjęcie autora
 
 sql/
 └── create_author_content_table.sql  # Migracja bazy danych
@@ -105,9 +150,10 @@ sql/
 
 ### 1. Hero Section
 - **Główny nagłówek** z tytułem i opisem autora
-- **Zdjęcie autora** (z fallback na placeholder)
+- **Zdjęcie autora** (dynamiczne z możliwością edycji)
 - **Call-to-action buttons** - Kontakt i "Dowiedz się więcej"
 - **Badge** z informacją o doświadczeniu
+- **Przycisk "Zmień zdjęcie"** (tylko dla zalogowanych)
 
 ### 2. Experience (Doświadczenie)
 - Opis doświadczenia zawodowego
@@ -139,6 +185,28 @@ sql/
   - Twitter
 - **Przyciski CTA** do formularza kontaktowego
 
+## 📸 Zarządzanie Zdjęciem Autora
+
+### Upload Zdjęcia
+1. **Kliknij "Zmień zdjęcie"** w sekcji hero (tylko dla zalogowanych)
+2. **Wybierz plik** - Obsługiwane formaty: JPG, PNG, GIF, WEBP (max 5MB)
+3. **Automatyczny upload** - Zdjęcie zostanie przesłane do Supabase Storage
+4. **Aktualizacja profilu** - URL zostanie zapisany w tabeli `profiles`
+5. **Usunięcie starego** - Poprzednie zdjęcie zostanie automatycznie usunięte
+
+### Funkcjonalności
+- **Podgląd aktualnego zdjęcia** w oknie dialogowym
+- **Walidacja plików** - Sprawdzanie typu i rozmiaru
+- **Automatyczne usuwanie** starych plików
+- **Fallback na placeholder** jeśli brak zdjęcia
+- **Responsywne wyświetlanie** na wszystkich urządzeniach
+
+### Bezpieczeństwo
+- **Unikalne nazwy plików** - `{user_id}-{timestamp}.{extension}`
+- **Ograniczenia rozmiaru** - Maksymalnie 5MB
+- **Walidacja typu MIME** - Tylko obrazy
+- **RLS na Storage** - Tylko zalogowani mogą przesyłać/usuwać
+
 ## 🎯 Call-to-Action Section
 
 Sekcja zachęcająca do:
@@ -149,6 +217,7 @@ Sekcja zachęcająca do:
 ## 🔐 Bezpieczeństwo
 
 - **RLS (Row Level Security)** - Kontrola dostępu na poziomie bazy danych
+- **Storage Policies** - Bezpieczny upload i dostęp do plików
 - **Uwierzytelnianie** - Tylko zalogowani użytkownicy mogą edytować
 - **Walidacja** - Sprawdzanie danych po stronie klienta i serwera
 - **Sanityzacja** - Bezpieczne wyświetlanie treści
@@ -156,10 +225,12 @@ Sekcja zachęcająca do:
 ## 🚀 Uruchomienie
 
 1. **Wykonaj migrację bazy danych** (kod SQL powyżej)
-2. **Zrestartuj aplikację** - `npm run dev`
-3. **Przejdź do strony** - `http://localhost:3000/o-autorze`
-4. **Zaloguj się** - Aby móc edytować treści
-5. **Edytuj sekcje** - Kliknij ikonę edycji przy każdej sekcji
+2. **Skonfiguruj Storage** (bucket i polityki)
+3. **Zrestartuj aplikację** - `npm run dev`
+4. **Przejdź do strony** - `http://localhost:3000/`
+5. **Zaloguj się** - Aby móc edytować treści i zdjęcie
+6. **Edytuj sekcje** - Kliknij ikonę edycji przy każdej sekcji
+7. **Zmień zdjęcie** - Kliknij "Zmień zdjęcie" w sekcji hero
 
 ## 📱 Responsywność
 
@@ -181,21 +252,31 @@ Kolory są zdefiniowane w `globals.css` i używają zmiennych CSS:
 2. Zaktualizuj `getSectionIcon()` w komponencie
 3. Dodaj specjalną logikę renderowania (opcjonalnie)
 
-### Zmiana zdjęcia autora
-Umieść plik `author-photo.jpg` w folderze `public/images/`
+### Zmiana domyślnego zdjęcia
+Zastąp plik `public/images/placeholder-author.svg`
 
 ## 🐛 Rozwiązywanie Problemów
 
 ### Błąd "Table 'author_content' doesn't exist"
 - Wykonaj migrację SQL z sekcji "Konfiguracja Bazy Danych"
 
+### Błąd "Bucket 'images' doesn't exist"
+- Utwórz bucket w Supabase Dashboard -> Storage
+- Wykonaj polityki Storage z sekcji 4
+
 ### Nie można edytować treści
 - Sprawdź czy użytkownik jest zalogowany
 - Sprawdź polityki RLS w Supabase
 
-### Problemy z obrazami
-- Sprawdź czy plik `author-photo.jpg` istnieje
-- Fallback na `placeholder-author.svg` powinien działać automatycznie
+### Problemy z uploadem zdjęć
+- Sprawdź polityki Storage bucket 'images'
+- Zweryfikuj czy plik nie przekracza 5MB
+- Sprawdź czy to prawidłowy format obrazu
+
+### Zdjęcie się nie wyświetla
+- Sprawdź URL w tabeli `profiles.avatar_url`
+- Zweryfikuj polityki odczytu Storage
+- Sprawdź logi konsoli przeglądarki
 
 ## 📈 Przyszłe Rozszerzenia
 
@@ -204,4 +285,6 @@ Umieść plik `author-photo.jpg` w folderze `public/images/`
 - **Testimoniale** - Opinie klientów i współpracowników
 - **Blog posts** - Integracja z najnowszymi postami autora
 - **Kalendarz** - Dostępność do konsultacji
-- **Newsletter** - Formularz zapisu do newslettera 
+- **Newsletter** - Formularz zapisu do newslettera
+- **Crop/resize** - Edycja zdjęć przed uploadem
+- **Multiple avatars** - Galeria zdjęć autora 

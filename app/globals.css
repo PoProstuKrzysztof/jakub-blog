@@ -14,73 +14,73 @@ body {
 
 @layer base {
   :root {
-    --background: 210 20% 98%; /* #F8FAFC - bardzo jasny szary/biały */
-    --foreground: 220 39% 11%; /* #111827 - ciemny szary dla głównego tekstu */
-    --card: 210 20% 98%; /* #F8FAFC - bardzo jasny szary/biały */
-    --card-foreground: 220 39% 11%; /* #111827 - ciemny szary dla głównego tekstu */
-    --popover: 210 20% 98%; /* #F8FAFC - bardzo jasny szary/biały */
-    --popover-foreground: 220 39% 11%; /* #111827 - ciemny szary dla głównego tekstu */
-    --primary: 220 91% 33%; /* #1E3A8A - ciemny niebieski (dominujący) */
-    --primary-foreground: 210 20% 98%; /* #F8FAFC - bardzo jasny szary/biały */
-    --secondary: 220 13% 69%; /* #6B7280 - średni szary dla drugorzędnego tekstu */
-    --secondary-foreground: 220 39% 11%; /* #111827 - ciemny szary dla głównego tekstu */
-    --muted: 220 13% 91%; /* Jaśniejszy odcień szarego dla tła */
-    --muted-foreground: 220 9% 46%; /* #6B7280 - średni szary dla drugorzędnego tekstu */
-    --accent: 158 64% 52%; /* #10B981 - zieleń akcentująca */
-    --accent-foreground: 210 20% 98%; /* #F8FAFC - bardzo jasny szary/biały */
+    --background: 0 0% 96%; /* #F6F6F6 - główny kolor tła */
+    --foreground: 0 0% 18%; /* #2F2F2F - poboczny kolor tekstu */
+    --card: 0 0% 100%; /* #FFFFFF - białe karty */
+    --card-foreground: 0 0% 18%; /* #2F2F2F - poboczny kolor tekstu */
+    --popover: 0 0% 100%; /* #FFFFFF - białe popovery */
+    --popover-foreground: 0 0% 18%; /* #2F2F2F - poboczny kolor tekstu */
+    --primary: 42 100% 73%; /* #FFCB74 - dopełnienie (ciepły żółty/pomarańczowy) */
+    --primary-foreground: 0 0% 18%; /* #2F2F2F - poboczny kolor tekstu */
+    --secondary: 0 0% 18%; /* #2F2F2F - poboczny kolor */
+    --secondary-foreground: 0 0% 96%; /* #F6F6F6 - główny kolor tła */
+    --muted: 0 0% 94%; /* #F0F0F0 - wyciszony kolor tła */
+    --muted-foreground: 0 0% 18%; /* #2F2F2F - poboczny kolor tekstu */
+    --accent: 42 100% 73%; /* #FFCB74 - dopełnienie */
+    --accent-foreground: 0 0% 18%; /* #2F2F2F - poboczny kolor tekstu */
     --destructive: 0 84% 60%; /* #EF4444 - czerwień dla alertów */
-    --destructive-foreground: 210 20% 98%; /* #F8FAFC - bardzo jasny szary/biały */
-    --border: 220 13% 91%; /* Jaśniejszy odcień szarego dla obramowań */
-    --input: 220 13% 91%; /* Jaśniejszy odcień szarego dla inputów */
-    --ring: 158 64% 52%; /* #10B981 - zieleń akcentująca */
-    --chart-1: 220 91% 33%; /* #1E3A8A - ciemny niebieski */
-    --chart-2: 158 64% 52%; /* #10B981 - zieleń */
-    --chart-3: 0 84% 60%; /* #EF4444 - czerwień */
-    --chart-4: 220 9% 46%; /* #6B7280 - średni szary */
-    --chart-5: 220 39% 11%; /* #111827 - ciemny szary */
+    --destructive-foreground: 0 0% 96%; /* #F6F6F6 - główny kolor tła */
+    --border: 0 0% 88%; /* #E0E0E0 - jasny szary dla obramowań */
+    --input: 0 0% 88%; /* #E0E0E0 - jasny szary dla inputów */
+    --ring: 42 100% 73%; /* #FFCB74 - dopełnienie */
+    --chart-1: 42 100% 73%; /* #FFCB74 - dopełnienie */
+    --chart-2: 0 0% 18%; /* #2F2F2F - poboczny kolor */
+    --chart-3: 0 0% 96%; /* #F6F6F6 - główny kolor */
+    --chart-4: 0 0% 88%; /* #E0E0E0 - jasny szary */
+    --chart-5: 0 0% 81%; /* #D0D0D0 - średni szary */
     --radius: 0.5rem;
-    --sidebar-background: 210 20% 98%;
-    --sidebar-foreground: 220 39% 11%;
-    --sidebar-primary: 220 91% 33%;
-    --sidebar-primary-foreground: 210 20% 98%;
-    --sidebar-accent: 158 64% 52%;
-    --sidebar-accent-foreground: 210 20% 98%;
-    --sidebar-border: 220 13% 91%;
-    --sidebar-ring: 158 64% 52%;
+    --sidebar-background: 0 0% 100%;
+    --sidebar-foreground: 0 0% 18%;
+    --sidebar-primary: 42 100% 73%;
+    --sidebar-primary-foreground: 0 0% 18%;
+    --sidebar-accent: 0 0% 96%;
+    --sidebar-accent-foreground: 0 0% 18%;
+    --sidebar-border: 0 0% 88%;
+    --sidebar-ring: 42 100% 73%;
   }
   .dark {
-    --background: 220 39% 11%; /* #111827 - ciemny szary dla tła w trybie ciemnym */
-    --foreground: 210 20% 98%; /* #F8FAFC - bardzo jasny szary/biały */
-    --card: 220 39% 15%; /* Nieco jaśniejszy odcień ciemnego szarego */
-    --card-foreground: 210 20% 98%; /* #F8FAFC - bardzo jasny szary/biały */
-    --popover: 220 39% 15%;
-    --popover-foreground: 210 20% 98%; /* #F8FAFC - bardzo jasny szary/biały */
-    --primary: 220 91% 33%; /* #1E3A8A - ciemny niebieski (dominujący) */
-    --primary-foreground: 210 20% 98%; /* #F8FAFC - bardzo jasny szary/biały */
-    --secondary: 220 13% 69%; /* #6B7280 - średni szary */
-    --secondary-foreground: 210 20% 98%; /* #F8FAFC - bardzo jasny szary/biały */
-    --muted: 220 13% 25%; /* Ciemniejszy odcień szarego dla tła */
-    --muted-foreground: 220 13% 69%; /* #6B7280 - średni szary */
-    --accent: 158 64% 52%; /* #10B981 - zieleń akcentująca */
-    --accent-foreground: 220 39% 11%; /* #111827 - ciemny szary */
+    --background: 0 0% 18%; /* #2F2F2F - poboczny kolor dla tła w trybie ciemnym */
+    --foreground: 0 0% 96%; /* #F6F6F6 - główny kolor dla tekstu */
+    --card: 0 0% 25%; /* #404040 - ciemniejsze karty */
+    --card-foreground: 0 0% 96%; /* #F6F6F6 - główny kolor tekstu */
+    --popover: 0 0% 25%; /* #404040 - ciemniejsze popovery */
+    --popover-foreground: 0 0% 96%; /* #F6F6F6 - główny kolor tekstu */
+    --primary: 42 100% 73%; /* #FFCB74 - dopełnienie */
+    --primary-foreground: 0 0% 18%; /* #2F2F2F - poboczny kolor tekstu */
+    --secondary: 0 0% 50%; /* #808080 - średni szary dla trybu ciemnego */
+    --secondary-foreground: 0 0% 96%; /* #F6F6F6 - główny kolor tekstu */
+    --muted: 0 0% 25%; /* #404040 - ciemniejszy odcień dla tła */
+    --muted-foreground: 0 0% 63%; /* #A0A0A0 - średni szary */
+    --accent: 42 100% 73%; /* #FFCB74 - dopełnienie */
+    --accent-foreground: 0 0% 18%; /* #2F2F2F - poboczny kolor tekstu */
     --destructive: 0 84% 60%; /* #EF4444 - czerwień dla alertów */
-    --destructive-foreground: 210 20% 98%; /* #F8FAFC - bardzo jasny szary/biały */
-    --border: 220 13% 25%;
-    --input: 220 13% 25%;
-    --ring: 158 64% 52%; /* #10B981 - zieleń akcentująca */
-    --chart-1: 220 91% 45%; /* Jaśniejszy niebieski dla trybu ciemnego */
-    --chart-2: 158 64% 52%; /* #10B981 - zieleń */
-    --chart-3: 0 84% 60%; /* #EF4444 - czerwień */
-    --chart-4: 220 13% 69%; /* #6B7280 - średni szary */
-    --chart-5: 210 20% 98%; /* #F8FAFC - bardzo jasny szary/biały */
-    --sidebar-background: 220 39% 11%;
-    --sidebar-foreground: 210 20% 98%;
-    --sidebar-primary: 220 91% 33%;
-    --sidebar-primary-foreground: 210 20% 98%;
-    --sidebar-accent: 158 64% 52%;
-    --sidebar-accent-foreground: 220 39% 11%;
-    --sidebar-border: 220 13% 25%;
-    --sidebar-ring: 158 64% 52%;
+    --destructive-foreground: 0 0% 96%; /* #F6F6F6 - główny kolor tekstu */
+    --border: 0 0% 25%; /* #404040 - ciemniejsze obramowania */
+    --input: 0 0% 25%; /* #404040 - ciemniejsze inputy */
+    --ring: 42 100% 73%; /* #FFCB74 - dopełnienie */
+    --chart-1: 42 100% 73%; /* #FFCB74 - dopełnienie */
+    --chart-2: 0 0% 50%; /* #808080 - średni szary */
+    --chart-3: 0 0% 96%; /* #F6F6F6 - główny kolor */
+    --chart-4: 0 0% 63%; /* #A0A0A0 - średni szary */
+    --chart-5: 0 0% 75%; /* #C0C0C0 - jaśniejszy szary */
+    --sidebar-background: 0 0% 18%;
+    --sidebar-foreground: 0 0% 96%;
+    --sidebar-primary: 42 100% 73%;
+    --sidebar-primary-foreground: 0 0% 18%;
+    --sidebar-accent: 0 0% 25%;
+    --sidebar-accent-foreground: 0 0% 96%;
+    --sidebar-border: 0 0% 25%;
+    --sidebar-ring: 42 100% 73%;
   }
 }
 
@@ -90,6 +90,6 @@ body {
   }
   body {
     @apply bg-background text-foreground;
-    background-color: #F8FAFC; /* fallback using new light background color */
+    background-color: #F6F6F6; /* fallback using new main background color */
   }
 }

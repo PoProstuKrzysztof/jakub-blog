@@ -179,7 +179,7 @@ export function SEOSettings({
         <div className="space-y-2">
           <Label className="text-foreground font-medium">Podgląd w Google</Label>
           <div className="border border-border rounded-xl p-4 bg-background">
-            <div className="text-blue-600 text-lg hover:underline cursor-pointer">{title || "Tytuł posta"}</div>
+                            <div className="text-primary text-lg hover:underline cursor-pointer">{title || "Tytuł posta"}</div>
             <div className="text-green-700 text-sm">jakub-inwestycje.com/post/{slug || "url-posta"}</div>
             <div className="text-muted-foreground text-sm mt-1">{metaDescription || "Meta opis posta pojawi się tutaj..."}</div>
           </div>

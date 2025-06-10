@@ -428,7 +428,7 @@ export default function AnalyticsPage() {
               </div>
             </div>
             <div className="flex items-center space-x-4">
-              <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                                  <div className="w-2 h-2 bg-primary rounded-full"></div>
               <div className="flex-1">
                 <p className="text-sm font-medium">Nowy użytkownik zarejestrowany</p>
                 <p className="text-xs text-muted-foreground">jan.kowalski@example.com - 4 godziny temu</p>

@@ -11,82 +11,82 @@ const config: Config = {
   theme: {
   	extend: {
   		colors: {
-  			background: 'hsl(var(--background))',
-  			foreground: 'hsl(var(--foreground))',
+  			background: '#F6F6F6',
+  			foreground: '#2F2F2F',
   			card: {
-  				DEFAULT: 'hsl(var(--card))',
-  				foreground: 'hsl(var(--card-foreground))'
+  				DEFAULT: '#FFFFFF',
+  				foreground: '#2F2F2F'
   			},
   			popover: {
-  				DEFAULT: 'hsl(var(--popover))',
-  				foreground: 'hsl(var(--popover-foreground))'
+  				DEFAULT: '#FFFFFF',
+  				foreground: '#2F2F2F'
   			},
   			primary: {
-  				DEFAULT: 'hsl(var(--primary))',
-  				foreground: 'hsl(var(--primary-foreground))'
+  				DEFAULT: '#FFCB74',
+  				foreground: '#2F2F2F'
   			},
   			secondary: {
-  				DEFAULT: 'hsl(var(--secondary))',
-  				foreground: 'hsl(var(--secondary-foreground))'
+  				DEFAULT: '#2F2F2F',
+  				foreground: '#F6F6F6'
   			},
   			muted: {
-  				DEFAULT: 'hsl(var(--muted))',
-  				foreground: 'hsl(var(--muted-foreground))'
+  				DEFAULT: '#F0F0F0',
+  				foreground: '#2F2F2F'
   			},
   			accent: {
-  				DEFAULT: 'hsl(var(--accent))',
-  				foreground: 'hsl(var(--accent-foreground))'
+  				DEFAULT: '#FFCB74',
+  				foreground: '#2F2F2F'
   			},
   			destructive: {
-  				DEFAULT: 'hsl(var(--destructive))',
-  				foreground: 'hsl(var(--destructive-foreground))'
+  				DEFAULT: '#EF4444',
+  				foreground: '#F6F6F6'
   			},
-  			border: 'hsl(var(--border))',
-  			input: 'hsl(var(--input))',
-  			ring: 'hsl(var(--ring))',
+  			border: '#E0E0E0',
+  			input: '#E0E0E0',
+  			ring: '#FFCB74',
   			chart: {
-  				'1': 'hsl(var(--chart-1))',
-  				'2': 'hsl(var(--chart-2))',
-  				'3': 'hsl(var(--chart-3))',
-  				'4': 'hsl(var(--chart-4))',
-  				'5': 'hsl(var(--chart-5))'
+  				'1': '#FFCB74',
+  				'2': '#2F2F2F',
+  				'3': '#F6F6F6',
+  				'4': '#E0E0E0',
+  				'5': '#D0D0D0'
   			},
   			sidebar: {
-  				DEFAULT: 'hsl(var(--sidebar-background))',
-  				foreground: 'hsl(var(--sidebar-foreground))',
-  				primary: 'hsl(var(--sidebar-primary))',
-  				'primary-foreground': 'hsl(var(--sidebar-primary-foreground))',
-  				accent: 'hsl(var(--sidebar-accent))',
-  				'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
-  				border: 'hsl(var(--sidebar-border))',
-  				ring: 'hsl(var(--sidebar-ring))'
+  				DEFAULT: '#FFFFFF',
+  				foreground: '#2F2F2F',
+  				primary: '#FFCB74',
+  				'primary-foreground': '#2F2F2F',
+  				accent: '#F6F6F6',
+  				'accent-foreground': '#2F2F2F',
+  				border: '#E0E0E0',
+  				ring: '#FFCB74'
   			},
   			'navy-blue': {
-  				DEFAULT: '#1E3A8A',
-  				50: '#EFF6FF',
-  				100: '#DBEAFE',
-  				200: '#BFDBFE',
-  				300: '#93C5FD',
-  				400: '#60A5FA',
-  				500: '#3B82F6',
-  				600: '#2563EB',
-  				700: '#1D4ED8',
-  				800: '#1E40AF',
-  				900: '#1E3A8A',
-  				950: '#172554'
+  				DEFAULT: '#2F2F2F',
+  				50: '#F6F6F6',
+  				100: '#F0F0F0',
+  				200: '#E0E0E0',
+  				300: '#D0D0D0',
+  				400: '#A0A0A0',
+  				500: '#808080',
+  				600: '#606060',
+  				700: '#404040',
+  				800: '#2F2F2F',
+  				900: '#1F1F1F',
+  				950: '#0F0F0F'
   			},
   			'light-gray': {
-  				DEFAULT: '#F8FAFC',
-  				50: '#F8FAFC',
-  				100: '#F1F5F9',
-  				200: '#E2E8F0',
-  				300: '#CBD5E1',
-  				400: '#94A3B8',
-  				500: '#64748B',
-  				600: '#475569',
-  				700: '#334155',
-  				800: '#1E293B',
-  				900: '#0F172A'
+  				DEFAULT: '#F6F6F6',
+  				50: '#FEFEFE',
+  				100: '#FCFCFC',
+  				200: '#F8F8F8',
+  				300: '#F6F6F6',
+  				400: '#F0F0F0',
+  				500: '#E8E8E8',
+  				600: '#D8D8D8',
+  				700: '#C0C0C0',
+  				800: '#A0A0A0',
+  				900: '#808080'
   			},
   			'success-green': {
   				DEFAULT: '#10B981',
@@ -115,17 +115,17 @@ const config: Config = {
   				900: '#7F1D1D'
   			},
   			'text-gray': {
-  				DEFAULT: '#6B7280',
+  				DEFAULT: '#2F2F2F',
   				50: '#F9FAFB',
-  				100: '#F3F4F6',
-  				200: '#E5E7EB',
-  				300: '#D1D5DB',
-  				400: '#9CA3AF',
-  				500: '#6B7280',
-  				600: '#4B5563',
-  				700: '#374151',
-  				800: '#1F2937',
-  				900: '#111827'
+  				100: '#F6F6F6',
+  				200: '#F0F0F0',
+  				300: '#E0E0E0',
+  				400: '#C0C0C0',
+  				500: '#A0A0A0',
+  				600: '#808080',
+  				700: '#606060',
+  				800: '#404040',
+  				900: '#2F2F2F'
   			}
   		},
   		borderRadius: {
