@@ -9,39 +9,6 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      author_content: {
-        Row: {
-          id: string
-          section_type: string
-          title: string
-          content: string
-          section_order: number
-          is_visible: boolean
-          created_at: string
-          updated_at: string
-        }
-        Insert: {
-          id?: string
-          section_type: string
-          title: string
-          content: string
-          section_order?: number
-          is_visible?: boolean
-          created_at?: string
-          updated_at?: string
-        }
-        Update: {
-          id?: string
-          section_type?: string
-          title?: string
-          content?: string
-          section_order?: number
-          is_visible?: boolean
-          created_at?: string
-          updated_at?: string
-        }
-        Relationships: []
-      }
       attachments: {
         Row: {
           alt_text: string | null
@@ -103,6 +70,39 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      author_content: {
+        Row: {
+          content: string
+          created_at: string | null
+          id: string
+          is_visible: boolean
+          section_order: number
+          section_type: string
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          content: string
+          created_at?: string | null
+          id?: string
+          is_visible?: boolean
+          section_order?: number
+          section_type: string
+          title: string
+          updated_at?: string | null
+        }
+        Update: {
+          content?: string
+          created_at?: string | null
+          id?: string
+          is_visible?: boolean
+          section_order?: number
+          section_type?: string
+          title?: string
+          updated_at?: string | null
+        }
+        Relationships: []
       }
       categories: {
         Row: {

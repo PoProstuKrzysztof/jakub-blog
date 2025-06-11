@@ -22,7 +22,7 @@ import { useState } from "react"
 import type { User } from "@supabase/supabase-js"
 
 interface SiteHeaderProps {
-  currentPage?: 'home' | 'blog' | 'cooperation' | 'contact' | 'admin' | 'post'
+  currentPage?: 'home' | 'wpisy' | 'cooperation' | 'contact' | 'admin' | 'post'
   showSearch?: boolean
   searchPlaceholder?: string
   searchValue?: string
@@ -107,10 +107,10 @@ export function SiteHeader({
               {!adminMode && (
                 <nav className="hidden md:flex items-center space-x-2">
                   <Link href="/" className={getNavLinkClass('home')}>
-                    O autorze
+                    Home
                   </Link>
-                  <Link href="/blog" className={getNavLinkClass('blog')}>
-                    Blog
+                  <Link href="/wpisy" className={getNavLinkClass('wpisy')}>
+                    Wpisy
                   </Link>
                   <Link href="/wspolpraca" className={getNavLinkClass('cooperation')}>
                     Współpraca
@@ -221,19 +221,13 @@ export function SiteHeader({
                     {!user && (
                       <Link href="/admin/login">
                         <Button variant="outline" size="sm">
-                          Panel administratora
+                          Zaloguj
                         </Button>
                       </Link>
                     )}
                     
                     {/* Kontekstowe przyciski */}
-                    {currentPage === 'home' && (
-                      <Link href="/blog">
-                        <Button variant="outline" size="sm">
-                          Przejdź do bloga
-                        </Button>
-                      </Link>
-                    )}
+
                     {currentPage === 'post' && (
                       <Link href="/">
                         <Button
@@ -242,7 +236,7 @@ export function SiteHeader({
                           className="border-primary text-primary hover:bg-primary hover:text-primary-foreground transition-all duration-300 rounded-xl"
                         >
                           <ArrowLeft className="h-4 w-4 mr-2" />
-                          Powrót do bloga
+                          Powrót do strony głównej
                         </Button>
                       </Link>
                     )}
@@ -263,14 +257,14 @@ export function SiteHeader({
               className={`block w-full ${getNavLinkClass('home')}`}
               onClick={() => setIsMobileMenuOpen(false)}
             >
-              O autorze
+              Home
             </Link>
             <Link 
-              href="/blog" 
-              className={`block w-full ${getNavLinkClass('blog')}`}
+              href="/wpisy" 
+              className={`block w-full ${getNavLinkClass('wpisy')}`}
               onClick={() => setIsMobileMenuOpen(false)}
             >
-              Blog
+              Wpisy
             </Link>
             <Link 
               href="/wspolpraca" 
@@ -327,7 +321,7 @@ export function SiteHeader({
               ) : (
                 <Link href="/admin/login" onClick={() => setIsMobileMenuOpen(false)}>
                   <Button variant="outline" size="sm" className="w-full justify-start">
-                    Panel administratora
+                    Zaloguj
                   </Button>
                 </Link>
               )}

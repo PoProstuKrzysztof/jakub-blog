@@ -1,8 +1,11 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
-import { Separator } from "@/components/ui/separator"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { Textarea } from "@/components/ui/textarea"
 import { SiteHeader } from "@/components/site-header"
 import {
   Users,
@@ -13,15 +16,16 @@ import {
   FileText,
   Trash2,
   MessageCircle,
-  Search,
   Edit,
   Plus,
-  LogOut,
+  Calendar,
+  ArrowRight,
+  Shield,
+  Target,
+  Award,
+  Lightbulb,
 } from "lucide-react"
 import Link from "next/link"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
 import { useState } from "react"
 import { useAuth } from "@/hooks/use-auth"
 
@@ -34,6 +38,7 @@ interface Service {
   features: string[]
   color: string
   icon: string
+  popular?: boolean
 }
 
 export default function CooperationPage() {
@@ -42,7 +47,7 @@ export default function CooperationPage() {
   const [services, setServices] = useState<Service[]>([
     {
       id: 1,
-      title: "Indywidualna analiza strategii",
+      title: "Indywidualna analiza portfela",
       description:
         "Spersonalizowana analiza Twojej strategii inwestycyjnej z uwzględnieniem celów, horyzontu czasowego i tolerancji ryzyka. Otrzymasz szczegółowy raport z rekomendacjami dostosowanymi do Twojej sytuacji.",
       price: "499 zł",
@@ -52,9 +57,11 @@ export default function CooperationPage() {
         "Rekomendacje dostosowane do profilu ryzyka",
         "Plan dywersyfikacji i optymalizacji",
         "Konsultacja online (60 min)",
+        "PDF raport z rekomendacjami",
       ],
-      color: "#33D2A4",
+      color: "from-blue-500 to-blue-600",
       icon: "Users",
+      popular: true,
     },
     {
       id: 2,
@@ -68,41 +75,189 @@ export default function CooperationPage() {
         "Ocena techniczna i poziomy wsparcia/oporu",
         "Wycena i potencjał wzrostu",
         "Szczegółowy raport PDF",
+        "Prognoza na 12-24 miesięcy",
       ],
-      color: "#2C3E50",
+      color: "from-green-500 to-green-600",
       icon: "TrendingUp",
     },
+    {
+      id: 3,
+      title: "Pakiet edukacyjny",
+      description:
+        "Kompleksowy program edukacyjny obejmujący podstawy i zaawansowane strategie inwestowania. Idealne dla osób rozpoczynających przygodę z rynkiem kapitałowym.",
+      price: "899 zł",
+      priceNote: "pakiet",
+      features: [
+        "8 modułów edukacyjnych",
+        "Case studies i praktyczne przykłady",
+        "Dostęp do społeczności inwestorów",
+        "Miesięczne webinaria Q&A",
+        "Certyfikat ukończenia",
+      ],
+      color: "from-purple-500 to-purple-600",
+      icon: "Award",
+    },
   ])
-  const [editingService, setEditingService] = useState<Service | null>(null)
 
   return (
     <div className="min-h-screen bg-background">
       <SiteHeader 
         currentPage="cooperation"
-        showSearch={true}
+        showSearch={false}
         searchPlaceholder="Szukaj usług, informacji..."
-        showEditButton={true}
+        showEditButton={user ? true : false}
         isEditing={isEditing}
         onEditToggle={() => setIsEditing(!isEditing)}
       />
 
-      {/* Hero Banner */}
-      <section className="bg-gradient-to-r from-primary to-primary/90 text-primary-foreground py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-4xl font-bold mb-4 animate-fade-in">Współpraca</h1>
-          <p className="text-xl text-primary-foreground/90 max-w-3xl mx-auto animate-fade-in-delay">
-            Profesjonalne usługi doradcze i analityczne dostosowane do Twoich potrzeb inwestycyjnych. Skorzystaj z
-            mojego doświadczenia, aby podejmować lepsze decyzje finansowe.
-          </p>
+      {/* Hero Section */}
+      <section className="relative bg-gradient-to-br from-primary/5 via-background to-accent/5 py-20 lg:py-32 overflow-hidden">
+        <div className="absolute inset-0 bg-grid-pattern opacity-5"></div>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="text-center space-y-8">
+            <div className="space-y-4">
+              <Badge className="bg-primary/10 text-primary border-primary/20 px-4 py-2 rounded-full text-sm font-medium">
+                🚀 Profesjonalne usługi inwestycyjne
+              </Badge>
+              <h1 className="text-4xl lg:text-6xl font-bold text-foreground leading-tight">
+                Rozwijaj się ze mną <span className="text-primary">finansowo</span>
+              </h1>
+              <p className="text-xl text-muted-foreground leading-relaxed max-w-3xl mx-auto">
+                Profesjonalne usługi doradcze i analityczne dostosowane do Twoich potrzeb inwestycyjnych. 
+                Skorzystaj z mojego 8-letniego doświadczenia, aby podejmować lepsze decyzje finansowe.
+              </p>
+            </div>
+
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button 
+                size="lg" 
+                className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-4 rounded-xl text-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+              >
+                <MessageCircle className="mr-2 h-5 w-5" />
+                Umów konsultację
+              </Button>
+              <Link href="/kontakt">
+                <Button 
+                  size="lg" 
+                  variant="outline" 
+                  className="border-2 border-border hover:border-primary px-8 py-4 rounded-xl text-lg font-semibold transition-all duration-300 hover:bg-primary/5"
+                >
+                  <Calendar className="mr-2 h-5 w-5" />
+                  Skontaktuj się
+                </Button>
+              </Link>
+            </div>
+
+            {/* Trust Indicators */}
+            <div className="flex items-center justify-center space-x-8 pt-4">
+              <div className="text-center">
+                <div className="text-2xl font-bold text-foreground">15.2%</div>
+                <div className="text-sm text-muted-foreground">Średnia stopa zwrotu</div>
+              </div>
+              <div className="text-center">
+                <div className="text-2xl font-bold text-foreground">1000+</div>
+                <div className="text-sm text-muted-foreground">Zadowolonych klientów</div>
+              </div>
+              <div className="text-center">
+                <div className="text-2xl font-bold text-foreground">4.9/5</div>
+                <div className="text-sm text-muted-foreground">Ocena usług</div>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        {/* Główne oferty */}
-        <section className="mb-16">
-          <div className="flex justify-between items-center mb-8">
-            <h2 className="text-3xl font-bold text-foreground">Moje usługi</h2>
-            {user && isEditing && (
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+        {/* Services Section */}
+        <section className="mb-20">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl lg:text-4xl font-bold text-foreground mb-4">
+              Wybierz usługę dla siebie
+            </h2>
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+              Od analiz spółek po indywidualne konsultacje – wszystko czego potrzebujesz do inteligentnego inwestowania
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8 mb-12">
+            {services.map((service, index) => (
+              <Card
+                key={service.id}
+                className={`border-0 shadow-2xl hover:shadow-3xl transition-all duration-500 transform hover:scale-[1.02] group relative overflow-hidden ${
+                  service.popular ? 'ring-2 ring-primary ring-opacity-50' : ''
+                }`}
+              >
+                {service.popular && (
+                  <div className="absolute top-4 left-1/2 transform -translate-x-1/2 z-20">
+                    <Badge className="bg-primary text-primary-foreground px-3 py-1 text-xs font-semibold">
+                      ⭐ Najpopularniejsza
+                    </Badge>
+                  </div>
+                )}
+
+                {user && isEditing && (
+                  <div className="absolute top-2 right-2 z-10 flex space-x-1">
+                    <Button
+                      size="sm"
+                      className="bg-primary hover:bg-primary/90 text-primary-foreground p-1 h-8 w-8 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-110 transition-all duration-300"
+                    >
+                      <Edit className="h-3 w-3" />
+                    </Button>
+                    <Button
+                      size="sm"
+                      onClick={() => setServices(services.filter((s) => s.id !== service.id))}
+                      className="bg-destructive hover:bg-destructive/90 text-destructive-foreground p-1 h-8 w-8 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-110 transition-all duration-300"
+                    >
+                      <Trash2 className="h-3 w-3" />
+                    </Button>
+                  </div>
+                )}
+
+                <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-accent/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                
+                <CardContent className="p-8 relative z-10">
+                  <div className="text-center mb-8">
+                    <div className={`w-20 h-20 mx-auto mb-6 rounded-2xl bg-gradient-to-br ${service.color} shadow-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}>
+                      {service.icon === "Users" && <Users className="h-10 w-10 text-white" />}
+                      {service.icon === "TrendingUp" && <TrendingUp className="h-10 w-10 text-white" />}
+                      {service.icon === "Award" && <Award className="h-10 w-10 text-white" />}
+                    </div>
+                    <h3 className="text-2xl font-bold text-foreground mb-4">{service.title}</h3>
+                    <p className="text-muted-foreground leading-relaxed">{service.description}</p>
+                  </div>
+
+                  <div className="space-y-3 mb-8">
+                    {service.features.map((feature, idx) => (
+                      <div key={idx} className="flex items-center text-sm text-muted-foreground">
+                        <CheckCircle className="h-4 w-4 text-green-500 mr-3 flex-shrink-0" />
+                        {feature}
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="text-center mb-8">
+                    <div className="text-3xl font-bold text-foreground mb-1">
+                      {service.price}
+                    </div>
+                    <div className="text-sm text-muted-foreground">{service.priceNote}</div>
+                  </div>
+
+                  <Link href="/kontakt" className="block">
+                    <Button
+                      className={`w-full bg-gradient-to-r ${service.color} hover:opacity-90 text-white transition-all duration-500 rounded-xl px-8 py-3 font-semibold shadow-xl hover:shadow-2xl transform hover:scale-105`}
+                    >
+                      <MessageCircle className="mr-2 h-4 w-4" />
+                      {index === 0 ? "Zamów analizę" : index === 1 ? "Zamów przegląd" : "Rozpocznij naukę"}
+                      <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform duration-300" />
+                    </Button>
+                  </Link>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+
+          {user && isEditing && (
+            <div className="text-center">
               <Button
                 onClick={() => {
                   const newService: Service = {
@@ -112,333 +267,150 @@ export default function CooperationPage() {
                     price: "0 zł",
                     priceNote: "jednorazowo",
                     features: ["Funkcja 1", "Funkcja 2"],
-                    color: "#33D2A4",
+                    color: "from-gray-500 to-gray-600",
                     icon: "Users",
                   }
                   setServices([...services, newService])
                 }}
-                className="bg-primary hover:bg-primary/90 text-primary-foreground transition-all duration-500 rounded-2xl px-6 py-2.5 font-semibold shadow-xl hover:shadow-2xl transform hover:scale-105"
+                className="bg-primary hover:bg-primary/90 text-primary-foreground transition-all duration-500 rounded-xl px-8 py-3 font-semibold shadow-xl hover:shadow-2xl transform hover:scale-105"
               >
-                <Plus className="h-4 w-4 mr-1 transition-transform duration-300 group-hover:rotate-180" />
+                <Plus className="h-4 w-4 mr-2" />
                 Dodaj usługę
               </Button>
-            )}
+            </div>
+          )}
+        </section>
+
+        {/* Process Section */}
+        <section className="py-20 bg-gradient-to-br from-primary/5 to-accent/5 rounded-3xl mb-20">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl font-bold text-foreground mb-4">
+              Jak przebiega współpraca?
+            </h2>
+            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+              Prosty, przejrzysty proces współpracy zapewniający najwyższą jakość usług
+            </p>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-8 mb-12">
-            {services.map((service, index) => (
-              <Card
-                key={service.id}
-                className="overflow-hidden group cursor-pointer border-0 shadow-xl hover:shadow-2xl transition-all duration-500 transform hover:scale-[1.02] relative"
-              >
-                {user && isEditing && (
-                  <div className="absolute top-2 right-2 z-10 flex space-x-1">
-                    <Button
-                      size="sm"
-                      onClick={() => setEditingService(service)}
-                      className="bg-primary hover:bg-primary/90 text-primary-foreground p-1 h-8 w-8 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-110 transition-all duration-300"
-                    >
-                      <Edit className="h-3 w-3 transition-transform duration-300 group-hover:rotate-12" />
-                    </Button>
-                    <Button
-                      size="sm"
-                      onClick={() => setServices(services.filter((s) => s.id !== service.id))}
-                      className="bg-destructive hover:bg-destructive/90 text-destructive-foreground p-1 h-8 w-8 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-110 transition-all duration-300"
-                    >
-                      <Trash2 className="h-3 w-3 transition-transform duration-300 group-hover:rotate-12" />
-                    </Button>
+          <div className="grid md:grid-cols-4 gap-8">
+            {[
+              {
+                step: "01",
+                title: "Kontakt i omówienie potrzeb",
+                description: "Krótka rozmowa o Twoich celach i oczekiwaniach",
+                icon: MessageCircle,
+                color: "text-blue-600"
+              },
+              {
+                step: "02", 
+                title: "Przesłanie materiałów",
+                description: "Otrzymuję niezbędne informacje do analizy",
+                icon: FileText,
+                color: "text-green-600"
+              },
+              {
+                step: "03",
+                title: "Analiza i przygotowanie",
+                description: "Szczegółowa analiza i przygotowanie raportu",
+                icon: Target,
+                color: "text-purple-600"
+              },
+              {
+                step: "04",
+                title: "Prezentacja wyników",
+                description: "Omówienie wyników i rekomendacji",
+                icon: Star,
+                color: "text-orange-600"
+              }
+            ].map((step, index) => (
+              <div key={index} className="text-center group">
+                <div className="relative mb-6">
+                  <div className="w-20 h-20 mx-auto rounded-2xl bg-white shadow-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                    <step.icon className={`h-8 w-8 ${step.color}`} />
                   </div>
-                )}
-                <CardContent className="p-8">
-                  <div
-                    className="flex items-center justify-center w-20 h-20 mb-6 rounded-2xl text-primary-foreground mx-auto shadow-lg"
-                    style={{ backgroundColor: service.color }}
-                  >
-                    {service.icon === "Users" ? <Users className="h-10 w-10" /> : <TrendingUp className="h-10 w-10" />}
+                  <div className="absolute -top-2 -right-2 w-8 h-8 bg-primary text-primary-foreground rounded-full flex items-center justify-center text-sm font-bold">
+                    {step.step}
                   </div>
-                  <h3 className="text-2xl font-bold text-center text-foreground mb-4">{service.title}</h3>
-                  <p className="text-muted-foreground text-center mb-6 leading-relaxed">{service.description}</p>
+                </div>
+                <h3 className="text-lg font-semibold text-foreground mb-3">{step.title}</h3>
+                <p className="text-sm text-muted-foreground">{step.description}</p>
+              </div>
+            ))}
+          </div>
+        </section>
 
-                  <div className="space-y-3 mb-6">
-                    {service.features.map((feature, idx) => (
-                      <div key={idx} className="flex items-center text-sm text-muted-foreground">
-                        <CheckCircle className="h-4 w-4 text-green-500 mr-2 flex-shrink-0" />
-                        {feature}
-                      </div>
-                    ))}
-                  </div>
+        {/* FAQ Section */}
+        <section className="mb-20">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl font-bold text-foreground mb-4">
+              Często zadawane pytania
+            </h2>
+            <p className="text-xl text-muted-foreground">
+              Odpowiedzi na najczęściej zadawane pytania dotyczące moich usług
+            </p>
+          </div>
 
-                  <div className="text-center mb-6">
-                    <div className="text-3xl font-bold mb-1" style={{ color: service.color }}>
-                      {service.price}
-                    </div>
-                    <div className="text-sm text-muted-foreground">{service.priceNote}</div>
-                  </div>
-
-                  <div className="flex justify-center">
-                    <Link href="/kontakt">
-                      <Button
-                        className="text-primary-foreground transition-all duration-500 rounded-2xl px-8 py-2.5 font-semibold shadow-xl hover:shadow-2xl transform hover:scale-105"
-                        style={{ 
-                          background: `linear-gradient(135deg, ${service.color}, ${service.color}dd)`,
-                        }}
-                      >
-                        {index === 0 ? "Zamów analizę" : "Zamów przegląd"}
-                      </Button>
-                    </Link>
-                  </div>
+          <div className="grid md:grid-cols-2 gap-8">
+            {[
+              {
+                question: "Jak długo trwa przygotowanie analizy?",
+                answer: "Analiza strategii portfela trwa 5-7 dni roboczych, przegląd spółki 3-5 dni roboczych."
+              },
+              {
+                question: "Czy oferujesz gwarancję zwrotu?",
+                answer: "Tak, jeśli nie będziesz zadowolony z jakości usługi, zwracam 100% kwoty w ciągu 14 dni."
+              },
+              {
+                question: "Czy mogę umówić konsultację telefoniczną?",
+                answer: "Oczywiście! Oferuję konsultacje zarówno online (Zoom/Teams) jak i telefoniczne."
+              },
+              {
+                question: "Czy analizy są aktualizowane?",
+                answer: "Tak, klienci otrzymują bezpłatne aktualizacje analiz przez 3 miesiące od daty zakupu."
+              }
+            ].map((faq, index) => (
+              <Card key={index} className="border-0 shadow-lg hover:shadow-xl transition-all duration-300">
+                <CardContent className="p-6">
+                  <h3 className="font-semibold text-foreground mb-3">{faq.question}</h3>
+                  <p className="text-sm text-muted-foreground">{faq.answer}</p>
                 </CardContent>
               </Card>
             ))}
           </div>
         </section>
 
-        <Separator className="my-16" />
-
-        {/* Dodatkowe informacje */}
-        <section className="mb-16">
-          <div className="grid lg:grid-cols-3 gap-8">
-            {/* Proces współpracy */}
-            <Card className="border-0 shadow-lg">
-              <CardContent className="p-6">
-                <div className="flex items-center justify-center w-12 h-12 mb-4 rounded-xl bg-primary text-primary-foreground mx-auto">
-                  <Clock className="h-6 w-6" />
-                </div>
-                <h3 className="text-lg font-semibold text-center text-foreground mb-4">Jak przebiega współpraca?</h3>
-                <div className="space-y-3 text-sm text-muted-foreground">
-                  <div className="flex items-start">
-                    <div className="w-6 h-6 rounded-full bg-primary text-primary-foreground text-xs flex items-center justify-center mr-3 mt-0.5 flex-shrink-0">
-                      1
-                    </div>
-                    <span>Kontakt i omówienie potrzeb</span>
-                  </div>
-                  <div className="flex items-start">
-                    <div className="w-6 h-6 rounded-full bg-primary text-primary-foreground text-xs flex items-center justify-center mr-3 mt-0.5 flex-shrink-0">
-                      2
-                    </div>
-                    <span>Przesłanie materiałów do analizy</span>
-                  </div>
-                  <div className="flex items-start">
-                    <div className="w-6 h-6 rounded-full bg-primary text-primary-foreground text-xs flex items-center justify-center mr-3 mt-0.5 flex-shrink-0">
-                      3
-                    </div>
-                    <span>Przygotowanie szczegółowej analizy</span>
-                  </div>
-                  <div className="flex items-start">
-                    <div className="w-6 h-6 rounded-full bg-primary text-primary-foreground text-xs flex items-center justify-center mr-3 mt-0.5 flex-shrink-0">
-                      4
-                    </div>
-                    <span>Prezentacja wyników i rekomendacji</span>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Czas realizacji */}
-            <Card className="border-0 shadow-lg">
-              <CardContent className="p-6">
-                <div className="flex items-center justify-center w-12 h-12 mb-4 rounded-xl bg-accent text-primary-foreground mx-auto">
-                  <FileText className="h-6 w-6" />
-                </div>
-                <h3 className="text-lg font-semibold text-center text-foreground mb-4">Czas realizacji</h3>
-                <div className="space-y-4 text-sm text-muted-foreground">
-                  <div className="text-center">
-                    <div className="font-semibold text-accent mb-1">Analiza strategii</div>
-                    <div>5-7 dni roboczych</div>
-                  </div>
-                  <Separator />
-                  <div className="text-center">
-                    <div className="font-semibold text-accent mb-1">Przegląd spółek</div>
-                    <div>3-5 dni roboczych</div>
-                  </div>
-                  <div className="text-center text-xs text-muted-foreground mt-4">
-                    * W przypadku pilnych zleceń możliwa jest ekspresowa realizacja za dodatkową opłatą
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Opinie klientów */}
-            <Card className="border-0 shadow-lg">
-              <CardContent className="p-6">
-                <div className="flex items-center justify-center w-12 h-12 mb-4 rounded-xl bg-accent text-primary-foreground mx-auto">
-                  <Star className="h-6 w-6" />
-                </div>
-                <h3 className="text-lg font-semibold text-center text-foreground mb-4">Opinie klientów</h3>
-                <div className="space-y-4">
-                  <div className="text-center">
-                    <div className="flex justify-center mb-2">
-                      {[...Array(5)].map((_, i) => (
-                        <Star key={i} className="h-4 w-4 text-yellow-400 fill-current" />
-                      ))}
-                    </div>
-                    <div className="text-sm text-muted-foreground italic">
-                      "Profesjonalna analiza, która pomogła mi zoptymalizować portfel. Polecam!"
-                    </div>
-                    <div className="text-xs text-muted-foreground mt-2">- Anna K.</div>
-                  </div>
-                  <Separator />
-                  <div className="text-center">
-                    <div className="flex justify-center mb-2">
-                      {[...Array(5)].map((_, i) => (
-                        <Star key={i} className="h-4 w-4 text-yellow-400 fill-current" />
-                      ))}
-                    </div>
-                    <div className="text-sm text-muted-foreground italic">
-                      "Szczegółowy przegląd spółek z konkretnymi rekomendacjami. Bardzo wartościowe."
-                    </div>
-                    <div className="text-xs text-muted-foreground mt-2">- Marcin W.</div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+        {/* CTA Section */}
+        <section className="text-center py-16 bg-gradient-to-r from-primary to-accent text-white rounded-3xl">
+          <h2 className="text-3xl font-bold mb-4">
+            Gotowy na następny krok w inwestowaniu?
+          </h2>
+          <p className="text-xl opacity-90 mb-8 max-w-2xl mx-auto">
+            Skontaktuj się ze mną już dziś i rozpocznij profesjonalną przygodę z rynkiem kapitałowym
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Link href="/kontakt">
+              <Button 
+                size="lg" 
+                variant="secondary"
+                className="bg-white text-primary hover:bg-gray-100 px-8 py-4 rounded-xl text-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+              >
+                <MessageCircle className="mr-2 h-5 w-5" />
+                Skontaktuj się
+              </Button>
+            </Link>
+                            <Link href="/wpisy">
+              <Button 
+                size="lg" 
+                variant="outline"
+                className="border-2 border-white text-white hover:bg-white hover:text-primary px-8 py-4 rounded-xl text-lg font-semibold transition-all duration-300"
+              >
+                <Lightbulb className="mr-2 h-5 w-5" />
+                Zobacz analizy
+              </Button>
+            </Link>
           </div>
-        </section>
-
-        {/* Call to Action */}
-        <section className="text-center">
-          <Card className="bg-gradient-to-r from-primary to-accent border-0 shadow-2xl">
-            <CardContent className="p-8 md:p-12">
-              <h2 className="text-2xl md:text-3xl font-bold text-primary-foreground mb-4">Gotowy na współpracę?</h2>
-              <p className="text-primary-foreground/90 mb-8 max-w-2xl mx-auto">
-                Skontaktuj się ze mną, aby omówić szczegóły i rozpocząć współpracę. Odpowiem na wszystkie pytania i
-                pomogę wybrać najlepszą opcję dla Ciebie.
-              </p>
-              <Link href="/kontakt">
-                <Button className="bg-card text-primary hover:bg-card/90 transition-all duration-500 rounded-2xl px-8 py-3 font-semibold shadow-xl hover:shadow-2xl transform hover:scale-105">
-                  Skontaktuj się ze mną
-                </Button>
-              </Link>
-            </CardContent>
-          </Card>
         </section>
       </main>
-
-      {/* Edit Service Modal */}
-      {editingService && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-card rounded-xl p-6 max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
-            <h3 className="text-xl font-bold mb-4">Edytuj usługę</h3>
-            <div className="space-y-4">
-              <div>
-                <Label>Tytuł</Label>
-                <Input
-                  value={editingService.title}
-                  onChange={(e) => setEditingService({ ...editingService, title: e.target.value })}
-                />
-              </div>
-              <div>
-                <Label>Opis</Label>
-                <Textarea
-                  value={editingService.description}
-                  onChange={(e) => setEditingService({ ...editingService, description: e.target.value })}
-                  rows={4}
-                />
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <Label>Cena</Label>
-                  <Input
-                    value={editingService.price}
-                    onChange={(e) => setEditingService({ ...editingService, price: e.target.value })}
-                  />
-                </div>
-                <div>
-                  <Label>Uwaga do ceny</Label>
-                  <Input
-                    value={editingService.priceNote}
-                    onChange={(e) => setEditingService({ ...editingService, priceNote: e.target.value })}
-                  />
-                </div>
-              </div>
-              <div>
-                <Label>Funkcje (jedna na linię)</Label>
-                <Textarea
-                  value={editingService.features.join("\n")}
-                  onChange={(e) =>
-                    setEditingService({
-                      ...editingService,
-                      features: e.target.value.split("\n").filter((f) => f.trim()),
-                    })
-                  }
-                  rows={4}
-                />
-              </div>
-              <div>
-                <Label>Kolor</Label>
-                <Input
-                  type="color"
-                  value={editingService.color}
-                  onChange={(e) => setEditingService({ ...editingService, color: e.target.value })}
-                />
-              </div>
-            </div>
-            <div className="flex justify-end space-x-2 mt-6">
-              <Button 
-                onClick={() => setEditingService(null)}
-                variant="outline"
-              >
-                Anuluj
-              </Button>
-              <Button
-                onClick={() => {
-                  setServices(services.map((s) => (s.id === editingService.id ? editingService : s)))
-                  setEditingService(null)
-                }}
-                className="bg-primary hover:bg-primary/90 text-primary-foreground"
-              >
-                Zapisz
-              </Button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Footer */}
-      <footer className="bg-background border-t border-border py-12 mt-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid md:grid-cols-2 gap-8">
-            <div>
-              <h4 className="text-lg font-semibold mb-4 text-foreground">Jakub Inwestycje</h4>
-              <p className="text-muted-foreground">Platforma edukacyjna dedykowana profesjonalnej wiedzy inwestycyjnej.</p>
-            </div>
-            <div>
-              <h4 className="text-lg font-semibold mb-4 text-foreground">Kontakt</h4>
-              <p className="text-muted-foreground mb-4">Masz pytania? Skontaktuj się ze mną poprzez formularz kontaktowy.</p>
-              <Link href="/kontakt">
-                <Button className="bg-primary hover:bg-primary/90 text-primary-foreground transition-all duration-300 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105">
-                  Formularz kontaktowy
-                </Button>
-              </Link>
-            </div>
-          </div>
-          <Separator className="my-8" />
-          <div className="text-center text-muted-foreground">
-            <p>&copy; 2024 Jakub Inwestycje. Wszystkie prawa zastrzeżone.</p>
-          </div>
-        </div>
-      </footer>
-
-      <style jsx>{`
-        @keyframes fade-in {
-          from {
-            opacity: 0;
-            transform: translateY(20px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-
-        .animate-fade-in {
-          animation: fade-in 0.8s ease-out;
-        }
-
-        .animate-fade-in-delay {
-          animation: fade-in 0.8s ease-out 0.2s both;
-        }
-      `}</style>
     </div>
   )
 }

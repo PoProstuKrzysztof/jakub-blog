@@ -13,7 +13,15 @@
 
 ### ✨ Kluczowe Funkcjonalności
 
-- 📝 **Zaawansowany edytor tekstów** z obsługą formatowania, obrazów i linków
+- 📝 **Zaawansowany edytor tekstów** podobny do Microsoft Word z obsługą:
+  - 🎨 Formatowanie tekstu (pogrubienie, kursywa, podkreślenie, indeksy)
+  - 📊 **Wykresy interaktywne** (słupkowe, liniowe, kołowe) z Chart.js
+  - 🎥 **Filmy YouTube** - bezpośrednie osadzanie
+  - 🖼️ **Obrazy** z upload plików i URL
+  - 📋 **Tabele** z edycją komórek
+  - ✅ **Listy zadań** z interaktywnymi checkboxami
+  - 🔗 **Linki** i cytaty
+  - ↩️ **Cofnij/Ponów** z pełną historią zmian
 - 🔐 **System uwierzytelniania** z Supabase Auth (email/hasło, OAuth)
 - 🛡️ **Ochrona tras** z middleware Next.js
 - 🔍 **System wyszukiwania i filtrowania** postów

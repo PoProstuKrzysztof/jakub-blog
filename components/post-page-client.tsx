@@ -9,6 +9,7 @@ import { CalendarDays, Eye, Download, FileText, ArrowLeft, User, Share2, Check }
 import Link from "next/link"
 import Image from "next/image"
 import { PostFull } from "@/lib/models/post"
+import { PostContentRenderer } from "@/components/post-content-renderer"
 import type { User as SupabaseUser } from '@supabase/supabase-js'
 
 interface PostPageClientProps {
@@ -48,14 +49,9 @@ export function PostPageClient({ post, user }: PostPageClientProps) {
     return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2)
   }
 
-  // Simple content renderer for HTML content
+  // Enhanced content renderer with chart support
   const renderContent = (content: string) => {
-    return (
-      <div 
-        className="prose prose-lg prose-gray max-w-none"
-        dangerouslySetInnerHTML={{ __html: content }}
-      />
-    )
+    return <PostContentRenderer content={content} />
   }
 
   return (

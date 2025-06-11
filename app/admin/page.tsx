@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
+import { SiteHeader } from "@/components/site-header"
 import {
   MoreHorizontal,
   Plus,
@@ -16,6 +17,12 @@ import {
   TrendingUp,
   Calendar,
   BarChart3,
+  Users,
+  Star,
+  ArrowRight,
+  Shield,
+  CheckCircle,
+  MessageCircle,
 } from "lucide-react"
 import Link from "next/link"
 import Image from "next/image"
@@ -81,28 +88,36 @@ const stats = [
     value: "12,450",
     change: "+12%",
     icon: Eye,
-    color: "#33D2A4",
+    color: "from-blue-500 to-blue-600",
+    bgColor: "bg-blue-50",
+    iconColor: "text-blue-600"
   },
   {
     title: "Opublikowane posty",
     value: "24",
     change: "+3",
     icon: FileText,
-    color: "#2C3E50",
+    color: "from-green-500 to-green-600",
+    bgColor: "bg-green-50",
+    iconColor: "text-green-600"
   },
   {
     title: "Szkice",
     value: "5",
     change: "+2",
     icon: Edit,
-    color: "#BDC3C7",
+    color: "from-orange-500 to-orange-600", 
+    bgColor: "bg-orange-50",
+    iconColor: "text-orange-600"
   },
   {
     title: "Średnie wyświetlenia",
     value: "518",
     change: "+8%",
     icon: TrendingUp,
-    color: "#33D2A4",
+    color: "from-purple-500 to-purple-600",
+    bgColor: "bg-purple-50",
+    iconColor: "text-purple-600"
   },
 ]
 
@@ -121,17 +136,9 @@ export default function AdminDashboard() {
       case "published":
         return <Badge className="bg-green-100 text-green-800 hover:bg-green-100 rounded-xl">Opublikowany</Badge>
       case "draft":
-        return (
-          <Badge variant="secondary" className="rounded-xl">
-            Szkic
-          </Badge>
-        )
+        return <Badge variant="secondary" className="rounded-xl">Szkic</Badge>
       default:
-        return (
-          <Badge variant="outline" className="rounded-xl">
-            Nieznany
-          </Badge>
-        )
+        return <Badge variant="outline" className="rounded-xl">Nieznany</Badge>
     }
   }
 
@@ -148,202 +155,330 @@ export default function AdminDashboard() {
   }
 
   const confirmDelete = async () => {
-    // Simulate delete
     await new Promise((resolve) => setTimeout(resolve, 1000))
     setDeleteModalOpen(false)
     setSelectedPost(null)
-    // Here you would actually delete the post
   }
 
   const saveEdit = async () => {
-    // Simulate save
     await new Promise((resolve) => setTimeout(resolve, 1000))
     setEditModalOpen(false)
     setSelectedPost(null)
-    // Here you would actually save the changes
   }
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="bg-card shadow-lg border-b border-border">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center space-x-4">
-              <Link href="/" className="text-2xl font-bold text-foreground">
-                Jakub Inwestycje
+      <SiteHeader 
+        currentPage="admin"
+        showSearch={false}
+        searchPlaceholder="Szukaj w panelu..."
+      />
+
+      {/* Hero Section */}
+      <section className="relative bg-gradient-to-br from-primary/5 via-background to-accent/5 py-16 lg:py-24 overflow-hidden">
+        <div className="absolute inset-0 bg-grid-pattern opacity-5"></div>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="text-center space-y-6">
+            <div className="space-y-4">
+              <Badge className="bg-primary/10 text-primary border-primary/20 px-4 py-2 rounded-full text-sm font-medium">
+                ⚡ Panel Twórcy
+              </Badge>
+              <h1 className="text-4xl lg:text-5xl font-bold text-foreground leading-tight">
+                Zarządzaj swoją <span className="text-primary">treścią</span>
+              </h1>
+              <p className="text-xl text-muted-foreground leading-relaxed max-w-2xl mx-auto">
+                Profesjonalny panel administracyjny do zarządzania postami, analizami i treścią na Twoim blogu finansowym
+              </p>
+            </div>
+
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link href="/admin/nowy-post">
+                <Button 
+                  size="lg" 
+                  className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-4 rounded-xl text-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+                >
+                  <Plus className="mr-2 h-5 w-5" />
+                  Nowy post
+                </Button>
               </Link>
-              <Badge className="bg-primary text-primary-foreground rounded-xl">Panel Twórcy</Badge>
+              <Link href="/admin/analytics">
+                <Button 
+                  size="lg" 
+                  variant="outline" 
+                  className="border-2 border-border hover:border-primary px-8 py-4 rounded-xl text-lg font-semibold transition-all duration-300 hover:bg-primary/5"
+                >
+                  <BarChart3 className="mr-2 h-5 w-5" />
+                  Analytics
+                </Button>
+              </Link>
             </div>
           </div>
         </div>
-      </header>
+      </section>
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Page Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-primary-foreground mb-2 animate-fade-in">Panel Twórcy</h1>
-          <p className="text-muted-foreground animate-fade-in-delay">Zarządzaj swoimi postami i treścią</p>
-        </div>
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        {/* Statistics Cards */}
+        <section className="mb-20">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-foreground mb-4">
+              Przegląd statystyk
+            </h2>
+            <p className="text-xl text-muted-foreground">
+              Kluczowe metryki wydajności Twojego bloga
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+            {stats.map((stat, index) => (
+              <Card key={index} className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 group relative overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-accent/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                <CardContent className="p-6 relative z-10">
+                  <div className="flex items-center justify-between mb-4">
+                    <div className={`w-12 h-12 rounded-xl ${stat.bgColor} flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}>
+                      <stat.icon className={`h-6 w-6 ${stat.iconColor}`} />
+                    </div>
+                    <Badge 
+                      className={`${stat.change.startsWith('+') ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'} rounded-lg`}
+                    >
+                      {stat.change}
+                    </Badge>
+                  </div>
+                  <div className="space-y-1">
+                    <p className="text-sm text-muted-foreground font-medium">{stat.title}</p>
+                    <p className="text-2xl font-bold text-foreground">{stat.value}</p>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </section>
+
         {/* Posts Management */}
-        <Card className="bg-card/95 rounded-2xl shadow-2xl">
-          <CardHeader>
-            <div className="flex justify-between items-center">
-              <div>
-                <CardTitle className="text-foreground">Zarządzanie postami</CardTitle>
-                <CardDescription>Przeglądaj, edytuj i zarządzaj swoimi postami</CardDescription>
-              </div>
-              <div className="flex items-center gap-3">
-                <Link href="/admin/analytics">
-                  <Button 
-                    variant="outline"
-                    className="group relative overflow-hidden border-2 border-border bg-transparent text-foreground hover:text-white hover:border-primary transition-all duration-300 rounded-xl px-6 py-2.5 font-medium shadow-sm hover:shadow-lg transform hover:scale-105"
-                  >
-                    <div className="absolute inset-0 bg-gradient-to-r from-primary to-accent translate-x-[-100%] group-hover:translate-x-0 transition-transform duration-300 ease-out"></div>
-                    <div className="relative flex items-center">
-                      <BarChart3 className="h-5 w-5 mr-2 transition-transform duration-300 group-hover:rotate-12" />
-                      Analytics
-                    </div>
-                  </Button>
-                </Link>
-                <Link href="/admin/nowy-post">
-                  <Button 
-                    variant="outline"
-                    className="group relative overflow-hidden border-2 border-border bg-transparent text-foreground hover:text-white hover:border-primary transition-all duration-300 rounded-xl px-6 py-2.5 font-medium shadow-sm hover:shadow-lg transform hover:scale-105"
-                  >
-                    <div className="absolute inset-0 bg-gradient-to-r from-primary to-accent translate-x-[-100%] group-hover:translate-x-0 transition-transform duration-300 ease-out"></div>
-                    <div className="relative flex items-center">
-                      <Plus className="h-5 w-5 mr-2 transition-transform duration-300 group-hover:rotate-180" />
-                      Nowy post
-                    </div>
-                  </Button>
-                </Link>
-              </div>
-            </div>
-          </CardHeader>
-          <CardContent>
-            {/* Search */}
-            <div className="mb-6">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
-                <Input
-                  placeholder="Szukaj postów..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10 border-accent rounded-xl focus:border-primary transition-colors duration-300"
-                />
-              </div>
-            </div>
-
-            {/* Posts Table */}
-            <div className="space-y-4">
-              {filteredPosts.map((post, index) => (
-                <div
-                  key={post.id}
-                  className="flex items-center space-x-4 p-4 bg-background rounded-xl hover:bg-muted transition-all duration-300 transform hover:scale-[1.02]"
-                  style={{ animationDelay: `${index * 100}ms` }}
-                >
-                  {/* Thumbnail */}
-                  <div className="relative h-16 w-24 rounded-xl overflow-hidden flex-shrink-0 shadow-md">
-                    <Image src={post.mainImage || "/placeholder.svg"} alt={post.title} fill className="object-cover" />
-                  </div>
-
-                  {/* Content */}
-                  <div className="flex-1 min-w-0">
-                    <h3 className="font-semibold text-foreground truncate">{post.title}</h3>
-                    <div className="flex items-center space-x-4 mt-1">
-                      <span className="text-sm text-muted-foreground">{post.category}</span>
-                      {getStatusBadge(post.status)}
-                      <span className="text-sm text-muted-foreground">
-                        {post.attachments} załącznik{post.attachments !== 1 ? "i" : ""}
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Stats */}
-                  <div className="flex items-center space-x-6 text-sm text-muted-foreground">
-                    <div className="flex items-center">
-                      <Eye className="h-4 w-4 mr-1" />
-                      {post.views}
-                    </div>
-                    <div className="flex items-center">
-                      <Calendar className="h-4 w-4 mr-1" />
-                      {post.publishedAt ? new Date(post.publishedAt).toLocaleDateString("pl-PL") : "Nie opublikowany"}
-                    </div>
-                  </div>
-
-                  {/* Actions */}
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="group relative overflow-hidden hover:bg-gradient-to-r hover:from-purple-500 hover:to-pink-500 hover:text-white transition-all duration-300 rounded-xl border-2 border-transparent hover:border-purple-300 hover:shadow-lg transform hover:scale-105"
-                      >
-                        <MoreHorizontal className="h-4 w-4 transition-transform duration-300 group-hover:rotate-90" />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end" className="bg-card border-accent rounded-xl shadow-xl">
-                      <DropdownMenuItem asChild>
-                        <Link href={`/post/${post.id}`}>
-                          <Eye className="h-4 w-4 mr-2" />
-                          Podgląd
-                        </Link>
-                      </DropdownMenuItem>
-                      <DropdownMenuItem onClick={() => handleEditPost(post)}>
-                        <Edit className="h-4 w-4 mr-2" />
-                        Szybka edycja
-                      </DropdownMenuItem>
-                      <DropdownMenuItem asChild>
-                        <Link href={`/admin/edytuj/${post.id}`}>
-                          <Edit className="h-4 w-4 mr-2" />
-                          Pełna edycja
-                        </Link>
-                      </DropdownMenuItem>
-                      <DropdownMenuItem
-                        className="text-red-600 focus:text-red-600"
-                        onClick={() => handleDeletePost(post)}
-                      >
-                        <Trash2 className="h-4 w-4 mr-2" />
-                        Usuń
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
+        <section>
+          <Card className="border-0 shadow-2xl hover:shadow-3xl transition-shadow duration-500">
+            <CardHeader className="border-b border-border/50">
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                <div>
+                  <CardTitle className="text-2xl font-bold text-foreground flex items-center">
+                    <FileText className="mr-2 h-6 w-6 text-primary" />
+                    Zarządzanie postami
+                  </CardTitle>
+                  <CardDescription className="text-muted-foreground mt-1">
+                    Przeglądaj, edytuj i zarządzaj swoimi postami
+                  </CardDescription>
                 </div>
-              ))}
-            </div>
-
-            {filteredPosts.length === 0 && (
-              <div className="text-center py-12">
-                <p className="text-muted-foreground">Nie znaleziono postów spełniających kryteria wyszukiwania.</p>
+                <div className="flex items-center gap-3">
+                  <Link href="/admin/analytics">
+                    <Button 
+                      variant="outline"
+                      className="border-2 border-border hover:border-primary hover:bg-primary/5 rounded-xl px-6 py-2.5 font-medium transition-all duration-300"
+                    >
+                      <BarChart3 className="h-4 w-4 mr-2" />
+                      Analytics
+                    </Button>
+                  </Link>
+                  <Link href="/admin/nowy-post">
+                    <Button 
+                      className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl px-6 py-2.5 font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+                    >
+                      <Plus className="h-4 w-4 mr-2" />
+                      Nowy post
+                    </Button>
+                  </Link>
+                </div>
               </div>
-            )}
-          </CardContent>
-        </Card>
+            </CardHeader>
+            
+            <CardContent className="p-6">
+              {/* Search */}
+              <div className="mb-8">
+                <div className="relative max-w-md">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
+                  <Input
+                    placeholder="Szukaj postów..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="pl-10 border-border rounded-xl focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-300"
+                  />
+                </div>
+              </div>
+
+              {/* Posts List */}
+              <div className="space-y-4">
+                {filteredPosts.map((post, index) => (
+                  <div
+                    key={post.id}
+                    className="flex items-center justify-between p-6 bg-card/50 hover:bg-card/80 rounded-xl border border-border/50 hover:border-border transition-all duration-300 transform hover:scale-[1.01]"
+                  >
+                    <div className="flex items-center space-x-4 flex-1">
+                      {/* Thumbnail */}
+                      <div className="relative h-16 w-24 rounded-lg overflow-hidden flex-shrink-0 shadow-md">
+                        <Image 
+                          src={post.mainImage || "/placeholder.svg"} 
+                          alt={post.title} 
+                          fill 
+                          className="object-cover" 
+                        />
+                      </div>
+
+                      {/* Post Info */}
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-3 mb-2">
+                          <h3 className="font-semibold text-foreground truncate">
+                            {post.title}
+                          </h3>
+                          {getStatusBadge(post.status)}
+                        </div>
+                        
+                        <div className="flex items-center space-x-4 text-sm text-muted-foreground">
+                          <span className="flex items-center">
+                            <Calendar className="h-4 w-4 mr-1" />
+                            {post.publishedAt ? new Date(post.publishedAt).toLocaleDateString("pl-PL") : "Nie opublikowano"}
+                          </span>
+                          <span className="flex items-center">
+                            <Eye className="h-4 w-4 mr-1" />
+                            {post.views} wyświetleń
+                          </span>
+                          <Badge variant="secondary" className="rounded-lg">
+                            {post.category}
+                          </Badge>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Actions */}
+                    <div className="flex items-center space-x-2 ml-4">
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => handleEditPost(post)}
+                        className="rounded-lg hover:bg-primary/5 hover:border-primary transition-all duration-300"
+                      >
+                        <Edit className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        className="rounded-lg hover:bg-green-50 hover:border-green-300 hover:text-green-700 transition-all duration-300"
+                      >
+                        <Eye className="h-4 w-4" />
+                      </Button>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button size="sm" variant="outline" className="rounded-lg">
+                            <MoreHorizontal className="h-4 w-4" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end" className="rounded-xl">
+                          <DropdownMenuItem 
+                            onClick={() => handleDeletePost(post)}
+                            className="text-red-600 focus:text-red-600 focus:bg-red-50 rounded-lg"
+                          >
+                            <Trash2 className="h-4 w-4 mr-2" />
+                            Usuń
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {filteredPosts.length === 0 && (
+                <div className="text-center py-12">
+                  <FileText className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
+                  <h3 className="text-lg font-semibold text-foreground mb-2">Brak postów</h3>
+                  <p className="text-muted-foreground mb-6">
+                    {searchTerm ? "Nie znaleziono postów spełniających kryteria wyszukiwania" : "Nie masz jeszcze żadnych postów"}
+                  </p>
+                  <Link href="/admin/nowy-post">
+                    <Button className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl">
+                      <Plus className="h-4 w-4 mr-2" />
+                      Utwórz pierwszy post
+                    </Button>
+                  </Link>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </section>
+
+        {/* Quick Actions */}
+        <section className="mt-20">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-foreground mb-4">
+              Szybkie akcje
+            </h2>
+            <p className="text-xl text-muted-foreground">
+              Najczęściej używane funkcje w panelu administracyjnym
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8">
+            {[
+              {
+                icon: Plus,
+                title: "Nowy post",
+                description: "Utwórz nową analizę lub artykuł edukacyjny",
+                href: "/admin/nowy-post",
+                color: "from-blue-500 to-blue-600",
+                bgColor: "bg-blue-50",
+                iconColor: "text-blue-600"
+              },
+              {
+                icon: BarChart3,
+                title: "Analytics",
+                description: "Przegląd statystyk i analityki bloga",
+                href: "/admin/analytics",
+                color: "from-green-500 to-green-600",
+                bgColor: "bg-green-50",
+                iconColor: "text-green-600"
+              },
+              {
+                icon: MessageCircle,
+                title: "Wiadomości",
+                description: "Sprawdź wiadomości od czytelników",
+                href: "/kontakt",
+                color: "from-purple-500 to-purple-600",
+                bgColor: "bg-purple-50",
+                iconColor: "text-purple-600"
+              }
+            ].map((action, index) => (
+              <Link key={index} href={action.href}>
+                <Card className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 group cursor-pointer">
+                  <CardContent className="p-8 text-center">
+                    <div className={`w-16 h-16 mx-auto mb-6 rounded-2xl ${action.bgColor} flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}>
+                      <action.icon className={`h-8 w-8 ${action.iconColor}`} />
+                    </div>
+                    <h3 className="text-xl font-semibold text-foreground mb-3">{action.title}</h3>
+                    <p className="text-muted-foreground mb-6">{action.description}</p>
+                    <div className="flex items-center justify-center text-primary font-medium">
+                      Przejdź
+                      <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform duration-300" />
+                    </div>
+                  </CardContent>
+                </Card>
+              </Link>
+            ))}
+          </div>
+        </section>
       </main>
 
       {/* Delete Modal */}
       <Dialog open={deleteModalOpen} onOpenChange={setDeleteModalOpen}>
-        <DialogContent className="sm:max-w-[425px]">
+        <DialogContent className="rounded-xl">
           <DialogHeader>
-            <DialogTitle className="text-red-600">Usuń post</DialogTitle>
+            <DialogTitle>Potwierdź usunięcie</DialogTitle>
             <DialogDescription>
               Czy na pewno chcesz usunąć post "{selectedPost?.title}"? Ta akcja jest nieodwracalna.
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
-            <Button 
-              variant="outline" 
-              onClick={() => setDeleteModalOpen(false)}
-              className="rounded-xl border-2 hover:bg-gray-50 transition-all duration-300"
-            >
+            <Button variant="outline" onClick={() => setDeleteModalOpen(false)} className="rounded-xl">
               Anuluj
             </Button>
-            <Button 
-              onClick={confirmDelete} 
-              className="bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
-            >
-              Usuń post
+            <Button onClick={confirmDelete} variant="destructive" className="rounded-xl">
+              Usuń
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -351,29 +486,27 @@ export default function AdminDashboard() {
 
       {/* Edit Modal */}
       <Dialog open={editModalOpen} onOpenChange={setEditModalOpen}>
-        <DialogContent className="sm:max-w-[500px]">
+        <DialogContent className="rounded-xl">
           <DialogHeader>
-            <DialogTitle>Szybka edycja posta</DialogTitle>
-            <DialogDescription>Edytuj podstawowe informacje o poście</DialogDescription>
+            <DialogTitle>Edytuj post</DialogTitle>
+            <DialogDescription>
+              Wprowadź zmiany w wybranym poście
+            </DialogDescription>
           </DialogHeader>
-          <div className="grid gap-4 py-4">
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="edit-title" className="text-right">
-                Tytuł
-              </Label>
+          <div className="space-y-4">
+            <div>
+              <Label htmlFor="title">Tytuł</Label>
               <Input
-                id="edit-title"
+                id="title"
                 value={editTitle}
                 onChange={(e) => setEditTitle(e.target.value)}
-                className="col-span-3"
+                className="rounded-xl"
               />
             </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="edit-category" className="text-right">
-                Kategoria
-              </Label>
+            <div>
+              <Label htmlFor="category">Kategoria</Label>
               <Select value={editCategory} onValueChange={setEditCategory}>
-                <SelectTrigger className="col-span-3">
+                <SelectTrigger className="rounded-xl">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -385,43 +518,15 @@ export default function AdminDashboard() {
             </div>
           </div>
           <DialogFooter>
-            <Button 
-              variant="outline" 
-              onClick={() => setEditModalOpen(false)}
-              className="rounded-xl border-2 hover:bg-gray-50 transition-all duration-300"
-            >
+            <Button variant="outline" onClick={() => setEditModalOpen(false)} className="rounded-xl">
               Anuluj
             </Button>
-            <Button 
-              onClick={saveEdit} 
-              className="bg-gradient-to-r from-gray-600 to-gray-700 hover:from-gray-700 hover:to-gray-800 text-white rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
-            >
-              Zapisz zmiany
+            <Button onClick={saveEdit} className="rounded-xl">
+              Zapisz
             </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
-
-      <style jsx>{`
-        @keyframes fade-in {
-          from {
-            opacity: 0;
-            transform: translateY(20px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-
-        .animate-fade-in {
-          animation: fade-in 0.8s ease-out;
-        }
-
-        .animate-fade-in-delay {
-          animation: fade-in 0.8s ease-out 0.2s both;
-        }
-      `}</style>
     </div>
   )
 }

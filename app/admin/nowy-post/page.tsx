@@ -19,6 +19,7 @@ import { PostService } from '@/lib/services/post-service'
 import { createClient } from '@/lib/supabase'
 import { Category } from '@/lib/models/category'
 import { Tag } from '@/lib/models/tag'
+import { RichTextEditorDynamic } from '@/components/editor/rich-text-editor-dynamic'
 import Image from 'next/image'
 import Link from 'next/link'
 
@@ -62,6 +63,8 @@ export default function NewPostPage() {
   const [activeTab, setActiveTab] = useState('content')
   const [newTag, setNewTag] = useState('')
   const [newCategory, setNewCategory] = useState('')
+  const [slugError, setSlugError] = useState('')
+  const [isCheckingSlug, setIsCheckingSlug] = useState(false)
 
   // Data
   const [categories, setCategories] = useState<Category[]>([])
@@ -111,6 +114,54 @@ export default function NewPostPage() {
       setFormData(prev => ({ ...prev, slug }))
     }
   }, [formData.title, formData.slug])
+
+  // Debounced slug checking
+  useEffect(() => {
+    if (!formData.slug) {
+      setSlugError('')
+      return
+    }
+
+    const timeoutId = setTimeout(() => {
+      checkSlugUniqueness(formData.slug)
+    }, 500)
+
+    return () => clearTimeout(timeoutId)
+  }, [formData.slug])
+
+  const checkSlugUniqueness = async (slug: string) => {
+    if (!slug.trim()) {
+      setSlugError('')
+      return
+    }
+
+    setIsCheckingSlug(true)
+    try {
+      const supabase = createClient()
+      const { data, error } = await supabase
+        .from('posts')
+        .select('id')
+        .eq('slug', slug)
+        .limit(1)
+
+      if (error) {
+        console.error('Error checking slug:', error)
+        setSlugError('Nie udało się sprawdzić unikalności slug')
+        return
+      }
+
+      if (data && data.length > 0) {
+        setSlugError('Ten slug już istnieje. Proszę wybrać inny.')
+      } else {
+        setSlugError('')
+      }
+    } catch (error) {
+      console.error('Error checking slug:', error)
+      setSlugError('Nie udało się sprawdzić unikalności slug')
+    } finally {
+      setIsCheckingSlug(false)
+    }
+  }
 
   const handleInputChange = (field: keyof PostFormData, value: string | boolean | string[]) => {
     setFormData(prev => ({ ...prev, [field]: value }))
@@ -224,20 +275,69 @@ export default function NewPostPage() {
       return
     }
 
+    if (slugError) {
+      toast({
+        title: 'Błąd',
+        description: 'Proszę poprawić błędy przed zapisaniem posta',
+        variant: 'destructive'
+      })
+      return
+    }
+
     setIsSaving(true)
 
     try {
+      // Get current user
+      const supabase = createClient()
+      const { data: { user }, error: userError } = await supabase.auth.getUser()
+      
+      if (userError || !user) {
+        throw new Error('Nie udało się pobrać danych użytkownika')
+      }
+
       // Upload featured image if exists
       let featuredImageUrl = formData.featured_image_url
       if (featuredImage) {
-        // Here you would implement image upload to Supabase Storage
-        // For now, we'll use a placeholder
-        featuredImageUrl = '/placeholder-image.jpg'
+        try {
+          // Generate unique filename
+          const fileExt = featuredImage.name.split('.').pop()?.toLowerCase() || 'jpg'
+          const fileName = `${Date.now()}-${Math.random().toString(36).substring(2)}.${fileExt}`
+          const filePath = `posts/${fileName}`
+
+          // Upload to Supabase Storage
+          const { data: uploadData, error: uploadError } = await supabase.storage
+            .from('images')
+            .upload(filePath, featuredImage, {
+              contentType: featuredImage.type,
+              cacheControl: '3600',
+              upsert: false
+            })
+
+          if (uploadError) {
+            throw new Error(`Błąd uploadu obrazu: ${uploadError.message}`)
+          }
+
+          // Get public URL
+          const { data: { publicUrl } } = supabase.storage
+            .from('images')
+            .getPublicUrl(filePath)
+
+          featuredImageUrl = publicUrl
+        } catch (uploadError) {
+          console.error('Error uploading featured image:', uploadError)
+          toast({
+            title: 'Ostrzeżenie',
+            description: 'Nie udało się przesłać obrazu głównego. Post zostanie zapisany bez obrazu.',
+            variant: 'destructive'
+          })
+          // Continue without featured image
+          featuredImageUrl = undefined
+        }
       }
 
       const postData = {
         title: formData.title,
-        slug: formData.slug || formData.title.toLowerCase().replace(/\s+/g, '-'),
+        slug: formData.slug?.trim() || '', // PostService wygeneruje unikalny slug jeśli pusty
         excerpt: formData.excerpt,
         content: formData.content,
         status,
@@ -249,7 +349,7 @@ export default function NewPostPage() {
         tags: formData.tags
       }
 
-      const response = await postService.createPost(postData)
+      const response = await postService.createPost(postData, user.id)
 
       if (response.data) {
         toast({
@@ -262,9 +362,10 @@ export default function NewPostPage() {
       }
     } catch (error) {
       console.error('Error saving post:', error)
+      const errorMessage = error instanceof Error ? error.message : 'Nie udało się zapisać posta'
       toast({
         title: 'Błąd',
-        description: 'Nie udało się zapisać posta',
+        description: errorMessage,
         variant: 'destructive'
       })
     } finally {
@@ -334,7 +435,23 @@ export default function NewPostPage() {
                       value={formData.slug}
                       onChange={(e) => handleInputChange('slug', e.target.value)}
                       placeholder="slug-posta"
+                      className={slugError ? 'border-red-500' : ''}
                     />
+                    {isCheckingSlug && (
+                      <p className="text-sm text-muted-foreground mt-1">
+                        Sprawdzanie unikalności...
+                      </p>
+                    )}
+                    {slugError && (
+                      <p className="text-sm text-red-500 mt-1">
+                        {slugError}
+                      </p>
+                    )}
+                    {!slugError && !isCheckingSlug && formData.slug && (
+                      <p className="text-sm text-green-600 mt-1">
+                        Slug jest dostępny
+                      </p>
+                    )}
                   </div>
 
                   <div>
@@ -353,14 +470,16 @@ export default function NewPostPage() {
               <Card>
                 <CardHeader>
                   <CardTitle>Treść posta</CardTitle>
+                  <p className="text-sm text-muted-foreground">
+                    Użyj zaawansowanego edytora do tworzenia bogatej treści z obrazami, filmami i wykresami
+                  </p>
                 </CardHeader>
                 <CardContent>
-                  <Textarea
-                    value={formData.content}
-                    onChange={(e) => handleContentChange(e.target.value)}
+                  <RichTextEditorDynamic
+                    content={formData.content}
+                    onChange={handleContentChange}
                     placeholder="Napisz treść posta..."
-                    rows={15}
-                    className="min-h-[400px]"
+                    className="min-h-[500px]"
                   />
                 </CardContent>
               </Card>

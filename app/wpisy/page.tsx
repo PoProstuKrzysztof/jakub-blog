@@ -1,12 +1,12 @@
 import { Suspense } from "react"
-import { HomePageClient } from "@/components/home-page-client"
+import { BlogPageClient } from "@/components/blog-page-client"
 import { PostsLoading } from "@/components/posts-loading"
 import { createClient } from "@/lib/supabase"
 import { PostFull } from "@/lib/models/post"
 
 export const metadata = {
-  title: 'Jakub Inwestycje - Profesjonalne analizy finansowe',
-  description: 'Osiągnij finansową niezależność dzięki profesjonalnym analizom spółek, strategiom inwestycyjnym i edukacji finansowej.',
+  title: 'Wpisy - Jakub Inwestycje',
+  description: 'Najnowsze artykuły o inwestowaniu i analizie rynków finansowych.',
 }
 
 async function getPosts(): Promise<PostFull[]> {
@@ -41,7 +41,7 @@ async function getUserFromSession() {
   return user
 }
 
-export default async function HomePage() {
+export default async function WpisyPage() {
   const [posts, user] = await Promise.all([
     getPosts(),
     getUserFromSession(),
@@ -49,7 +49,7 @@ export default async function HomePage() {
 
   return (
     <Suspense fallback={<PostsLoading />}>
-      <HomePageClient initialPosts={posts} user={user} />
+      <BlogPageClient initialPosts={posts} user={user} />
     </Suspense>
   )
-}
+} 

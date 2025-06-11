@@ -1,4 +1,5 @@
 import { SupabaseClient } from '@supabase/supabase-js'
+import { createClient } from '../supabase'
 import {
   Post,
   PostFull,
@@ -23,6 +24,49 @@ export class PostService {
 
   private async getSupabaseClient() {
     return this.supabase instanceof Promise ? await this.supabase : this.supabase
+  }
+
+  /**
+   * Generuje unikalny slug na podstawie tytułu
+   */
+  private async generateUniqueSlug(title: string, excludeId?: string): Promise<string> {
+    const baseSlug = title
+      .toLowerCase()
+      .replace(/[^a-z0-9\s-]/g, '')
+      .replace(/\s+/g, '-')
+      .replace(/-+/g, '-')
+      .trim()
+
+    let slug = baseSlug
+    let counter = 1
+
+    while (true) {
+      const supabase = await this.getSupabaseClient()
+      let query = supabase
+        .from('posts')
+        .select('id')
+        .eq('slug', slug)
+
+      if (excludeId) {
+        query = query.neq('id', excludeId)
+      }
+
+      const { data, error } = await query
+
+      if (error) {
+        console.error('Error checking slug uniqueness:', error)
+        break
+      }
+
+      if (!data || data.length === 0) {
+        break
+      }
+
+      counter++
+      slug = `${baseSlug}-${counter}`
+    }
+
+    return slug
   }
 
   /**
@@ -316,10 +360,15 @@ export class PostService {
     try {
       const supabase = await this.getSupabaseClient()
       
+      // Generowanie unikalnego slug jeśli nie podano lub jest pusty
+      const slug = postData.slug && postData.slug.trim() 
+        ? postData.slug 
+        : await this.generateUniqueSlug(postData.title)
+      
       // Przygotowanie danych posta
       const postInsert: PostInsert = {
         title: postData.title,
-        slug: postData.slug,
+        slug: slug,
         content: postData.content,
         excerpt: postData.excerpt,
         featured_image_url: postData.featured_image_url,
@@ -397,7 +446,13 @@ export class PostService {
       return this.getPostById(post.id)
     } catch (error) {
       console.error('Error creating post:', error)
-      return { data: null, error: (error as Error).message }
+      
+      // Sprawdź czy to błąd duplikatu slug
+      if (error && typeof error === 'object' && 'code' in error && error.code === '23505') {
+        return { data: null, error: 'Post z tym slug już istnieje. Proszę zmienić slug.' }
+      }
+      
+      return { data: null, error: (error as Error).message || 'Wystąpił nieoczekiwany błąd podczas tworzenia posta' }
     }
   }
 
