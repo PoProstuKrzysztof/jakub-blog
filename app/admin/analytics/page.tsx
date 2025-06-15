@@ -214,236 +214,245 @@ export default function AnalyticsPage() {
   }
 
   return (
-    <div className="container mx-auto p-6 space-y-8">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">Analityka</h1>
-          <p className="text-muted-foreground">
-            Przegląd statystyk i wydajności bloga
-          </p>
+    <div className="min-h-screen bg-background">
+      <SiteHeader 
+        currentPage="admin"
+        adminMode={true}
+        adminTitle="Analytics"
+        showSearch={false}
+      />
+
+      <div className="container mx-auto p-6 space-y-8">
+        {/* Header */}
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-bold tracking-tight">Analityka</h1>
+            <p className="text-muted-foreground">
+              Przegląd statystyk i wydajności bloga
+            </p>
+          </div>
         </div>
-      </div>
 
-      {/* Key Metrics */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
-              Całkowite wyświetlenia
-            </CardTitle>
-            <Eye className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{mockData.totalViews.toLocaleString()}</div>
-            <p className="text-xs text-muted-foreground">
-              +20.1% od ostatniego miesiąca
-            </p>
-          </CardContent>
-        </Card>
-        
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
-              Opublikowane posty
-            </CardTitle>
-            <MessageSquare className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{mockData.totalPosts}</div>
-            <p className="text-xs text-muted-foreground">
-              +3 w tym miesiącu
-            </p>
-          </CardContent>
-        </Card>
-        
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
-              Zarejestrowani użytkownicy
-            </CardTitle>
-            <Users className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{mockData.totalUsers}</div>
-            <p className="text-xs text-muted-foreground">
-              +12% od ostatniego miesiąca
-            </p>
-          </CardContent>
-        </Card>
-        
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
-              Średni czas czytania
-            </CardTitle>
-            <Clock className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{mockData.avgReadTime} min</div>
-            <p className="text-xs text-muted-foreground">
-              +0.3 min od ostatniego miesiąca
-            </p>
-          </CardContent>
-        </Card>
-      </div>
+        {/* Key Metrics */}
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">
+                Całkowite wyświetlenia
+              </CardTitle>
+              <Eye className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{mockData.totalViews.toLocaleString()}</div>
+              <p className="text-xs text-muted-foreground">
+                +20.1% od ostatniego miesiąca
+              </p>
+            </CardContent>
+          </Card>
+          
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">
+                Opublikowane posty
+              </CardTitle>
+              <MessageSquare className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{mockData.totalPosts}</div>
+              <p className="text-xs text-muted-foreground">
+                +3 w tym miesiącu
+              </p>
+            </CardContent>
+          </Card>
+          
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">
+                Zarejestrowani użytkownicy
+              </CardTitle>
+              <Users className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{mockData.totalUsers}</div>
+              <p className="text-xs text-muted-foreground">
+                +12% od ostatniego miesiąca
+              </p>
+            </CardContent>
+          </Card>
+          
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">
+                Średni czas czytania
+              </CardTitle>
+              <Clock className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{mockData.avgReadTime} min</div>
+              <p className="text-xs text-muted-foreground">
+                +0.3 min od ostatniego miesiąca
+              </p>
+            </CardContent>
+          </Card>
+        </div>
 
-      {/* Charts Row */}
-      <div className="grid gap-4 md:grid-cols-2">
-        {/* Views Over Time */}
+        {/* Charts Row */}
+        <div className="grid gap-4 md:grid-cols-2">
+          {/* Views Over Time */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Wyświetlenia w czasie</CardTitle>
+              <CardDescription>
+                Ostatnie 7 dni
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <ResponsiveContainer width="100%" height={300}>
+                <LineChart data={mockData.viewsData}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis 
+                    dataKey="date" 
+                    tickFormatter={(value) => new Date(value).toLocaleDateString('pl-PL', { month: 'short', day: 'numeric' })}
+                  />
+                  <YAxis />
+                  <Tooltip 
+                    labelFormatter={(value) => new Date(value).toLocaleDateString('pl-PL')}
+                    formatter={(value) => [value, 'Wyświetlenia']}
+                  />
+                  <Line 
+                    type="monotone" 
+                    dataKey="views" 
+                    stroke="#8884d8" 
+                    strokeWidth={2}
+                    dot={{ fill: '#8884d8' }}
+                  />
+                </LineChart>
+              </ResponsiveContainer>
+            </CardContent>
+          </Card>
+
+          {/* Traffic Sources */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Źródła ruchu</CardTitle>
+              <CardDescription>
+                Rozkład źródeł odwiedzin
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <ResponsiveContainer width="100%" height={300}>
+                <PieChart>
+                  <Pie
+                    data={mockData.trafficSources}
+                    cx="50%"
+                    cy="50%"
+                    labelLine={false}
+                    label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                    outerRadius={80}
+                    fill="#8884d8"
+                    dataKey="value"
+                  >
+                    {mockData.trafficSources.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={entry.color} />
+                    ))}
+                  </Pie>
+                  <Tooltip />
+                </PieChart>
+              </ResponsiveContainer>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Popular Posts and Device Stats */}
+        <div className="grid gap-4 md:grid-cols-2">
+          {/* Popular Posts */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Najpopularniejsze posty</CardTitle>
+              <CardDescription>
+                Top 5 postów według wyświetleń
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {mockData.popularPosts.map((post, index) => (
+                  <div key={post.slug} className="flex items-center justify-between">
+                    <div className="flex items-center space-x-3">
+                      <Badge variant="secondary" className="w-6 h-6 rounded-full p-0 flex items-center justify-center text-xs">
+                        {index + 1}
+                      </Badge>
+                      <div>
+                        <p className="font-medium text-sm leading-none">{post.title}</p>
+                        <p className="text-xs text-muted-foreground mt-1">/{post.slug}</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <Eye className="h-3 w-3 text-muted-foreground" />
+                      <span className="text-sm font-medium">{post.views.toLocaleString()}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Device Statistics */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Statystyki urządzeń</CardTitle>
+              <CardDescription>
+                Rozkład użytkowników według typu urządzenia
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <ResponsiveContainer width="100%" height={300}>
+                <BarChart data={mockData.deviceData}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="device" />
+                  <YAxis />
+                  <Tooltip formatter={(value) => [value, 'Użytkownicy (%)']} />
+                  <Bar dataKey="users" fill="#8884d8" />
+                </BarChart>
+              </ResponsiveContainer>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Recent Activity */}
         <Card>
           <CardHeader>
-            <CardTitle>Wyświetlenia w czasie</CardTitle>
+            <CardTitle>Ostatnia aktywność</CardTitle>
             <CardDescription>
-              Ostatnie 7 dni
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <ResponsiveContainer width="100%" height={300}>
-              <LineChart data={mockData.viewsData}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis 
-                  dataKey="date" 
-                  tickFormatter={(value) => new Date(value).toLocaleDateString('pl-PL', { month: 'short', day: 'numeric' })}
-                />
-                <YAxis />
-                <Tooltip 
-                  labelFormatter={(value) => new Date(value).toLocaleDateString('pl-PL')}
-                  formatter={(value) => [value, 'Wyświetlenia']}
-                />
-                <Line 
-                  type="monotone" 
-                  dataKey="views" 
-                  stroke="#8884d8" 
-                  strokeWidth={2}
-                  dot={{ fill: '#8884d8' }}
-                />
-              </LineChart>
-            </ResponsiveContainer>
-          </CardContent>
-        </Card>
-
-        {/* Traffic Sources */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Źródła ruchu</CardTitle>
-            <CardDescription>
-              Rozkład źródeł odwiedzin
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <ResponsiveContainer width="100%" height={300}>
-              <PieChart>
-                <Pie
-                  data={mockData.trafficSources}
-                  cx="50%"
-                  cy="50%"
-                  labelLine={false}
-                  label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
-                  outerRadius={80}
-                  fill="#8884d8"
-                  dataKey="value"
-                >
-                  {mockData.trafficSources.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={entry.color} />
-                  ))}
-                </Pie>
-                <Tooltip />
-              </PieChart>
-            </ResponsiveContainer>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Popular Posts and Device Stats */}
-      <div className="grid gap-4 md:grid-cols-2">
-        {/* Popular Posts */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Najpopularniejsze posty</CardTitle>
-            <CardDescription>
-              Top 5 postów według wyświetleń
+              Najnowsze wydarzenia na blogu
             </CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {mockData.popularPosts.map((post, index) => (
-                <div key={post.slug} className="flex items-center justify-between">
-                  <div className="flex items-center space-x-3">
-                    <Badge variant="secondary" className="w-6 h-6 rounded-full p-0 flex items-center justify-center text-xs">
-                      {index + 1}
-                    </Badge>
-                    <div>
-                      <p className="font-medium text-sm leading-none">{post.title}</p>
-                      <p className="text-xs text-muted-foreground mt-1">/{post.slug}</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <Eye className="h-3 w-3 text-muted-foreground" />
-                    <span className="text-sm font-medium">{post.views.toLocaleString()}</span>
-                  </div>
+              <div className="flex items-center space-x-4">
+                <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                <div className="flex-1">
+                  <p className="text-sm font-medium">Nowy post opublikowany</p>
+                  <p className="text-xs text-muted-foreground">Analiza spółki CD Projekt - 2 godziny temu</p>
                 </div>
-              ))}
+              </div>
+              <div className="flex items-center space-x-4">
+                <div className="w-2 h-2 bg-primary rounded-full"></div>
+                <div className="flex-1">
+                  <p className="text-sm font-medium">Nowy użytkownik zarejestrowany</p>
+                  <p className="text-xs text-muted-foreground">jan.kowalski@example.com - 4 godziny temu</p>
+                </div>
+              </div>
+              <div className="flex items-center space-x-4">
+                <div className="w-2 h-2 bg-yellow-500 rounded-full"></div>
+                <div className="flex-1">
+                  <p className="text-sm font-medium">Post zaktualizowany</p>
+                  <p className="text-xs text-muted-foreground">Jak zacząć inwestować w akcje - wczoraj</p>
+                </div>
+              </div>
             </div>
-          </CardContent>
-        </Card>
-
-        {/* Device Statistics */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Statystyki urządzeń</CardTitle>
-            <CardDescription>
-              Rozkład użytkowników według typu urządzenia
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <ResponsiveContainer width="100%" height={300}>
-              <BarChart data={mockData.deviceData}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="device" />
-                <YAxis />
-                <Tooltip formatter={(value) => [value, 'Użytkownicy (%)']} />
-                <Bar dataKey="users" fill="#8884d8" />
-              </BarChart>
-            </ResponsiveContainer>
           </CardContent>
         </Card>
       </div>
-
-      {/* Recent Activity */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Ostatnia aktywność</CardTitle>
-          <CardDescription>
-            Najnowsze wydarzenia na blogu
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            <div className="flex items-center space-x-4">
-              <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-              <div className="flex-1">
-                <p className="text-sm font-medium">Nowy post opublikowany</p>
-                <p className="text-xs text-muted-foreground">Analiza spółki CD Projekt - 2 godziny temu</p>
-              </div>
-            </div>
-            <div className="flex items-center space-x-4">
-                                  <div className="w-2 h-2 bg-primary rounded-full"></div>
-              <div className="flex-1">
-                <p className="text-sm font-medium">Nowy użytkownik zarejestrowany</p>
-                <p className="text-xs text-muted-foreground">jan.kowalski@example.com - 4 godziny temu</p>
-              </div>
-            </div>
-            <div className="flex items-center space-x-4">
-              <div className="w-2 h-2 bg-yellow-500 rounded-full"></div>
-              <div className="flex-1">
-                <p className="text-sm font-medium">Post zaktualizowany</p>
-                <p className="text-xs text-muted-foreground">Jak zacząć inwestować w akcje - wczoraj</p>
-              </div>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
     </div>
   )
 }

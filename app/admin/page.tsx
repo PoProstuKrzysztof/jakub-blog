@@ -7,7 +7,6 @@ import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
 import { SiteHeader } from "@/components/site-header"
 import {
-  MoreHorizontal,
   Plus,
   Search,
   Eye,
@@ -23,10 +22,11 @@ import {
   Shield,
   CheckCircle,
   MessageCircle,
+  Loader2,
+  AlertCircle,
 } from "lucide-react"
 import Link from "next/link"
 import Image from "next/image"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import {
   Dialog,
   DialogContent,
@@ -37,99 +37,112 @@ import {
 } from "@/components/ui/dialog"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Alert, AlertDescription } from "@/components/ui/alert"
+import { useAdminPosts } from "@/hooks/use-admin-posts"
+import { PostFull } from "@/lib/models/post"
 
-// Mock data for admin dashboard
-const posts = [
-  {
-    id: 1,
-    title: "Analiza fundamentalna spółki PKN Orlen - Q3 2024",
-    status: "published",
-    publishedAt: "2024-12-01",
-    views: 1250,
-    category: "Analiza spółek",
-    attachments: 2,
-    mainImage: "/placeholder.svg?height=100&width=150",
-  },
-  {
-    id: 2,
-    title: "Trendy na rynku kryptowalut - Grudzień 2024",
-    status: "published",
-    publishedAt: "2024-11-28",
-    views: 890,
-    category: "Kryptowaluty",
-    attachments: 2,
-    mainImage: "/placeholder.svg?height=100&width=150",
-  },
-  {
-    id: 3,
-    title: "Jak czytać sprawozdania finansowe - Poradnik",
-    status: "draft",
-    publishedAt: null,
-    views: 0,
-    category: "Edukacja",
-    attachments: 3,
-    mainImage: "/placeholder.svg?height=100&width=150",
-  },
-  {
-    id: 4,
-    title: "Sektor bankowy - perspektywy na 2025",
-    status: "published",
-    publishedAt: "2024-11-20",
-    views: 756,
-    category: "Analiza spółek",
-    attachments: 1,
-    mainImage: "/placeholder.svg?height=100&width=150",
-  },
-]
+// Helper functions
+const formatNumber = (num: number): string => {
+  if (num >= 1000000) {
+    return (num / 1000000).toFixed(1) + 'M'
+  } else if (num >= 1000) {
+    return (num / 1000).toFixed(1) + 'K'
+  }
+  return num.toString()
+}
 
-const stats = [
-  {
-    title: "Łączne wyświetlenia",
-    value: "12,450",
-    change: "+12%",
-    icon: Eye,
-    color: "from-blue-500 to-blue-600",
-    bgColor: "bg-blue-50",
-    iconColor: "text-blue-600"
-  },
-  {
-    title: "Opublikowane posty",
-    value: "24",
-    change: "+3",
-    icon: FileText,
-    color: "from-green-500 to-green-600",
-    bgColor: "bg-green-50",
-    iconColor: "text-green-600"
-  },
-  {
-    title: "Szkice",
-    value: "5",
-    change: "+2",
-    icon: Edit,
-    color: "from-orange-500 to-orange-600", 
-    bgColor: "bg-orange-50",
-    iconColor: "text-orange-600"
-  },
-  {
-    title: "Średnie wyświetlenia",
-    value: "518",
-    change: "+8%",
-    icon: TrendingUp,
-    color: "from-purple-500 to-purple-600",
-    bgColor: "bg-purple-50",
-    iconColor: "text-purple-600"
-  },
-]
+const formatDate = (dateString: string | null): string => {
+  if (!dateString) return "Nie opublikowano"
+  return new Date(dateString).toLocaleDateString("pl-PL")
+}
+
+const getCategoryName = (post: PostFull): string => {
+  if (post.post_categories && post.post_categories.length > 0) {
+    return post.post_categories[0].categories.name
+  }
+  return "Bez kategorii"
+}
+
+const getMainImage = (post: PostFull): string => {
+  if (post.featured_image_url) {
+    return post.featured_image_url
+  }
+  if (post.post_attachments && post.post_attachments.length > 0) {
+    const imageAttachment = post.post_attachments.find(
+      att => att.attachments.mime_type?.startsWith('image/')
+    )
+    if (imageAttachment?.attachments.public_url) {
+      return imageAttachment.attachments.public_url
+    }
+  }
+  return "/placeholder.svg?height=100&width=150"
+}
 
 export default function AdminDashboard() {
   const [searchTerm, setSearchTerm] = useState("")
   const [deleteModalOpen, setDeleteModalOpen] = useState(false)
   const [editModalOpen, setEditModalOpen] = useState(false)
-  const [selectedPost, setSelectedPost] = useState<any>(null)
+  const [selectedPost, setSelectedPost] = useState<PostFull | null>(null)
   const [editTitle, setEditTitle] = useState("")
   const [editCategory, setEditCategory] = useState("")
+  const [isDeleting, setIsDeleting] = useState(false)
+  const [isUpdating, setIsUpdating] = useState(false)
 
-  const filteredPosts = posts.filter((post) => post.title.toLowerCase().includes(searchTerm.toLowerCase()))
+  // Use custom hook for data management
+  const {
+    posts,
+    stats: adminStats,
+    loading,
+    error,
+    deletePost,
+    updatePost,
+    refreshPosts
+  } = useAdminPosts()
+
+  // Create stats array from adminStats
+  const stats = adminStats ? [
+    {
+      title: "Łączne wyświetlenia",
+      value: formatNumber(adminStats.totalViews),
+      change: "+12%", // Mock change for now
+      icon: Eye,
+      color: "from-blue-500 to-blue-600",
+      bgColor: "bg-blue-50",
+      iconColor: "text-blue-600"
+    },
+    {
+      title: "Opublikowane posty",
+      value: adminStats.publishedPosts.toString(),
+      change: "+3", // Mock change for now
+      icon: FileText,
+      color: "from-green-500 to-green-600",
+      bgColor: "bg-green-50",
+      iconColor: "text-green-600"
+    },
+    {
+      title: "Szkice",
+      value: adminStats.draftPosts.toString(),
+      change: "+2", // Mock change for now
+      icon: Edit,
+      color: "from-orange-500 to-orange-600", 
+      bgColor: "bg-orange-50",
+      iconColor: "text-orange-600"
+    },
+    {
+      title: "Średnie wyświetlenia",
+      value: formatNumber(adminStats.averageViews),
+      change: "+8%", // Mock change for now
+      icon: TrendingUp,
+      color: "from-purple-500 to-purple-600",
+      bgColor: "bg-purple-50",
+      iconColor: "text-purple-600"
+    },
+  ] : []
+
+  // Filter posts based on search term
+  const filteredPosts = posts.filter((post) => 
+    post.title.toLowerCase().includes(searchTerm.toLowerCase())
+  )
 
   const getStatusBadge = (status: string) => {
     switch (status) {
@@ -137,33 +150,61 @@ export default function AdminDashboard() {
         return <Badge className="bg-green-100 text-green-800 hover:bg-green-100 rounded-xl">Opublikowany</Badge>
       case "draft":
         return <Badge variant="secondary" className="rounded-xl">Szkic</Badge>
+      case "scheduled":
+        return <Badge className="bg-blue-100 text-blue-800 hover:bg-blue-100 rounded-xl">Zaplanowany</Badge>
+      case "archived":
+        return <Badge variant="outline" className="rounded-xl">Zarchiwizowany</Badge>
       default:
         return <Badge variant="outline" className="rounded-xl">Nieznany</Badge>
     }
   }
 
-  const handleDeletePost = (post: any) => {
+  const handleDeletePost = (post: PostFull) => {
     setSelectedPost(post)
     setDeleteModalOpen(true)
   }
 
-  const handleEditPost = (post: any) => {
+  const handleEditPost = (post: PostFull) => {
     setSelectedPost(post)
-    setEditTitle(post.title)
-    setEditCategory(post.category)
+    setEditTitle(post.title || "")
+    setEditCategory(getCategoryName(post))
     setEditModalOpen(true)
   }
 
   const confirmDelete = async () => {
-    await new Promise((resolve) => setTimeout(resolve, 1000))
-    setDeleteModalOpen(false)
-    setSelectedPost(null)
+    if (!selectedPost) return
+    
+    setIsDeleting(true)
+    try {
+      const success = await deletePost(selectedPost.id)
+      if (success) {
+        setDeleteModalOpen(false)
+        setSelectedPost(null)
+      }
+    } catch (error) {
+      console.error('Error deleting post:', error)
+    } finally {
+      setIsDeleting(false)
+    }
   }
 
   const saveEdit = async () => {
-    await new Promise((resolve) => setTimeout(resolve, 1000))
-    setEditModalOpen(false)
-    setSelectedPost(null)
+    if (!selectedPost) return
+    
+    setIsUpdating(true)
+    try {
+      const success = await updatePost(selectedPost.id, {
+        title: editTitle
+      })
+      if (success) {
+        setEditModalOpen(false)
+        setSelectedPost(null)
+      }
+    } catch (error) {
+      console.error('Error updating post:', error)
+    } finally {
+      setIsUpdating(false)
+    }
   }
 
   return (
@@ -228,28 +269,56 @@ export default function AdminDashboard() {
             </p>
           </div>
 
+          {/* Error Display */}
+          {error && (
+            <Alert className="mb-6">
+              <AlertCircle className="h-4 w-4" />
+              <AlertDescription>
+                Błąd podczas ładowania danych: {error}
+              </AlertDescription>
+            </Alert>
+          )}
+
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-            {stats.map((stat, index) => (
-              <Card key={index} className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 group relative overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-accent/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                <CardContent className="p-6 relative z-10">
-                  <div className="flex items-center justify-between mb-4">
-                    <div className={`w-12 h-12 rounded-xl ${stat.bgColor} flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}>
-                      <stat.icon className={`h-6 w-6 ${stat.iconColor}`} />
+            {loading ? (
+              // Loading skeleton for stats
+              Array.from({ length: 4 }).map((_, index) => (
+                <Card key={index} className="border-0 shadow-lg">
+                  <CardContent className="p-6">
+                    <div className="flex items-center justify-between mb-4">
+                      <div className="w-12 h-12 rounded-xl bg-gray-200 animate-pulse"></div>
+                      <div className="w-12 h-6 bg-gray-200 rounded-lg animate-pulse"></div>
                     </div>
-                    <Badge 
-                      className={`${stat.change.startsWith('+') ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'} rounded-lg`}
-                    >
-                      {stat.change}
-                    </Badge>
-                  </div>
-                  <div className="space-y-1">
-                    <p className="text-sm text-muted-foreground font-medium">{stat.title}</p>
-                    <p className="text-2xl font-bold text-foreground">{stat.value}</p>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+                    <div className="space-y-2">
+                      <div className="h-4 bg-gray-200 rounded animate-pulse"></div>
+                      <div className="h-8 bg-gray-200 rounded animate-pulse w-20"></div>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))
+            ) : (
+              stats.map((stat, index) => (
+                <Card key={index} className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 group relative overflow-hidden">
+                  <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-accent/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                  <CardContent className="p-6 relative z-10">
+                    <div className="flex items-center justify-between mb-4">
+                      <div className={`w-12 h-12 rounded-xl ${stat.bgColor} flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}>
+                        <stat.icon className={`h-6 w-6 ${stat.iconColor}`} />
+                      </div>
+                      <Badge 
+                        className={`${stat.change.startsWith('+') ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'} rounded-lg`}
+                      >
+                        {stat.change}
+                      </Badge>
+                    </div>
+                    <div className="space-y-1">
+                      <p className="text-sm text-muted-foreground font-medium">{stat.title}</p>
+                      <p className="text-2xl font-bold text-foreground">{stat.value}</p>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))
+            )}
           </div>
         </section>
 
@@ -303,48 +372,57 @@ export default function AdminDashboard() {
                 </div>
               </div>
 
-              {/* Posts List */}
-              <div className="space-y-4">
-                {filteredPosts.map((post, index) => (
-                  <div
-                    key={post.id}
-                    className="flex items-center justify-between p-6 bg-card/50 hover:bg-card/80 rounded-xl border border-border/50 hover:border-border transition-all duration-300 transform hover:scale-[1.01]"
-                  >
-                    <div className="flex items-center space-x-4 flex-1">
-                      {/* Thumbnail */}
-                      <div className="relative h-16 w-24 rounded-lg overflow-hidden flex-shrink-0 shadow-md">
-                        <Image 
-                          src={post.mainImage || "/placeholder.svg"} 
-                          alt={post.title} 
-                          fill 
-                          className="object-cover" 
-                        />
-                      </div>
+              {/* Loading State */}
+              {loading && (
+                <div className="flex items-center justify-center py-12">
+                  <Loader2 className="h-8 w-8 animate-spin text-primary" />
+                  <span className="ml-2 text-muted-foreground">Ładowanie postów...</span>
+                </div>
+              )}
 
-                      {/* Post Info */}
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-3 mb-2">
-                          <h3 className="font-semibold text-foreground truncate">
-                            {post.title}
-                          </h3>
-                          {getStatusBadge(post.status)}
+              {/* Posts List */}
+              {!loading && (
+                <div className="space-y-4">
+                  {filteredPosts.map((post, index) => (
+                    <div
+                      key={post.id}
+                      className="flex items-center justify-between p-6 bg-card/50 hover:bg-card/80 rounded-xl border border-border/50 hover:border-border transition-all duration-300 transform hover:scale-[1.01]"
+                    >
+                      <div className="flex items-center space-x-4 flex-1">
+                        {/* Thumbnail */}
+                        <div className="relative h-16 w-24 rounded-lg overflow-hidden flex-shrink-0 shadow-md">
+                          <Image 
+                            src={getMainImage(post)} 
+                            alt={post.title || "Post image"} 
+                            fill 
+                            className="object-cover" 
+                          />
                         </div>
-                        
-                        <div className="flex items-center space-x-4 text-sm text-muted-foreground">
-                          <span className="flex items-center">
-                            <Calendar className="h-4 w-4 mr-1" />
-                            {post.publishedAt ? new Date(post.publishedAt).toLocaleDateString("pl-PL") : "Nie opublikowano"}
-                          </span>
-                          <span className="flex items-center">
-                            <Eye className="h-4 w-4 mr-1" />
-                            {post.views} wyświetleń
-                          </span>
-                          <Badge variant="secondary" className="rounded-lg">
-                            {post.category}
-                          </Badge>
+
+                        {/* Post Info */}
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-3 mb-2">
+                            <h3 className="font-semibold text-foreground truncate">
+                              {post.title}
+                            </h3>
+                            {getStatusBadge(post.status || 'draft')}
+                          </div>
+                          
+                          <div className="flex items-center space-x-4 text-sm text-muted-foreground">
+                            <span className="flex items-center">
+                              <Calendar className="h-4 w-4 mr-1" />
+                              {formatDate(post.published_at)}
+                            </span>
+                            <span className="flex items-center">
+                              <Eye className="h-4 w-4 mr-1" />
+                              {post.view_count || 0} wyświetleń
+                            </span>
+                            <Badge variant="secondary" className="rounded-lg">
+                              {getCategoryName(post)}
+                            </Badge>
+                          </div>
                         </div>
                       </div>
-                    </div>
 
                     {/* Actions */}
                     <div className="flex items-center space-x-2 ml-4">
@@ -353,6 +431,7 @@ export default function AdminDashboard() {
                         variant="outline"
                         onClick={() => handleEditPost(post)}
                         className="rounded-lg hover:bg-primary/5 hover:border-primary transition-all duration-300"
+                        title="Edytuj post"
                       >
                         <Edit className="h-4 w-4" />
                       </Button>
@@ -360,31 +439,26 @@ export default function AdminDashboard() {
                         size="sm"
                         variant="outline"
                         className="rounded-lg hover:bg-green-50 hover:border-green-300 hover:text-green-700 transition-all duration-300"
+                        title="Podgląd posta"
                       >
                         <Eye className="h-4 w-4" />
                       </Button>
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button size="sm" variant="outline" className="rounded-lg">
-                            <MoreHorizontal className="h-4 w-4" />
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end" className="rounded-xl">
-                          <DropdownMenuItem 
-                            onClick={() => handleDeletePost(post)}
-                            className="text-red-600 focus:text-red-600 focus:bg-red-50 rounded-lg"
-                          >
-                            <Trash2 className="h-4 w-4 mr-2" />
-                            Usuń
-                          </DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => handleDeletePost(post)}
+                        className="rounded-lg hover:bg-red-50 hover:border-red-300 hover:text-red-700 transition-all duration-300"
+                        title="Usuń post"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
                     </div>
                   </div>
                 ))}
               </div>
+              )}
 
-              {filteredPosts.length === 0 && (
+              {!loading && filteredPosts.length === 0 && (
                 <div className="text-center py-12">
                   <FileText className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
                   <h3 className="text-lg font-semibold text-foreground mb-2">Brak postów</h3>
@@ -474,10 +548,21 @@ export default function AdminDashboard() {
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setDeleteModalOpen(false)} className="rounded-xl">
+            <Button 
+              variant="outline" 
+              onClick={() => setDeleteModalOpen(false)} 
+              className="rounded-xl"
+              disabled={isDeleting}
+            >
               Anuluj
             </Button>
-            <Button onClick={confirmDelete} variant="destructive" className="rounded-xl">
+            <Button 
+              onClick={confirmDelete} 
+              variant="destructive" 
+              className="rounded-xl"
+              disabled={isDeleting}
+            >
+              {isDeleting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               Usuń
             </Button>
           </DialogFooter>
@@ -518,10 +603,20 @@ export default function AdminDashboard() {
             </div>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setEditModalOpen(false)} className="rounded-xl">
+            <Button 
+              variant="outline" 
+              onClick={() => setEditModalOpen(false)} 
+              className="rounded-xl"
+              disabled={isUpdating}
+            >
               Anuluj
             </Button>
-            <Button onClick={saveEdit} className="rounded-xl">
+            <Button 
+              onClick={saveEdit} 
+              className="rounded-xl"
+              disabled={isUpdating}
+            >
+              {isUpdating && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               Zapisz
             </Button>
           </DialogFooter>

@@ -15,6 +15,7 @@ import {
   MessageCircle,
   Menu,
   X,
+  Settings,
 } from "lucide-react"
 import Link from "next/link"
 import { useAuth } from "@/hooks/use-auth"
@@ -171,7 +172,7 @@ export function SiteHeader({
                         )}
                       </Button>
                     )}
-                    <Link href="/">
+                    <Link href="/admin">
                       <Button
                         variant="outline"
                         size="sm"
@@ -190,6 +191,16 @@ export function SiteHeader({
                     {/* Przyciski dla zalogowanych użytkowników */}
                     {user && (
                       <>
+                        <Link href="/admin">
+                          <Button 
+                            variant="outline" 
+                            size="sm"
+                            className="border-primary text-primary hover:bg-primary hover:text-primary-foreground transition-all duration-300 rounded-xl"
+                          >
+                            <Settings className="h-4 w-4 mr-2" />
+                            Panel Twórcy
+                          </Button>
+                        </Link>
                         <Link href="/admin/nowy-post">
                           <Button variant="outline" size="sm">
                             <Plus className="h-4 w-4 mr-2" />
@@ -285,6 +296,16 @@ export function SiteHeader({
             <div className="pt-4 space-y-2">
               {user ? (
                 <>
+                  <Link href="/admin" onClick={() => setIsMobileMenuOpen(false)}>
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      className="w-full justify-start border-primary text-primary hover:bg-primary hover:text-primary-foreground"
+                    >
+                      <Settings className="h-4 w-4 mr-2" />
+                      Panel Twórcy
+                    </Button>
+                  </Link>
                   <Link href="/admin/nowy-post" onClick={() => setIsMobileMenuOpen(false)}>
                     <Button variant="outline" size="sm" className="w-full justify-start">
                       <Plus className="h-4 w-4 mr-2" />
