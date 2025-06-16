@@ -5,6 +5,7 @@ import { Toaster as SonnerToaster } from "@/components/ui/sonner";
 import { AuthProvider } from "@/components/auth-provider";
 import { SiteFooter } from "@/components/site-footer";
 import { ErrorBoundary } from "@/components/error-boundary";
+import { ClientErrorFilter } from "@/components/client-error-filter";
 import "@/lib/builder";
 import "@/lib/utils/iframe-error-handler";
 
