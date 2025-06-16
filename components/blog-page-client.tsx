@@ -183,18 +183,11 @@ export function BlogPageClient({ initialPosts }: BlogPageClientProps) {
                 <div className="text-sm text-muted-foreground">Publikacji</div>
               </div>
               <div className="text-center p-4 bg-card/50 rounded-xl border border-border backdrop-blur-sm">
-                <div className="text-2xl font-bold text-foreground">15.2%</div>
-                <div className="text-sm text-muted-foreground">Średnia stopa zwrotu</div>
-              </div>
-              <div className="text-center p-4 bg-card/50 rounded-xl border border-border backdrop-blur-sm">
-                <div className="text-2xl font-bold text-foreground">
-                  {posts.reduce((sum, post) => sum + (post.view_count || 0), 0).toLocaleString()}
-                </div>
-                <div className="text-sm text-muted-foreground">Wyświetleń</div>
-              </div>
-              <div className="text-center p-4 bg-card/50 rounded-xl border border-border backdrop-blur-sm">
                 <div className="text-2xl font-bold text-foreground">{categories.length - 1}</div>
-                <div className="text-sm text-muted-foreground">Kategorii</div>
+                <div className="text-sm text-muted-foreground">
+                  {categories.length - 1 === 1 ? 'Kategoria' : 
+                   categories.length - 1 < 5 ? 'Kategorie' : 'Kategorii'}
+                </div>
               </div>
             </div>
           </div>
