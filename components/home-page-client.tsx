@@ -229,7 +229,13 @@ export function HomePageClient({ initialPosts }: HomePageClientProps) {
             <div className="relative">
               <div className="relative bg-card rounded-2xl p-8 shadow-2xl border border-border">
                 <div className="space-y-6">
-                  <div className="flex items-center justify-between">
+                  <div
+                    className="flex items-center justify-between"
+                    style={{
+                      "@media (max-width: 991px)": { display: "flex" },
+                      "@media (max-width: 640px)": { display: "flex" },
+                    }}
+                  >
                     <h3 className="text-lg font-semibold text-foreground">
                       Portfolio
                     </h3>
@@ -485,7 +491,7 @@ export function HomePageClient({ initialPosts }: HomePageClientProps) {
                 name: "Tomasz L.",
                 role: "CEO Tech Startup",
                 content:
-                  "Rozpocząłem inwestowanie dzięki poradnikom Jakuba. Po roku mój portfel osiągnął zysk 12%. Polecam każdemu, kto chce profesjonalnie podejść do inwestycji.",
+                  "Rozpocząłem inwestowanie dzięki poradnikom Jakuba. Po roku mój portfel osiągnął zysk 12%. Polecam każdemu, kto chce profesjonalnie podejś�� do inwestycji.",
                 rating: 5,
               },
             ].map((testimonial, index) => (
