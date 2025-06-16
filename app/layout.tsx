@@ -23,12 +23,14 @@ export default function RootLayout({
   return (
     <html lang="pl">
       <body>
-        <AuthProvider>
-          {children}
-          <SiteFooter />
-          <Toaster />
-          <SonnerToaster />
-        </AuthProvider>
+        <ErrorBoundary>
+          <AuthProvider>
+            <ErrorBoundary>{children}</ErrorBoundary>
+            <SiteFooter />
+            <Toaster />
+            <SonnerToaster />
+          </AuthProvider>
+        </ErrorBoundary>
       </body>
     </html>
   );
