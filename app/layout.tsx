@@ -25,6 +25,7 @@ export default function RootLayout({
     <html lang="pl">
       <body>
         <ErrorBoundary>
+          <ClientErrorFilter />
           <AuthProvider>
             <ErrorBoundary>{children}</ErrorBoundary>
             <SiteFooter />
