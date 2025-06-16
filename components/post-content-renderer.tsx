@@ -67,12 +67,63 @@ export function PostContentRenderer({
         }
       });
 
-      // Dodaj style dla YouTube embedów
-      const youtubeIframes = contentRef.current.querySelectorAll(
-        'iframe[src*="youtube.com"]',
-      );
-      youtubeIframes.forEach((iframe) => {
-        iframe.setAttribute("class", "w-full aspect-video rounded-lg my-6");
+      // Dodaj bezpieczne style dla wszystkich iframes
+      const iframes = contentRef.current.querySelectorAll("iframe");
+      iframes.forEach((iframe) => {
+        // Add error handling for iframes
+        iframe.addEventListener("error", (event) => {
+          console.debug("Iframe error handled:", event);
+          // Replace with fallback content
+          const fallback = document.createElement("div");
+          fallback.className =
+            "bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center my-6";
+          fallback.innerHTML = `
+          <div class="text-center">
+            <svg class="w-12 h-12 mx-auto mb-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+            </svg>
+            <p class="text-gray-500 font-medium">Nie udało się załadować treści multimedialnej</p>
+            <p class="text-sm text-gray-400 mt-2">Sprawdź ustawienia przeglądarki lub wyłącz blokady reklam</p>
+          </div>
+        `;
+          iframe.parentNode?.replaceChild(fallback, iframe);
+        });
+
+        // Configure iframe safely
+        iframe.setAttribute("loading", "lazy");
+        iframe.setAttribute(
+          "referrerpolicy",
+          "strict-origin-when-cross-origin",
+        );
+
+        // YouTube specific handling
+        if (
+          iframe.src.includes("youtube.com") ||
+          iframe.src.includes("youtu.be")
+        ) {
+          iframe.setAttribute("class", "w-full aspect-video rounded-lg my-6");
+          iframe.setAttribute(
+            "allow",
+            "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture",
+          );
+          iframe.setAttribute("allowfullscreen", "true");
+        }
+
+        // Vimeo specific handling
+        else if (iframe.src.includes("vimeo.com")) {
+          iframe.setAttribute("class", "w-full aspect-video rounded-lg my-6");
+          iframe.setAttribute(
+            "allow",
+            "autoplay; fullscreen; picture-in-picture",
+          );
+          iframe.setAttribute("allowfullscreen", "true");
+        }
+
+        // Generic iframe styling
+        else {
+          iframe.setAttribute("class", "w-full rounded-lg my-6 border");
+          iframe.style.minHeight = "200px";
+        }
       });
 
       // Dodaj style dla obrazów
