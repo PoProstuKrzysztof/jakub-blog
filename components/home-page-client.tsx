@@ -147,7 +147,7 @@ export function HomePageClient({ initialPosts }: HomePageClientProps) {
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div className="space-y-8">
               <div className="space-y-4">
-                <Badge className="bg-primary/10 text-primary border-primary/20 px-4 py-2 rounded-full text-sm font-medium">
+                <Badge className="bg-primary/10  border-primary/20 px-4 py-2 rounded-full text-sm font-medium">
                   🚀 Profesjonalne analizy finansowe
                 </Badge>
                 <h1 className="text-4xl lg:text-6xl font-bold text-foreground leading-tight">
