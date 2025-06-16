@@ -77,7 +77,7 @@ export default function ContactPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="text-center space-y-8">
             <div className="space-y-4">
-              <Badge className="bg-primary/10 text-primary border-primary/20 px-4 py-2 rounded-full text-sm font-medium">
+              <Badge className="bg-primary/10  border-primary/20 px-4 py-2 rounded-full text-sm font-medium">
                 💬 Skontaktuj się bezpośrednio
               </Badge>
               <h1 className="text-4xl lg:text-6xl font-bold text-foreground leading-tight">
