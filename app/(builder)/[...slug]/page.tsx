@@ -9,17 +9,20 @@ import { notFound } from 'next/navigation'
 export const revalidate = 60 // ISR – odśwież treść co 60 s
 
 interface PageProps {
-  params: { slug: string[] }
-  searchParams: Record<string, string | string[]>
+  params: Promise<{ slug: string[] }>
+  searchParams: Promise<Record<string, string | string[]>>
 }
 
 export default async function BuilderCatchAllPage({ params, searchParams }: PageProps) {
-  const urlPath = '/' + params.slug.join('/')
+  const resolvedParams = await params
+  const resolvedSearchParams = await searchParams
+  
+  const urlPath = '/' + resolvedParams.slug.join('/')
 
   const content = await fetchOneEntry({
     model: 'page',
     apiKey: builderApiKey,
-    options: getBuilderSearchParams(searchParams),
+    options: getBuilderSearchParams(resolvedSearchParams),
     userAttributes: { urlPath },
   })
 
