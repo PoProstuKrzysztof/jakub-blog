@@ -1,8 +1,8 @@
-"use client"
+"use client";
 
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
 import {
   Search,
   Plus,
@@ -16,34 +16,34 @@ import {
   Menu,
   X,
   Settings,
-} from "lucide-react"
-import Link from "next/link"
-import { useAuth } from "@/hooks/use-auth"
-import { useState } from "react"
-import type { User } from "@supabase/supabase-js"
+} from "lucide-react";
+import Link from "next/link";
+import { useAuth } from "@/hooks/use-auth";
+import { useState } from "react";
+import type { User } from "@supabase/supabase-js";
 
 interface SiteHeaderProps {
-  currentPage?: 'home' | 'wpisy' | 'cooperation' | 'contact' | 'admin' | 'post'
-  showSearch?: boolean
-  searchPlaceholder?: string
-  searchValue?: string
-  onSearchChange?: (value: string) => void
-  adminMode?: boolean
-  adminTitle?: string
-  showPreviewToggle?: boolean
-  isPreview?: boolean
-  onPreviewToggle?: () => void
-  showShareButton?: boolean
-  onShare?: () => void
-  shareButtonCopied?: boolean
-  showEditButton?: boolean
-  isEditing?: boolean
-  onEditToggle?: () => void
-  user?: User | null
+  currentPage?: "home" | "wpisy" | "cooperation" | "contact" | "admin" | "post";
+  showSearch?: boolean;
+  searchPlaceholder?: string;
+  searchValue?: string;
+  onSearchChange?: (value: string) => void;
+  adminMode?: boolean;
+  adminTitle?: string;
+  showPreviewToggle?: boolean;
+  isPreview?: boolean;
+  onPreviewToggle?: () => void;
+  showShareButton?: boolean;
+  onShare?: () => void;
+  shareButtonCopied?: boolean;
+  showEditButton?: boolean;
+  isEditing?: boolean;
+  onEditToggle?: () => void;
+  user?: User | null;
 }
 
 export function SiteHeader({
-  currentPage = 'home',
+  currentPage = "home",
   showSearch = false,
   searchPlaceholder = "Szukaj...",
   searchValue = "",
@@ -61,39 +61,44 @@ export function SiteHeader({
   onEditToggle,
   user: propUser,
 }: SiteHeaderProps) {
-  const { user: authUser, signOut } = useAuth()
-  const user = propUser || authUser
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const { user: authUser, signOut } = useAuth();
+  const user = propUser || authUser;
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const getNavLinkClass = (page: string) => {
-    const baseClass = "px-4 py-2 rounded-lg font-medium transition-all duration-300 whitespace-nowrap flex items-center justify-center min-h-[40px]"
-    const activeClass = "text-primary bg-primary/10"
-    const inactiveClass = "text-foreground hover:text-primary hover:bg-primary/10"
-    
-    return `${baseClass} ${currentPage === page ? activeClass : inactiveClass}`
-  }
+    const baseClass =
+      "px-4 py-2 rounded-lg font-medium transition-all duration-300 whitespace-nowrap flex items-center justify-center min-h-[40px]";
+    const activeClass = "text-primary bg-primary/10";
+    const inactiveClass =
+      "text-foreground hover:text-primary hover:bg-primary/10";
+
+    return `${baseClass} ${currentPage === page ? activeClass : inactiveClass}`;
+  };
 
   const handleSignOut = async () => {
-    await signOut()
-    window.location.reload()
-  }
+    await signOut();
+    window.location.reload();
+  };
 
   return (
     <>
       {/* Header */}
-      <header className={`shadow-sm py-4 border-b sticky top-0 z-40 ${
-        adminMode ? 'bg-accent border-accent' : 'bg-card border-border'
-      }`}>
+      <header
+        className={`shadow-sm py-4 border-b sticky top-0 z-40 ${
+          adminMode ? "bg-accent border-accent" : "bg-card border-border"
+        }`}
+      >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-3 items-center min-h-[48px]">
-            
             {/* Left Section - Logo */}
             <div className="flex items-center space-x-4">
               <Link href="/" className="flex items-center space-x-2">
-                <div className={`text-2xl font-bold ${
-                  adminMode ? 'text-primary-foreground' : 'text-primary'
-                }`}>
-                  JAKUB INWESTYCJE
+                <div
+                  className={`text-2xl font-bold ${
+                    adminMode ? "text-primary-foreground" : "text-primary"
+                  }`}
+                >
+                  JAKUB ASDASDW
                 </div>
               </Link>
               {adminTitle && (
@@ -107,21 +112,24 @@ export function SiteHeader({
             <div className="flex justify-center">
               {!adminMode && (
                 <nav className="hidden lg:flex items-center space-x-2">
-                  <Link href="/" className={getNavLinkClass('home')}>
+                  <Link href="/" className={getNavLinkClass("home")}>
                     Home
                   </Link>
-                  <Link href="/wpisy" className={getNavLinkClass('wpisy')}>
+                  <Link href="/wpisy" className={getNavLinkClass("wpisy")}>
                     Wpisy
                   </Link>
-                  <Link href="/wspolpraca" className={getNavLinkClass('cooperation')}>
+                  <Link
+                    href="/wspolpraca"
+                    className={getNavLinkClass("cooperation")}
+                  >
                     Współpraca
                   </Link>
-                  <Link href="/kontakt" className={getNavLinkClass('contact')}>
+                  <Link href="/kontakt" className={getNavLinkClass("contact")}>
                     Kontakt
                   </Link>
                 </nav>
               )}
-              
+
               {/* Mobile Menu Button - widoczny na tablet i mobile */}
               {!adminMode && (
                 <Button
@@ -130,7 +138,11 @@ export function SiteHeader({
                   className="lg:hidden"
                   onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                 >
-                  {isMobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+                  {isMobileMenuOpen ? (
+                    <X className="h-5 w-5" />
+                  ) : (
+                    <Menu className="h-5 w-5" />
+                  )}
                 </Button>
               )}
             </div>
@@ -138,7 +150,6 @@ export function SiteHeader({
             {/* Right Section - Admin/User Buttons (maksymalnie po prawej) */}
             <div className="flex justify-end">
               <div className="flex items-center space-x-2">
-                
                 {/* Admin Mode Buttons */}
                 {adminMode && (
                   <>
@@ -192,19 +203,21 @@ export function SiteHeader({
                     {user && (
                       <>
                         <Link href="/admin">
-                          <Button 
-                            variant="outline" 
+                          <Button
+                            variant="outline"
                             size="sm"
                             className="border-primary text-primary hover:bg-primary hover:text-primary-foreground transition-all duration-300 rounded-xl text-xs lg:text-sm px-2 lg:px-3"
                           >
                             <Settings className="h-3 w-3 lg:h-4 lg:w-4 mr-1 lg:mr-2" />
-                            <span className="hidden xl:inline">Panel Twórcy</span>
+                            <span className="hidden xl:inline">
+                              Panel Twórcy
+                            </span>
                             <span className="xl:hidden">Panel</span>
                           </Button>
                         </Link>
                         <Link href="/admin/nowy-post">
-                          <Button 
-                            variant="outline" 
+                          <Button
+                            variant="outline"
                             size="sm"
                             className="text-xs lg:text-sm px-2 lg:px-3"
                           >
@@ -221,7 +234,9 @@ export function SiteHeader({
                             className="text-xs lg:text-sm px-2 lg:px-3"
                           >
                             <Edit className="h-3 w-3 lg:h-4 lg:w-4 mr-1 lg:mr-2" />
-                            <span className="hidden xl:inline">{isEditing ? "Zakończ edycję" : "Edytuj usługi"}</span>
+                            <span className="hidden xl:inline">
+                              {isEditing ? "Zakończ edycję" : "Edytuj usługi"}
+                            </span>
                             <span className="xl:hidden">Edytuj</span>
                           </Button>
                         )}
@@ -237,12 +252,12 @@ export function SiteHeader({
                         </Button>
                       </>
                     )}
-                    
+
                     {/* Panel administratora dla niezalogowanych */}
                     {!user && (
                       <Link href="/admin/login">
-                        <Button 
-                          variant="outline" 
+                        <Button
+                          variant="outline"
                           size="sm"
                           className="text-xs lg:text-sm px-2 lg:px-3"
                         >
@@ -250,9 +265,9 @@ export function SiteHeader({
                         </Button>
                       </Link>
                     )}
-                    
+
                     {/* Kontekstowe przyciski */}
-                    {currentPage === 'post' && (
+                    {currentPage === "post" && (
                       <Link href="/">
                         <Button
                           variant="outline"
@@ -260,7 +275,9 @@ export function SiteHeader({
                           className="border-primary text-primary hover:bg-primary hover:text-primary-foreground transition-all duration-300 rounded-xl text-xs lg:text-sm px-2 lg:px-3"
                         >
                           <ArrowLeft className="h-3 w-3 lg:h-4 lg:w-4 mr-1 lg:mr-2" />
-                          <span className="hidden xl:inline">Powrót do strony głównej</span>
+                          <span className="hidden xl:inline">
+                            Powrót do strony głównej
+                          </span>
                           <span className="xl:hidden">Powrót</span>
                         </Button>
                       </Link>
@@ -277,51 +294,61 @@ export function SiteHeader({
       {!adminMode && isMobileMenuOpen && (
         <div className="lg:hidden bg-card border-b border-border shadow-lg">
           <nav className="max-w-7xl mx-auto px-4 py-4 space-y-1">
-            <Link 
-              href="/" 
-              className={`block w-full ${getNavLinkClass('home')}`}
+            <Link
+              href="/"
+              className={`block w-full ${getNavLinkClass("home")}`}
               onClick={() => setIsMobileMenuOpen(false)}
             >
               Home
             </Link>
-            <Link 
-              href="/wpisy" 
-              className={`block w-full ${getNavLinkClass('wpisy')}`}
+            <Link
+              href="/wpisy"
+              className={`block w-full ${getNavLinkClass("wpisy")}`}
               onClick={() => setIsMobileMenuOpen(false)}
             >
               Wpisy
             </Link>
-            <Link 
-              href="/wspolpraca" 
-              className={`block w-full ${getNavLinkClass('cooperation')}`}
+            <Link
+              href="/wspolpraca"
+              className={`block w-full ${getNavLinkClass("cooperation")}`}
               onClick={() => setIsMobileMenuOpen(false)}
             >
               Współpraca
             </Link>
-            <Link 
-              href="/kontakt" 
-              className={`block w-full ${getNavLinkClass('contact')}`}
+            <Link
+              href="/kontakt"
+              className={`block w-full ${getNavLinkClass("contact")}`}
               onClick={() => setIsMobileMenuOpen(false)}
             >
               Kontakt
             </Link>
-            
+
             {/* Mobile Action Buttons */}
             <div className="pt-4 space-y-2">
               {user ? (
                 <>
-                  <Link href="/admin" onClick={() => setIsMobileMenuOpen(false)}>
-                    <Button 
-                      variant="outline" 
-                      size="sm" 
+                  <Link
+                    href="/admin"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    <Button
+                      variant="outline"
+                      size="sm"
                       className="w-full justify-start border-primary text-primary hover:bg-primary hover:text-primary-foreground"
                     >
                       <Settings className="h-4 w-4 mr-2" />
                       Panel Twórcy
                     </Button>
                   </Link>
-                  <Link href="/admin/nowy-post" onClick={() => setIsMobileMenuOpen(false)}>
-                    <Button variant="outline" size="sm" className="w-full justify-start">
+                  <Link
+                    href="/admin/nowy-post"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="w-full justify-start"
+                    >
                       <Plus className="h-4 w-4 mr-2" />
                       Nowy post
                     </Button>
@@ -329,8 +356,8 @@ export function SiteHeader({
                   {showEditButton && (
                     <Button
                       onClick={() => {
-                        onEditToggle?.()
-                        setIsMobileMenuOpen(false)
+                        onEditToggle?.();
+                        setIsMobileMenuOpen(false);
                       }}
                       variant="outline"
                       size="sm"
@@ -344,8 +371,8 @@ export function SiteHeader({
                     variant="outline"
                     size="sm"
                     onClick={() => {
-                      handleSignOut()
-                      setIsMobileMenuOpen(false)
+                      handleSignOut();
+                      setIsMobileMenuOpen(false);
                     }}
                     className="w-full justify-start"
                   >
@@ -354,8 +381,15 @@ export function SiteHeader({
                   </Button>
                 </>
               ) : (
-                <Link href="/admin/login" onClick={() => setIsMobileMenuOpen(false)}>
-                  <Button variant="outline" size="sm" className="w-full justify-start">
+                <Link
+                  href="/admin/login"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="w-full justify-start"
+                  >
                     Zaloguj
                   </Button>
                 </Link>
@@ -385,7 +419,7 @@ export function SiteHeader({
       )}
 
       {/* Floating Action Button for Contact */}
-      {(currentPage === 'cooperation' || currentPage === 'contact') && (
+      {(currentPage === "cooperation" || currentPage === "contact") && (
         <div className="fixed bottom-6 right-6 z-50 flex flex-col gap-3">
           <Link href="/kontakt">
             <Button
@@ -398,5 +432,5 @@ export function SiteHeader({
         </div>
       )}
     </>
-  )
-} 
+  );
+}
