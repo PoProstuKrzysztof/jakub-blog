@@ -126,10 +126,18 @@ export function PostContentRenderer({
         }
       });
 
-      // Dodaj style dla obrazów
+      // Dodaj style dla obrazów z obsługą błędów
       const images = contentRef.current.querySelectorAll("img");
       images.forEach((img) => {
         img.setAttribute("class", "max-w-full h-auto rounded-lg my-4 mx-auto");
+        img.setAttribute("loading", "lazy");
+
+        // Add error handling for images
+        img.addEventListener("error", (event) => {
+          console.debug("Image load error, using placeholder:", event);
+          img.src = "/placeholder.svg?height=300&width=600";
+          img.alt = "Nie udało się załadować obrazu";
+        });
       });
 
       // Dodaj style dla tabel
