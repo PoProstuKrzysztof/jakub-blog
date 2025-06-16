@@ -9,5 +9,13 @@ import { register } from '@builder.io/sdk-react-nextjs'
 // Rejestracja komponentu RSC
 register('CatFacts', CatFactsInfo)
 
-// Eksportujemy klucz API dla komponentów
-export const builderApiKey = process.env.NEXT_PUBLIC_BUILDER_PUBLIC_KEY as string 
+// Walidacja i eksport klucza API
+const builderPublicKey = process.env.NEXT_PUBLIC_BUILDER_PUBLIC_KEY
+
+if (!builderPublicKey) {
+  throw new Error(
+    'NEXT_PUBLIC_BUILDER_PUBLIC_KEY environment variable is required for Builder.io functionality'
+  )
+}
+
+export const builderApiKey = builderPublicKey 
