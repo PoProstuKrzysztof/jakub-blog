@@ -389,62 +389,6 @@ export async function togglePostPin(postId: string) {
 }
 ```
 
-## 🛡️ Bezpieczeństwo
-
-### Zaimplementowane Zabezpieczenia
-
-#### 1. Middleware Bezpieczeństwa
-- **Rate Limiting**: 2000 żądań na 60 sekund na IP
-- **Request Validation**: Walidacja User-Agent i Content-Type
-- **Security Headers**: CSP, HSTS, X-Frame-Options, X-XSS-Protection
-- **Authentication Guards**: Ochrona tras administracyjnych
-
-#### 2. Content Security Policy (CSP)
-```
-default-src 'self';
-script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net;
-style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
-font-src 'self' https://fonts.gstatic.com;
-img-src 'self' data: https: blob:;
-connect-src 'self' https://*.supabase.co wss://*.supabase.co;
-frame-ancestors 'none';
-base-uri 'self';
-form-action 'self';
-upgrade-insecure-requests;
-```
-
-#### 3. Row Level Security (RLS)
-- Wszystkie tabele mają włączone RLS
-- Polityki dostępu oparte na rolach użytkowników
-- Bezpieczne funkcje z `SET search_path = ''`
-
-#### 4. Walidacja i Sanityzacja Danych
-- Input Validation Hook dla formularzy
-- XSS Protection - sanityzacja HTML i JavaScript
-- SQL Injection Prevention - parametryzowane zapytania
-- Pattern Matching - walidacja formatów (email, URL, UUID)
-
-#### 5. Bezpieczny Upload Plików
-- Type Validation - sprawdzanie MIME types
-- Size Limits - ograniczenie rozmiaru plików (5MB)
-- Content Scanning - detekcja niebezpiecznej zawartości
-- Hash Verification - SHA-256 dla integralności plików
-
-### Ochrona przed Atakami OWASP Top 10
-
-✅ **A01:2021 – Broken Access Control** - RLS policies, role-based authorization  
-✅ **A02:2021 – Cryptographic Failures** - HTTPS enforcement, secure cookies  
-✅ **A03:2021 – Injection** - Parametrized queries, input sanitization  
-✅ **A04:2021 – Insecure Design** - Security-first architecture  
-✅ **A05:2021 – Security Misconfiguration** - Security headers, secure defaults  
-✅ **A06:2021 – Vulnerable Components** - Dependency scanning, regular updates  
-✅ **A07:2021 – Authentication Failures** - Strong password policy, session management  
-✅ **A08:2021 – Data Integrity Failures** - File integrity checks, secure CI/CD  
-✅ **A09:2021 – Logging Failures** - Comprehensive logging, security monitoring  
-✅ **A10:2021 – Server-Side Request Forgery** - URL validation, request filtering  
-
-## 🚀 Wdrożenie
-
 ### Vercel (Zalecane)
 
 1. **Połącz projekt z Vercel**
@@ -611,17 +555,3 @@ Używaj [GitHub Issues](https://github.com/your-repo/issues) do zgłaszania bł�
 Ten projekt jest licencjonowany na licencji MIT - zobacz plik [LICENSE](LICENSE) dla szczegółów.
 
 ---
-
-## 📞 Kontakt
-
-**Jakub** - Autor bloga finansowego JAKUB INWESTYCJE
-
-- 📧 Email: [kontakt@jakubinwestycje.pl](mailto:kontakt@jakubinwestycje.pl)
-- 🌐 Website: [https://jakubinwestycje.pl](https://jakubinwestycje.pl)
-- 💼 LinkedIn: [Jakub Inwestycje](https://linkedin.com/in/jakub-inwestycje)
-
----
-
-**Projekt stworzony z ❤️ dla społeczności inwestorów**
-
-*Dokumentacja aktualizowana na bieżąco wraz z rozwojem projektu.*
