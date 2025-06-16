@@ -1,36 +1,74 @@
 # JAKUB INWESTYCJE - Blog Finansowy
 
-## 📋 Opis Projektu
+[![Next.js](https://img.shields.io/badge/Next.js-15-black?style=flat-square&logo=next.js)](https://nextjs.org/)
+[![React](https://img.shields.io/badge/React-19-blue?style=flat-square&logo=react)](https://reactjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue?style=flat-square&logo=typescript)](https://www.typescriptlang.org/)
+[![Supabase](https://img.shields.io/badge/Supabase-Latest-green?style=flat-square&logo=supabase)](https://supabase.com/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.0-38B2AC?style=flat-square&logo=tailwind-css)](https://tailwindcss.com/)
+
+## 📋 Spis Treści
+
+- [Opis Projektu](#-opis-projektu)
+- [Funkcjonalności](#-funkcjonalności)
+- [Stack Technologiczny](#️-stack-technologiczny)
+- [Instalacja i Uruchomienie](#-instalacja-i-uruchomienie)
+- [Konfiguracja](#-konfiguracja)
+- [Struktura Projektu](#-struktura-projektu)
+- [Funkcjonalności Zaawansowane](#-funkcjonalności-zaawansowane)
+- [Bezpieczeństwo](#-bezpieczeństwo)
+- [Wdrożenie](#-wdrożenie)
+- [Rozwiązywanie Problemów](#-rozwiązywanie-problemów)
+- [Współpraca](#-współpraca)
+- [Licencja](#-licencja)
+
+## 🎯 Opis Projektu
 
 **JAKUB INWESTYCJE** to nowoczesny blog finansowy o tematyce inwestycyjnej, stworzony w technologii Next.js 15 z TypeScript. Aplikacja oferuje profesjonalną platformę do publikowania analiz finansowych, poradników inwestycyjnych oraz aktualności z rynków kapitałowych.
 
-### 🎯 Główne Cele Aplikacji
+### Główne Cele Aplikacji
 
 1. **Edukacja Finansowa** - Dostarczanie wysokiej jakości treści edukacyjnych z zakresu inwestowania
 2. **Analiza Rynkowa** - Publikowanie szczegółowych analiz spółek, sektorów i trendów rynkowych
 3. **Społeczność Inwestorów** - Budowanie platformy wymiany wiedzy między inwestorami
 4. **Profesjonalne Zarządzanie Treścią** - Zaawansowany panel administratora z edytorem WYSIWYG
 
-### ✨ Kluczowe Funkcjonalności
+## ✨ Funkcjonalności
 
-- 📝 **Zaawansowany edytor tekstów** podobny do Microsoft Word z obsługą:
-  - 🎨 Formatowanie tekstu (pogrubienie, kursywa, podkreślenie, indeksy)
-  - 📊 **Wykresy interaktywne** (słupkowe, liniowe, kołowe) z Chart.js
-  - 🎥 **Filmy YouTube** - bezpośrednie osadzanie
-  - 🖼️ **Obrazy** z upload plików i URL
-  - 📋 **Tabele** z edycją komórek
-  - ✅ **Listy zadań** z interaktywnymi checkboxami
-  - 🔗 **Linki** i cytaty
-  - ↩️ **Cofnij/Ponów** z pełną historią zmian
-- 🔐 **System uwierzytelniania** z Supabase Auth (email/hasło, OAuth)
-- 🛡️ **Ochrona tras** z middleware Next.js
-- 🔍 **System wyszukiwania i filtrowania** postów
-- 📊 **Panel analityczny** z metrykami odwiedzin
-- 📱 **Responsywny design** dostosowany do wszystkich urządzeń
-- 🎨 **Nowoczesny interfejs** oparty na Tailwind CSS i Radix UI
-- 📎 **System załączników** (PDF, Excel, obrazy)
-- 🏷️ **Kategoryzacja treści** (Analiza spółek, Kryptowaluty, Edukacja)
-- 📌 **System przypinania** ważnych postów
+### 📝 Zaawansowany Edytor Tekstów
+- **Formatowanie tekstu** (pogrubienie, kursywa, podkreślenie, indeksy)
+- **Wykresy interaktywne** (słupkowe, liniowe, kołowe) z Chart.js
+- **Filmy YouTube** - bezpośrednie osadzanie
+- **Obrazy** z upload plików i URL do Supabase Storage
+- **Tabele** z edycją komórek
+- **Listy zadań** z interaktywnymi checkboxami
+- **Linki** i cytaty
+- **Cofnij/Ponów** z pełną historią zmian
+
+### 🔐 System Uwierzytelniania
+- Integracja z Supabase Auth (email/hasło, OAuth)
+- Ochrona tras z middleware Next.js
+- Automatyczne tworzenie profili użytkowników
+- Role-based access control
+
+### 🎨 Interfejs Użytkownika
+- **Responsywny design** dostosowany do wszystkich urządzeń
+- **Nowoczesny interfejs** oparty na Tailwind CSS i Radix UI
+- **Zunifikowana nawigacja** z Grid Layout CSS
+- **Drag & Drop** dla ofert współpracy
+- **Inline edycja** treści dla administratorów
+
+### 📊 Zarządzanie Treścią
+- System wyszukiwania i filtrowania postów
+- Kategoryzacja treści (Analiza spółek, Kryptowaluty, Edukacja)
+- System przypinania ważnych postów
+- Panel analityczny z metrykami odwiedzin
+- System załączników (PDF, Excel, obrazy)
+
+### 🖼️ Strona O Autorze
+- Nowoczesny landing page z możliwością edycji
+- Upload głównego zdjęcia autora
+- Responsywny design z smooth scrolling
+- Sekcje: Hero, Doświadczenie, Wykształcenie, Filozofia, Osiągnięcia, Kontakt
 
 ## 🛠️ Stack Technologiczny
 
@@ -44,7 +82,6 @@
 ### Backend i Baza Danych
 - **Supabase** - Backend-as-a-Service z PostgreSQL
 - **Supabase Auth** - System uwierzytelniania z obsługą OAuth
-- **Supabase Client** - Klient do komunikacji z bazą danych
 - **Row Level Security** - Bezpieczeństwo na poziomie wierszy
 - **Real-time subscriptions** - Aktualizacje w czasie rzeczywistym
 
@@ -53,419 +90,538 @@
 - **React Hook Form** - Zarządzanie formularzami
 - **Zod** - Walidacja schematów
 
-### UI/UX
+### UI/UX i Narzędzia
 - **Lucide React** - Ikony
 - **Next Themes** - Zarządzanie motywami
 - **Sonner** - Powiadomienia toast
-- **Recharts** - Wykresy i analityka
-
-## 📁 Struktura Projektu
-
-### `/app` - Routing i Strony Aplikacji
-Folder zawierający wszystkie strony aplikacji zgodnie z App Router Next.js 15:
-
-- **`page.tsx`** - Strona główna z listą postów, wyszukiwarką i filtrami
-- **`layout.tsx`** - Główny layout aplikacji z nawigacją
-- **`globals.css`** - Globalne style CSS i zmienne Tailwind
-- **`loading.tsx`** - Komponent ładowania
-
-#### `/app/admin` - Panel Administratora
-Sekcja zarządzania treścią dostępna dla administratorów:
-
-- **`page.tsx`** - Dashboard administratora z metrykami i zarządzaniem postami
-- **`loading.tsx`** - Komponent ładowania dla panelu admin
-
-##### `/app/admin/login` - Logowanie
-- Strona logowania do panelu administratora z integracją Supabase Auth
-- Obsługa uwierzytelniania email/hasło
-- Automatyczne przekierowanie po zalogowaniu
-- Walidacja formularza i obsługa błędów
-
-##### `/app/admin/nowy-post` - Tworzenie Postów
-- Zaawansowany edytor do tworzenia nowych postów z integracją uwierzytelniania
-- Obsługa załączników, SEO, kategorii
-- Automatyczne przypisywanie autora na podstawie sesji użytkownika
-- Ochrona przed nieautoryzowanym dostępem
-
-##### `/app/admin/analytics` - Analityka
-- Dashboard z metrykami odwiedzin
-- Wykresy i statystyki
-
-#### `/app/post/[id]` - Strony Postów
-- Dynamiczne routing dla pojedynczych postów
-- Wyświetlanie pełnej treści, załączników i komentarzy
-
-#### `/app/auth/callback` - OAuth Callback
-- Obsługa callback'ów OAuth z Supabase
-- Automatyczne przekierowanie po uwierzytelnieniu
-- Obsługa błędów uwierzytelniania
-
-#### `/app/o-autorze` - Strona O Autorze
-- Nowoczesny landing page prezentujący autora bloga
-- Możliwość edycji treści przez zalogowanych administratorów
-- Responsywny design z smooth scrolling między sekcjami
-- Sekcje: Hero, Doświadczenie, Wykształcenie, Filozofia, Osiągnięcia, Kontakt
-
-#### `/app/kontakt` - Strona Kontaktowa
-- Formularz kontaktowy
-- Informacje o autorze
-
-#### `/app/wspolpraca` - Współpraca
-- Informacje o możliwościach współpracy
-- Formularz dla potencjalnych partnerów
-
-### `/components` - Komponenty React
-
-#### `/components/ui` - Komponenty UI
-Biblioteka komponentów UI opartych na Radix UI i Tailwind CSS:
-
-**Podstawowe Komponenty:**
-- `button.tsx` - Przyciski w różnych wariantach
-- `input.tsx` - Pola tekstowe
-- `textarea.tsx` - Obszary tekstowe
-- `label.tsx` - Etykiety formularzy
-- `badge.tsx` - Znaczniki i tagi
-- `card.tsx` - Karty zawartości
-
-**Nawigacja i Layout:**
-- `navigation-menu.tsx` - Menu nawigacyjne
-- `breadcrumb.tsx` - Ścieżka nawigacji
-- `sidebar.tsx` - Panel boczny
-- `separator.tsx` - Separatory
-
-**Formularze i Interakcja:**
-- `form.tsx` - Komponenty formularzy
-- `select.tsx` - Listy rozwijane
-- `checkbox.tsx` - Pola wyboru
-- `radio-group.tsx` - Grupy przycisków radio
-- `switch.tsx` - Przełączniki
-- `slider.tsx` - Suwaki
-
-**Modalne i Overlays:**
-- `dialog.tsx` - Okna dialogowe
-- `alert-dialog.tsx` - Dialogi alertów
-- `popover.tsx` - Popovery
-- `tooltip.tsx` - Podpowiedzi
-- `sheet.tsx` - Panele boczne
-- `drawer.tsx` - Szuflady
-
-**Wyświetlanie Danych:**
-- `table.tsx` - Tabele
-- `chart.tsx` - Wykresy
-- `progress.tsx` - Paski postępu
-- `skeleton.tsx` - Szkielety ładowania
-- `avatar.tsx` - Awatary użytkowników
-
-**Nawigacja i Paginacja:**
-- `pagination.tsx` - Paginacja
-- `tabs.tsx` - Zakładki
-- `accordion.tsx` - Akordeony
-- `collapsible.tsx` - Składane sekcje
-
-**Multimedia i Interakcja:**
-- `carousel.tsx` - Karuzele
-- `aspect-ratio.tsx` - Proporcje obrazów
-- `scroll-area.tsx` - Obszary przewijania
-- `resizable.tsx` - Panele o zmiennym rozmiarze
-
-**Menu Kontekstowe:**
-- `context-menu.tsx` - Menu kontekstowe
-- `dropdown-menu.tsx` - Menu rozwijane
-- `menubar.tsx` - Pasek menu
-- `command.tsx` - Paleta komend
-
-**Powiadomienia:**
-- `toast.tsx` - Komponenty toast
-- `toaster.tsx` - Kontener toastów
-- `sonner.tsx` - Integracja z Sonner
-- `alert.tsx` - Alerty
-
-**Specjalne:**
-- `calendar.tsx` - Kalendarz
-- `input-otp.tsx` - Pola OTP
-- `hover-card.tsx` - Karty hover
-- `toggle.tsx` - Przełączniki toggle
-- `toggle-group.tsx` - Grupy przełączników
-
-**Hooks i Utilities:**
-- `use-toast.ts` - Hook do zarządzania toastami
-- `use-mobile.tsx` - Hook do wykrywania urządzeń mobilnych
-
-#### `/components/editor` - Komponenty Edytora
-Zaawansowane komponenty do tworzenia i edycji treści:
-
-- **`rich-text-editor.tsx`** - Główny komponent edytora WYSIWYG oparty na TipTap
-  - Obsługa formatowania tekstu (pogrubienie, kursywa, podkreślenie)
-  - Wstawianie linków i obrazów
-  - Licznik znaków
-  - Wyrównanie tekstu
-
-- **`toolbar.tsx`** - Pasek narzędzi edytora
-  - Przyciski formatowania
-  - Opcje wstawiania mediów
-  - Narzędzia do stylizacji tekstu
-
-- **`media-upload.tsx`** - Komponent do przesyłania mediów
-  - Upload obrazów
-  - Zarządzanie załącznikami
-  - Podgląd przesłanych plików
-
-- **`seo-settings.tsx`** - Ustawienia SEO dla postów
-  - Meta tytuł i opis
-  - Słowa kluczowe
-  - Ustawienia społecznościowe (Open Graph)
-
-#### `/components/auth-provider.tsx`
-- Provider do zarządzania uwierzytelnianiem z Supabase
-- Dostarcza kontekst uwierzytelnienia dla całej aplikacji
-- Integracja z `useAuth` hook
-
-#### `/components/theme-provider.tsx`
-- Provider do zarządzania motywami (jasny/ciemny)
-
-### `/hooks` - Custom Hooks
-Folder zawierający niestandardowe hooki React:
-
-- **`use-auth.ts`** - Hook do zarządzania uwierzytelnianiem z Supabase
-  - Zarządzanie sesją użytkownika
-  - Metody logowania i rejestracji
-  - Obsługa OAuth (Google, GitHub)
-  - Context API dla stanu uwierzytelnienia
-- **`use-mobile.tsx`** - Hook do wykrywania urządzeń mobilnych
-- **`use-toast.ts`** - Hook do zarządzania powiadomieniami toast
-
-### `/lib` - Biblioteki i Utilities
-Folder zawierający konfigurację bazy danych, modele i serwisy:
-
-#### Konfiguracja Supabase
-- **`supabase.ts`** - Klient Supabase dla środowiska przeglądarki
-- **`supabase-server.ts`** - Klient Supabase dla środowiska serwera
-- **`database.types.ts`** - Automatycznie generowane typy TypeScript z schematu bazy
-
-#### `/lib/models` - Modele Danych
-- **`post.ts`** - Modele i typy dla postów bloga
-- **`category.ts`** - Modele kategorii
-- **`tag.ts`** - Modele tagów
-
-#### `/lib/services` - Serwisy Biznesowe
-- **`post-service.ts`** - Serwis do zarządzania postami (CRUD)
-- **`README.md`** - Dokumentacja serwisów
-
-### `/public` - Zasoby Statyczne
-
-#### `/public/images`
-- Obrazy, ikony i inne zasoby graficzne
-- Zdjęcia do postów
-- Logo i elementy brandingowe
-
-### `/styles` - Style CSS
-Dodatkowe pliki stylów (obecnie główne style w `globals.css`)
-
-## 📋 Pliki Konfiguracyjne
-
-### `package.json`
-Definicja zależności i skryptów projektu:
-- **Zależności produkcyjne**: Next.js, React, Radix UI, TipTap, Tailwind CSS
-- **Zależności deweloperskie**: TypeScript, PostCSS, Tailwind CSS
-- **Skrypty**: `dev`, `build`, `start`, `lint`
-
-### `next.config.mjs`
-Konfiguracja Next.js:
-- Wyłączenie błędów ESLint i TypeScript podczas budowania
-- Wyłączenie optymalizacji obrazów
-
-### `tailwind.config.ts`
-Konfiguracja Tailwind CSS:
-- Rozszerzona paleta kolorów
-- Zmienne CSS dla motywów
-- Animacje i keyframes
-- Plugin dla animacji
-
-### `middleware.ts`
-Middleware Next.js do obsługi uwierzytelniania:
-- Automatyczna ochrona tras `/admin/*`
-- Przekierowanie niezalogowanych użytkowników do strony logowania
-- Odświeżanie sesji Supabase
-- Obsługa cookies uwierzytelniania
-
-### `tsconfig.json`
-Konfiguracja TypeScript z aliasami ścieżek
-
-### `postcss.config.mjs`
-Konfiguracja PostCSS z Tailwind CSS
-
-### `components.json`
-Konfiguracja komponentów UI (shadcn/ui)
+- **Chart.js** - Wykresy interaktywne
+- **@dnd-kit** - Drag & Drop functionality
 
 ## 🚀 Instalacja i Uruchomienie
 
-### Wymagania
-- Node.js 18+
-- pnpm (zalecane) lub npm
+### Wymagania Systemowe
+- **Node.js** 18.0 lub nowszy
+- **pnpm** (zalecane), **npm** lub **yarn**
+- **Git**
 
-### Kroki instalacji
+### Kroki Instalacji
 
 1. **Klonowanie repozytorium**
 ```bash
-git clone [repository-url]
+git clone <repository-url>
 cd jakub-blog
 ```
 
 2. **Instalacja zależności**
 ```bash
+# Używając pnpm (zalecane)
 pnpm install
+
+# Lub używając npm
+npm install
+
+# Lub używając yarn
+yarn install
 ```
 
-3. **Uruchomienie w trybie deweloperskim**
+3. **Konfiguracja zmiennych środowiskowych**
+
+Utwórz plik `.env.local` w głównym katalogu projektu:
+
+```env
+# Supabase Configuration
+NEXT_PUBLIC_SUPABASE_URL=your-supabase-url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-supabase-anon-key
+
+# Security Configuration
+CSRF_SECRET=your_csrf_secret_32_chars_minimum
+RATE_LIMIT_MAX=2000
+RATE_LIMIT_WINDOW_MS=60000
+MAX_FILE_SIZE=5242880
+ALLOWED_FILE_TYPES=image/jpeg,image/png,image/webp,image/gif
+
+# Redis Configuration (Optional)
+UPSTASH_REDIS_REST_URL=https://your-redis-url.upstash.io
+UPSTASH_REDIS_REST_TOKEN=your-redis-token
+REDIS_DEFAULT_TTL=3600
+REDIS_KEY_PREFIX=blog:
+REDIS_RATE_LIMIT_ENABLED=true
+
+# Headers Security
+HSTS_MAX_AGE=31536000
+CSP_REPORT_URI=https://yourdomain.com/api/security/csp-report
+```
+
+4. **Uruchomienie aplikacji**
+
+#### Tryb Deweloperski
 ```bash
 pnpm dev
 ```
 
-4. **Budowanie dla produkcji**
+Aplikacja będzie dostępna pod adresem: **http://localhost:3000**
+
+#### Tryb Produkcyjny
 ```bash
 pnpm build
 pnpm start
 ```
 
-## 🎨 Funkcjonalności UI/UX
+## ⚙️ Konfiguracja
 
-### Strona Główna
-- **Header z social media** - Linki do mediów społecznościowych
-- **Wyszukiwarka** - Filtrowanie postów w czasie rzeczywistym
-- **Kategoryzacja** - Filtrowanie po kategoriach
-- **Sortowanie** - Według daty lub popularności
-- **Przypinane posty** - Wyróżnienie ważnych treści
+### Konfiguracja Supabase
 
-### Panel Administratora
-- **Uwierzytelnianie** - Bezpieczne logowanie z Supabase Auth
-- **Ochrona tras** - Automatyczne przekierowanie niezalogowanych użytkowników
-- **Dashboard** - Przegląd metryk i zarządzanie
-- **Edytor postów** - Zaawansowany WYSIWYG z TipTap
-- **Zarządzanie mediami** - Upload i organizacja plików
-- **Analityka** - Statystyki odwiedzin i engagement
+#### 1. Utworzenie projektu Supabase
+- Utwórz konto na [Supabase](https://supabase.com/)
+- Stwórz nowy projekt
+- Skopiuj URL i klucz anonimowy do `.env.local`
 
-### Responsywność
-- Pełna responsywność na wszystkich urządzeniach
-- Optymalizacja dla mobile-first
-- Dostępność (a11y) dzięki Radix UI
+#### 2. Konfiguracja bazy danych
 
-## 🔧 Rozwój i Rozszerzenia
+Wykonaj poniższe skrypty SQL w Supabase SQL Editor:
 
-### Zaimplementowane Funkcjonalności ✅
-- ✅ **System uwierzytelniania** - Pełna integracja z Supabase Auth
-- ✅ **Ochrona tras** - Middleware zabezpieczający panel administratora
-- ✅ **Zarządzanie sesjami** - Automatyczne odświeżanie i walidacja
-- ✅ **OAuth callback** - Obsługa zewnętrznych dostawców uwierzytelniania
-- ✅ **Strona O Autorze** - Landing page z możliwością edycji treści przez administratorów
+```sql
+-- Funkcja automatycznego tworzenia profili
+CREATE OR REPLACE FUNCTION public.handle_new_user()
+RETURNS trigger AS $$
+BEGIN
+  INSERT INTO public.profiles (id, username, full_name, role, is_active)
+  VALUES (
+    new.id,
+    COALESCE(new.raw_user_meta_data->>'username', split_part(new.email, '@', 1)),
+    COALESCE(new.raw_user_meta_data->>'full_name', ''),
+    'admin',
+    true
+  );
+  RETURN new;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
 
-### Planowane Funkcjonalności
-- System komentarzy
-- Newsletter
-- Integracja z API giełdowymi
-- System tagów
-- Wersje językowe
-- PWA (Progressive Web App)
-
-### Struktura Gotowa na Rozszerzenie
-- Modułowa architektura komponentów
-- Hooks do logiki biznesowej
-- Utilities dla funkcji pomocniczych
-- Konfigurowalny system motywów
-
-## 📞 Kontakt i Wsparcie
-
-Projekt stworzony dla bloga finansowego **JAKUB INWESTYCJE - FINANSE BARDZO OSOBISTE**.
-
----
-
-## 🚀 Konfiguracja i Uruchomienie
-
-### 1. Instalacja zależności
-```bash
-npm install
-# lub
-pnpm install
+-- Trigger dla nowych użytkowników
+CREATE TRIGGER on_auth_user_created
+  AFTER INSERT ON auth.users
+  FOR EACH ROW EXECUTE PROCEDURE public.handle_new_user();
 ```
 
-### 2. Konfiguracja Supabase
-Stwórz plik `.env.local` i dodaj zmienne środowiskowe:
-```env
-NEXT_PUBLIC_SUPABASE_URL=your-supabase-url
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your-supabase-anon-key
+#### 3. Konfiguracja Storage
+
+Utwórz bucket `images` z następującymi politykami:
+
+```sql
+-- Publiczny dostęp do odczytu
+CREATE POLICY "Public Access" ON storage.objects FOR SELECT USING (bucket_id = 'images');
+
+-- Upload dla zalogowanych użytkowników
+CREATE POLICY "Authenticated users can upload images" ON storage.objects 
+FOR INSERT WITH CHECK (bucket_id = 'images' AND auth.role() = 'authenticated');
 ```
 
-**Przykładowa konfiguracja znajduje się w pliku `env-test.txt`.**
+#### 4. Tabela author_content
 
-**Ważne:** Aplikacja wymaga prawidłowej konfiguracji Supabase Auth:
-- ✅ Tabele `profiles` są automatycznie tworzone przez trigger
-- ✅ Trigger `handle_new_user()` automatycznie tworzy profile dla nowych użytkowników
-- Ustaw odpowiednie polityki RLS
-- Skonfiguruj dostawców OAuth (opcjonalnie)
+```sql
+-- Tabela dla treści strony O Autorze
+CREATE TABLE IF NOT EXISTS author_content (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  section_type VARCHAR(50) NOT NULL UNIQUE,
+  title TEXT NOT NULL,
+  content TEXT NOT NULL,
+  section_order INTEGER NOT NULL DEFAULT 1,
+  is_visible BOOLEAN NOT NULL DEFAULT true,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
 
-Szczegółowe instrukcje konfiguracji znajdziesz w pliku `SUPABASE_SETUP.md`.
+-- Wstawienie domyślnych sekcji
+INSERT INTO author_content (section_type, title, content, section_order, is_visible) VALUES
+('hero', 'Jakub - Twój Przewodnik w Świecie Inwestycji', 'Witaj! Jestem Jakub, pasjonatem inwestycji z wieloletnim doświadczeniem na rynkach finansowych.', 1, true),
+('experience', 'Doświadczenie', 'Ponad 8 lat doświadczenia w analizie rynków finansowych.', 2, true),
+('education', 'Wykształcenie', 'Magister Ekonomii na Uniwersytecie Warszawskim.', 3, true),
+('philosophy', 'Filozofia Inwestycyjna', 'Wierzę w długoterminowe inwestowanie oparte na solidnej analizie.', 4, true),
+('achievements', 'Osiągnięcia', 'Autor ponad 200 analiz spółek.', 5, true),
+('contact', 'Kontakt', 'Masz pytania? Skontaktuj się ze mną!', 6, true)
+ON CONFLICT (section_type) DO NOTHING;
+```
 
-### 3. Uruchomienie aplikacji
+### Konfiguracja Redis (Opcjonalna)
+
+#### Opcja 1: Upstash Redis (Zalecane dla Vercel)
+1. Utwórz konto na [Upstash](https://upstash.com/)
+2. Stwórz nową bazę Redis
+3. Dodaj URL i token do `.env.local`
+
+#### Opcja 2: Lokalny Redis (Docker)
 ```bash
-npm run dev
-# lub
+docker run -d --name redis-blog -p 6379:6379 redis:7-alpine
+```
+
+## 📁 Struktura Projektu
+
+```
+jakub-blog/
+├── app/                        # Next.js App Router
+│   ├── admin/                  # Panel administratora
+│   │   ├── analytics/          # Dashboard analityczny
+│   │   ├── login/             # Logowanie administratora
+│   │   └── nowy-post/         # Tworzenie postów
+│   ├── api/                   # API endpoints
+│   │   ├── redis/health/      # Health check Redis
+│   │   └── security/csp-report/ # CSP violation reports
+│   ├── auth/callback/         # OAuth callback
+│   ├── blog/                  # Strona bloga
+│   ├── kontakt/              # Strona kontaktowa
+│   ├── post/[id]/            # Dynamiczne strony postów
+│   ├── wpisy/                # Lista wszystkich postów
+│   └── wspolpraca/           # Strona współpracy
+├── components/               # Komponenty React
+│   ├── editor/              # Komponenty edytora
+│   │   ├── rich-text-editor.tsx
+│   │   ├── chart-component.tsx
+│   │   └── media-upload.tsx
+│   └── ui/                  # Komponenty UI (Radix/Shadcn)
+├── hooks/                   # Custom React hooks
+│   ├── use-auth.ts         # Hook uwierzytelniania
+│   └── use-mobile.tsx      # Hook wykrywania mobile
+├── lib/                    # Biblioteki i utilities
+│   ├── actions/           # Server actions
+│   ├── models/            # Modele danych
+│   ├── redis/             # Konfiguracja Redis
+│   ├── security/          # Zabezpieczenia
+│   └── services/          # Serwisy biznesowe
+├── public/                # Zasoby statyczne
+│   └── images/           # Obrazy i ikony
+├── styles/               # Style CSS
+└── guides/              # Dokumentacja techniczna
+```
+
+## 🔧 Funkcjonalności Zaawansowane
+
+### Zaawansowany Edytor Tekstu (TipTap)
+
+Edytor oferuje funkcjonalności podobne do Microsoft Word:
+
+#### Formatowanie Tekstu
+- **Podstawowe**: Pogrubienie, kursywa, podkreślenie, przekreślenie
+- **Kod**: Formatowanie kodu inline
+- **Indeksy**: Górny (x²) i dolny (H₂O)
+- **Highlight**: Podświetlanie tekstu
+
+#### Elementy Multimedialne
+- **Obrazy**: Automatyczny upload do Supabase Storage
+- **Filmy YouTube**: Automatyczne osadzanie z URL
+- **Wykresy**: Interaktywne wykresy Chart.js (słupkowe, liniowe, kołowe)
+
+#### Przykład konfiguracji wykresu:
+```json
+{
+  "labels": ["Q1", "Q2", "Q3", "Q4"],
+  "datasets": [{
+    "label": "Przychody",
+    "data": [1200, 1900, 800, 1700],
+    "borderColor": "#36a2eb",
+    "backgroundColor": "rgba(54, 162, 235, 0.1)"
+  }]
+}
+```
+
+### Drag & Drop dla Ofert Współpracy
+
+Implementacja z biblioteką `@dnd-kit`:
+
+```typescript
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core"
+import {
+  arrayMove,
+  SortableContext,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable"
+```
+
+#### Funkcjonalności:
+- Przeciąganie i upuszczanie ofert
+- Inline edycja treści
+- Automatyczne zapisywanie zmian
+- Responsywny design
+
+### Zunifikowana Nawigacja (SiteHeader)
+
+Komponent nawigacji z Grid Layout CSS:
+
+#### Struktura (3 kolumny):
+1. **Lewa sekcja**: Logo i badge administratora
+2. **Środkowa sekcja**: Menu nawigacji (zawsze wyśrodkowane)
+3. **Prawa sekcja**: Przyciski administratora/użytkownika
+
+#### Funkcjonalności:
+- Globalny dostęp do panelu twórcy
+- Responsywny hamburger menu
+- Izolowane sekcje bez wpływu na pozycjonowanie
+
+### System Przypinania Postów
+
+```typescript
+// Server Action
+export async function togglePostPin(postId: string) {
+  const { data: { user } } = await supabase.auth.getUser()
+  
+  if (!user) {
+    throw new Error('Unauthorized')
+  }
+
+  const { data: post } = await supabase
+    .from('posts')
+    .select('is_featured')
+    .eq('id', postId)
+    .single()
+
+  await supabase
+    .from('posts')
+    .update({ is_featured: !post.is_featured })
+    .eq('id', postId)
+
+  revalidatePath('/')
+}
+```
+
+## 🛡️ Bezpieczeństwo
+
+### Zaimplementowane Zabezpieczenia
+
+#### 1. Middleware Bezpieczeństwa
+- **Rate Limiting**: 2000 żądań na 60 sekund na IP
+- **Request Validation**: Walidacja User-Agent i Content-Type
+- **Security Headers**: CSP, HSTS, X-Frame-Options, X-XSS-Protection
+- **Authentication Guards**: Ochrona tras administracyjnych
+
+#### 2. Content Security Policy (CSP)
+```
+default-src 'self';
+script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net;
+style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+font-src 'self' https://fonts.gstatic.com;
+img-src 'self' data: https: blob:;
+connect-src 'self' https://*.supabase.co wss://*.supabase.co;
+frame-ancestors 'none';
+base-uri 'self';
+form-action 'self';
+upgrade-insecure-requests;
+```
+
+#### 3. Row Level Security (RLS)
+- Wszystkie tabele mają włączone RLS
+- Polityki dostępu oparte na rolach użytkowników
+- Bezpieczne funkcje z `SET search_path = ''`
+
+#### 4. Walidacja i Sanityzacja Danych
+- Input Validation Hook dla formularzy
+- XSS Protection - sanityzacja HTML i JavaScript
+- SQL Injection Prevention - parametryzowane zapytania
+- Pattern Matching - walidacja formatów (email, URL, UUID)
+
+#### 5. Bezpieczny Upload Plików
+- Type Validation - sprawdzanie MIME types
+- Size Limits - ograniczenie rozmiaru plików (5MB)
+- Content Scanning - detekcja niebezpiecznej zawartości
+- Hash Verification - SHA-256 dla integralności plików
+
+### Ochrona przed Atakami OWASP Top 10
+
+✅ **A01:2021 – Broken Access Control** - RLS policies, role-based authorization  
+✅ **A02:2021 – Cryptographic Failures** - HTTPS enforcement, secure cookies  
+✅ **A03:2021 – Injection** - Parametrized queries, input sanitization  
+✅ **A04:2021 – Insecure Design** - Security-first architecture  
+✅ **A05:2021 – Security Misconfiguration** - Security headers, secure defaults  
+✅ **A06:2021 – Vulnerable Components** - Dependency scanning, regular updates  
+✅ **A07:2021 – Authentication Failures** - Strong password policy, session management  
+✅ **A08:2021 – Data Integrity Failures** - File integrity checks, secure CI/CD  
+✅ **A09:2021 – Logging Failures** - Comprehensive logging, security monitoring  
+✅ **A10:2021 – Server-Side Request Forgery** - URL validation, request filtering  
+
+## 🚀 Wdrożenie
+
+### Vercel (Zalecane)
+
+1. **Połącz projekt z Vercel**
+```bash
+vercel --prod
+```
+
+2. **Dodaj zmienne środowiskowe** w Vercel Dashboard
+3. **Skonfiguruj domeny** i SSL
+
+### Inne Platformy
+
+#### Railway
+```bash
+railway add redis
+railway deploy
+```
+
+#### DigitalOcean App Platform
+1. Dodaj Redis Managed Database
+2. Skonfiguruj zmienne środowiskowe
+3. Wdróż aplikację
+
+### Lista Kontrolna Wdrożenia
+
+- [ ] Wszystkie zmienne środowiskowe ustawione
+- [ ] HTTPS włączone (SSL/TLS)
+- [ ] Security headers skonfigurowane
+- [ ] RLS policies aktywne w Supabase
+- [ ] Rate limiting włączony
+- [ ] Monitoring skonfigurowany
+- [ ] Backup i recovery plan
+- [ ] Incident response plan
+
+## 🔍 Rozwiązywanie Problemów
+
+### Częste Problemy i Rozwiązania
+
+#### Problem: ChunkLoadError w Next.js 15
+**Błąd:** `ChunkLoadError` podczas ładowania komponentów
+
+**Rozwiązanie:**
+```tsx
+// Dynamiczny import z wyłączonym SSR
+const RichTextEditorCore = dynamic(() => 
+  import('./rich-text-editor').then(mod => ({ default: mod.RichTextEditor })), 
+  {
+    ssr: false,
+    loading: () => <EditorSkeleton />
+  }
+)
+```
+
+#### Problem: Błąd klucza obcego posts_author_id_fkey
+**Błąd:** `violates foreign key constraint "posts_author_id_fkey"`
+
+**Rozwiązanie:** ✅ ROZWIĄZANE
+- Utworzono automatyczny trigger `handle_new_user()`
+- Zapewniono spójność między `auth.users` a `profiles`
+
+#### Problem: next/headers w komponentach klienckich
+**Błąd:** `You're importing a component that needs "next/headers"`
+
+**Rozwiązanie:**
+- Usunięto importy `supabase-server.ts` z komponentów klienckich
+- Wszystkie serwisy używają teraz tylko klienta Supabase
+
+### Debugowanie
+
+#### 1. Sprawdź konsolę przeglądarki
+```bash
+# Otwórz DevTools > Console
+# Szukaj błędów:
+- ChunkLoadError
+- Failed to fetch dynamically imported module
+- Loading chunk [number] failed
+```
+
+#### 2. Wyczyść cache
+```bash
+# Usuń cache Next.js
+rm -rf .next
+
+# Usuń cache node_modules
+rm -rf node_modules/.cache
+
+# Restart serwera
 pnpm dev
 ```
 
-Aplikacja będzie dostępna pod adresem `http://localhost:3000`.
-
-### 4. Logowanie do panelu administratora
-- Przejdź do `http://localhost:3000/admin/login`
-- Zaloguj się używając konta Supabase (email/hasło)
-- Po zalogowaniu zostaniesz automatycznie przekierowany do panelu administratora
-- Wszystkie trasy `/admin/*` są chronione i wymagają uwierzytelnienia
-
-### 5. Budowanie dla produkcji
+#### 3. Webpack Bundle Analyzer
 ```bash
-npm run build
-npm start
+npm install -g webpack-bundle-analyzer
+npx webpack-bundle-analyzer .next/static/chunks
 ```
 
-## 🔧 Rozwiązane Problemy
+## 📊 Dostępne Strony i Funkcjonalności
 
-### Problem z UUID w bazie danych
-**Błąd:** `Error: invalid input syntax for type uuid: "mock-author-id"`
+### Strona Główna (`/`)
+- Lista wszystkich opublikowanych postów
+- Wyszukiwarka i filtry
+- Przypinane posty w specjalnej sekcji
+- Sortowanie według daty i popularności
 
-**Rozwiązanie:**
-- ✅ Zaimplementowano pełny system uwierzytelniania z Supabase Auth
-- ✅ Zastąpiono "mock-author-id" prawdziwym UUID użytkownika z sesji
-- ✅ Dodano walidację uwierzytelnienia przed tworzeniem postów
-- ✅ Zaimplementowano automatyczne przekierowanie do logowania
+### Panel Administratora (`/admin`)
+- Dashboard z metrykami i zarządzaniem postami
+- Wymagane uwierzytelnienie
 
-### Problem z kluczem obcym w tabeli posts
-**Błąd:** `Error: insert or update on table "posts" violates foreign key constraint "posts_author_id_fkey"`
+### Tworzenie Postów (`/admin/nowy-post`)
+- Zaawansowany edytor WYSIWYG z TipTap
+- Upload obrazów i załączników
+- Zarządzanie kategoriami i tagami
+- Ustawienia SEO i podgląd
 
-**Rozwiązanie:**
-- ✅ Utworzono brakujący profil użytkownika w tabeli `profiles`
-- ✅ Dodano automatyczny trigger `handle_new_user()` do tworzenia profili
-- ✅ Skonfigurowano trigger na tabeli `auth.users` dla nowych rejestracji
-- ✅ Zapewniono spójność danych między `auth.users` a `profiles`
+### Analityka (`/admin/analytics`)
+- Dashboard z metrykami odwiedzin
+- Wykresy i statystyki
 
-### Implementacja uwierzytelniania
-**Zmiany:**
-- ✅ Utworzono hook `useAuth` do zarządzania sesją
-- ✅ Dodano `AuthProvider` do głównego layoutu
-- ✅ Zaktualizowano stronę logowania z integracją Supabase
-- ✅ Dodano middleware do ochrony tras administratora
-- ✅ Zaimplementowano OAuth callback handler
+### Strona O Autorze (`/o-autorze`)
+- Nowoczesny landing page
+- Możliwość edycji treści przez administratorów
+- Upload głównego zdjęcia autora
+- Responsywny design z smooth scrolling
 
-### Bezpieczeństwo aplikacji
-**Zabezpieczenia:**
-- ✅ Ochrona tras `/admin/*` przez middleware
-- ✅ Automatyczne przekierowanie niezalogowanych użytkowników
-- ✅ Walidacja sesji na poziomie serwera
-- ✅ Bezpieczne zarządzanie cookies uwierzytelniania
-- ✅ Automatyczne tworzenie profili dla nowych użytkowników
+### Pojedynczy Post (`/post/[id]`)
+- Wyświetlanie pełnej treści posta
+- Automatyczne zwiększanie liczby wyświetleń
+- Obsługa błędów 404 dla nieistniejących postów
 
-## 📚 Dokumentacja
+### Współpraca (`/wspolpraca`)
+- Informacje o możliwościach współpracy
+- Drag & Drop dla ofert (dla administratorów)
+- Inline edycja treści
 
-- **Serwisy**: `lib/services/README.md` - Dokumentacja serwisów do zarządzania danymi
-- **Konfiguracja**: `SUPABASE_SETUP.md` - Instrukcje konfiguracji Supabase
-- **Modele**: Typy i interfejsy w folderze `lib/models/`
-- **Uwierzytelnianie**: `hooks/use-auth.ts` - Hook do zarządzania sesją użytkownika
+## 🤝 Współpraca
 
-*Dokumentacja aktualizowana na bieżąco wraz z rozwojem projektu.* 
+### Jak Współpracować
+
+1. **Fork** repozytorium
+2. **Utwórz** branch dla swojej funkcjonalności (`git checkout -b feature/AmazingFeature`)
+3. **Commit** swoje zmiany (`git commit -m 'Add some AmazingFeature'`)
+4. **Push** do brancha (`git push origin feature/AmazingFeature`)
+5. **Otwórz** Pull Request
+
+### Wytyczne Kodowania
+
+- Używaj TypeScript dla wszystkich nowych plików
+- Przestrzegaj konwencji nazewnictwa (camelCase dla zmiennych, PascalCase dla komponentów)
+- Dodawaj JSDoc komentarze dla publicznych funkcji
+- Pisz testy dla nowych funkcjonalności
+- Używaj Prettier i ESLint
+
+### Zgłaszanie Błędów
+
+Używaj [GitHub Issues](https://github.com/your-repo/issues) do zgłaszania błędów. Dołącz:
+- Opis problemu
+- Kroki do reprodukcji
+- Oczekiwane zachowanie
+- Zrzuty ekranu (jeśli dotyczy)
+- Informacje o środowisku (OS, przeglądarka, wersja Node.js)
+
+## 📄 Licencja
+
+Ten projekt jest licencjonowany na licencji MIT - zobacz plik [LICENSE](LICENSE) dla szczegółów.
+
+---
+
+## 📞 Kontakt
+
+**Jakub** - Autor bloga finansowego JAKUB INWESTYCJE
+
+- 📧 Email: [kontakt@jakubinwestycje.pl](mailto:kontakt@jakubinwestycje.pl)
+- 🌐 Website: [https://jakubinwestycje.pl](https://jakubinwestycje.pl)
+- 💼 LinkedIn: [Jakub Inwestycje](https://linkedin.com/in/jakub-inwestycje)
+
+---
+
+**Projekt stworzony z ❤️ dla społeczności inwestorów**
+
+*Dokumentacja aktualizowana na bieżąco wraz z rozwojem projektu.*

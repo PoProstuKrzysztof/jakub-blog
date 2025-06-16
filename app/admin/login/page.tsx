@@ -8,29 +8,62 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Alert, AlertDescription } from '@/components/ui/alert'
-import { Loader2, LogIn } from 'lucide-react'
+import { Loader2, LogIn, CheckCircle } from 'lucide-react'
 import { useAuth } from '@/hooks/use-auth'
+import { useToast } from '@/hooks/use-toast'
 
 export default function AdminLoginPage() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
+  const [successMessage, setSuccessMessage] = useState('')
+  const [isRedirecting, setIsRedirecting] = useState(false)
   const router = useRouter()
   const { user, loading: authLoading } = useAuth()
+  const { toast } = useToast()
+
+  // Cleanup timeouts on unmount
+  useEffect(() => {
+    return () => {
+      setIsRedirecting(false)
+      setSuccessMessage('')
+    }
+  }, [])
 
   // Redirect if already logged in
   useEffect(() => {
     if (user && !authLoading) {
-      router.push("/admin")
+      setSuccessMessage('Już jesteś zalogowany! Przekierowywanie...')
+      setIsRedirecting(true)
+      
+      toast({
+        title: "Już jesteś zalogowany! 👋",
+        description: "Przekierowywanie do panelu administratora...",
+        duration: 1500,
+      })
+      
+      setTimeout(() => {
+        router.push("/admin")
+      }, 1000)
     }
-  }, [user, authLoading, router])
+  }, [user, authLoading, router, toast])
 
-  // Show loading while checking auth state
-  if (authLoading) {
+  // Show loading while checking auth state or redirecting
+  if (authLoading || isRedirecting) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary"></div>
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 to-slate-100">
+        <div className="text-center space-y-4">
+          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-primary mx-auto"></div>
+          <div className="text-lg font-medium text-slate-600">
+            {authLoading ? 'Sprawdzanie autoryzacji...' : 'Przekierowywanie do panelu...'}
+          </div>
+          {successMessage && (
+            <div className="text-sm text-green-600 font-medium">
+              {successMessage}
+            </div>
+          )}
+        </div>
       </div>
     )
   }
@@ -39,6 +72,7 @@ export default function AdminLoginPage() {
     e.preventDefault()
     setLoading(true)
     setErrorMessage('')
+    setSuccessMessage('')
 
     try {
       const supabase = createClient()
@@ -49,6 +83,11 @@ export default function AdminLoginPage() {
 
       if (authError) {
         setErrorMessage(authError.message)
+        toast({
+          title: "Błąd logowania",
+          description: authError.message,
+          variant: "destructive",
+        })
         return
       }
 
@@ -61,14 +100,53 @@ export default function AdminLoginPage() {
           .single()
 
         if (profile?.role === 'admin') {
-          router.push('/admin')
+          setSuccessMessage('Logowanie pomyślne! Przekierowywanie...')
+          setIsRedirecting(true)
+          
+          // Show success toast
+          toast({
+            title: "Logowanie pomyślne! ✅",
+            description: "Przekierowywanie do panelu administratora...",
+            duration: 2000,
+          })
+          
+          // Small delay to show success message
+          const redirectTimeout = setTimeout(() => {
+            try {
+              router.push('/admin')
+            } catch (error) {
+              console.error('Redirect error:', error)
+              setErrorMessage('Błąd podczas przekierowywania. Spróbuj ponownie.')
+              setIsRedirecting(false)
+              setSuccessMessage('')
+              
+              toast({
+                title: "Błąd przekierowywania",
+                description: "Spróbuj ponownie lub odśwież stronę.",
+                variant: "destructive",
+              })
+            }
+          }, 1500)
+
+          // Cleanup timeout if component unmounts
+          return () => clearTimeout(redirectTimeout)
         } else {
           setErrorMessage('Brak uprawnień administratora')
+          toast({
+            title: "Brak uprawnień",
+            description: "Nie masz uprawnień administratora.",
+            variant: "destructive",
+          })
           await supabase.auth.signOut()
         }
       }
     } catch {
       setErrorMessage('Wystąpił błąd podczas logowania')
+      toast({
+        title: "Błąd",
+        description: "Wystąpił nieoczekiwany błąd podczas logowania.",
+        variant: "destructive",
+      })
     } finally {
       setLoading(false)
     }
@@ -97,7 +175,7 @@ export default function AdminLoginPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                disabled={loading}
+                disabled={loading || isRedirecting}
               />
             </div>
             <div className="space-y-2">
@@ -108,7 +186,7 @@ export default function AdminLoginPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                disabled={loading}
+                disabled={loading || isRedirecting}
               />
             </div>
             
@@ -118,11 +196,25 @@ export default function AdminLoginPage() {
               </Alert>
             )}
 
-            <Button type="submit" className="w-full" disabled={loading}>
+            {successMessage && (
+              <Alert className="border-green-200 bg-green-50 text-green-800">
+                <CheckCircle className="h-4 w-4 text-green-600" />
+                <AlertDescription className="text-green-800">
+                  {successMessage}
+                </AlertDescription>
+              </Alert>
+            )}
+
+            <Button type="submit" className="w-full" disabled={loading || isRedirecting}>
               {loading ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                   Logowanie...
+                </>
+              ) : isRedirecting ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Przekierowywanie...
                 </>
               ) : (
                 'Zaloguj się'
