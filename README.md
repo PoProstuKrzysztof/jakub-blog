@@ -108,6 +108,9 @@ Utwórz plik `.env.local` w głównym katalogu projektu:
 NEXT_PUBLIC_SUPABASE_URL=your-supabase-url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your-supabase-anon-key
 
+# Builder.io Configuration (Optional)
+NEXT_PUBLIC_BUILDER_PUBLIC_KEY=your-builder-public-key
+
 # Security Configuration
 CSRF_SECRET=your_csrf_secret_32_chars_minimum
 RATE_LIMIT_MAX=2000

@@ -364,13 +364,34 @@ export default function CooperationPage() {
   const { user } = useAuth()
   const [activeId, setActiveId] = useState<number | null>(null)
   const [services, setServices] = useState<Service[]>([
+    
     {
       id: 1,
+      title: "Wsparcie Inwestycyjne",
+      description:
+        "Dla tych, którzy chcą mieć pewność, że ich inwestycje są na właściwej ścieżce. Regularne monitorowanie, raporty kwartalne i wsparcie przy zmianach strategii. Idealne uzupełnienie po konsultacji głównej.",
+      price: "297 zł",
+      priceNote: "miesięcznie",
+      type: "subskrypcja",
+      ctaText: "Rozpocznij subskrypcję",
+      badge: "NAJLEPSZA WARTOŚĆ",
+      features: [
+        "Monitorowanie portfela - śledzenie wyników Twoich inwestycji",
+        "Raporty kwartalne z analizą osiągnięć i wykresami",
+        "Wsparcie przy modyfikacjach portfela",
+        "Pomoc podatkowa - rozliczenie zysków kapitałowych (PIT-38)",
+        "Priorytetowy kontakt mailowy/telefoniczny",
+        "Dostęp do ekskluzywnych materiałów edukacyjnych",
+      ],
+      color: "from-purple-600 to-purple-700",
+      icon: "BarChart3",
+    },{
+      id: 2,
       title: "Konsultacja Majątkowa-Edukacyjna",
       description:
         "Inwestowanie bywa wyzwaniem, zwłaszcza gdy zaczynasz przygodę z rynkami. Ta konsultacja pomoże Ci zrozumieć zasady gry i pewniej budować własny portfel. Nie obiecuję łatwych zysków – nauczę Cię, jak krok po kroku analizować własne podejście do ryzyka i samodzielnie zarządzać inwestycjami.",
-      price: "1,497 zł",
-      originalPrice: "1,997 zł",
+      price: "899 zł",
+      originalPrice: "1,497 zł",
       priceNote: "jednorazowo",
       type: "jednorazowa",
       ctaText: "Zarezerwuj konsultację",
@@ -388,32 +409,11 @@ export default function CooperationPage() {
       popular: true,
     },
     {
-      id: 2,
-      title: "Wsparcie Inwestycyjne Premium",
-      description:
-        "Dla tych, którzy chcą mieć pewność, że ich inwestycje są na właściwej ścieżce. Regularne monitorowanie, raporty kwartalne i wsparcie przy zmianach strategii. Idealne uzupełnienie po konsultacji głównej.",
-      price: "297 zł",
-      priceNote: "miesięcznie",
-      type: "subskrypcja",
-      ctaText: "Rozpocznij subskrypcję",
-      badge: "TYLKO PO KONSULTACJI",
-      features: [
-        "Monitorowanie portfela - śledzenie wyników Twoich inwestycji",
-        "Raporty kwartalne z analizą osiągnięć i wykresami",
-        "Wsparcie przy modyfikacjach portfela",
-        "Pomoc podatkowa - rozliczenie zysków kapitałowych (PIT-38)",
-        "Priorytetowy kontakt mailowy/telefoniczny",
-        "Dostęp do ekskluzywnych materiałów edukacyjnych",
-      ],
-      color: "from-purple-600 to-purple-700",
-      icon: "BarChart3",
-    },
-    {
       id: 3,
       title: "Pakiet Startowy",
       description: 
         "Podstawowa wiedza inwestycyjna w przystępnej cenie. Idealne dla osób, które chcą zacząć, ale nie są gotowe na pełną konsultację. Zawiera najważniejsze informacje do samodzielnego startu.",
-      price: "497 zł",
+      price: "300 zł",
       priceNote: "jednorazowo", 
       type: "jednorazowa",
       ctaText: "Rozpocznij naukę",
@@ -687,8 +687,8 @@ export default function CooperationPage() {
             onDragEnd={handleDragEnd}
           >
             <SortableContext items={services.map(s => s.id)} strategy={verticalListSortingStrategy}>
-              {/* Zmiana z grid na flex column dla lepszego sortowania */}
-              <div className="flex flex-col gap-8 mb-12 max-w-4xl mx-auto">
+              {/* Grid layout dla ofert obok siebie */}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
                 {services.map((service) => (
                   <SortableServiceItem
                     key={service.id}
@@ -879,10 +879,10 @@ export default function CooperationPage() {
             <Link href="/kontakt">
               <Button 
                 size="lg" 
-                variant="outline"
-                className="border-2 border-white text-white hover:bg-white hover:text-primary px-8 py-5 rounded-xl text-lg font-semibold transition-all duration-300"
+                variant="secondary"
+                className="bg-white text-primary hover:bg-gray-100 px-10 py-5 rounded-xl text-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
               >
-                <MessageCircle className="mr-2 h-5 w-5" />
+                <MessageCircle className="mr-2 h-6 w-6" />
                 Zadaj pytanie
               </Button>
             </Link>
