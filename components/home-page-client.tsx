@@ -184,15 +184,15 @@ export function HomePageClient({ initialPosts }: HomePageClientProps) {
               {/* Social Proof */}
               <div className="flex items-center space-x-8 pt-4">
                 <div className="text-center">
-                  <div className="text-2xl font-bold text-foreground">200+</div>
-                  <div className="text-sm text-muted-foreground">Analiz spółek</div>
+                  <div className="text-2xl font-bold text-foreground">100+</div>
+                  <div className="text-sm text-muted-foreground">Zadowolonych klientów</div>
                 </div>
                 <div className="text-center">
                   <div className="text-2xl font-bold text-foreground">15.2%</div>
                   <div className="text-sm text-muted-foreground">Średnia stopa zwrotu</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-2xl font-bold text-foreground">8+</div>
+                  <div className="text-2xl font-bold text-foreground">5+</div>
                   <div className="text-sm text-muted-foreground">lat doświadczenia</div>
                 </div>
               </div>
@@ -203,7 +203,7 @@ export function HomePageClient({ initialPosts }: HomePageClientProps) {
               <div className="relative bg-card rounded-2xl p-8 shadow-2xl border border-border">
                 <div className="space-y-6">
                   <div className="flex items-center justify-between">
-                    <h3 className="text-lg font-semibold text-foreground">Portfolio Performance</h3>
+                    <h3 className="text-lg font-semibold text-foreground">Portfolio</h3>
                     <Badge className="bg-green-100 text-green-800 rounded-lg">+15.2%</Badge>
                   </div>
                   
@@ -248,7 +248,7 @@ export function HomePageClient({ initialPosts }: HomePageClientProps) {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl lg:text-4xl font-bold text-foreground mb-4">
-              Dlaczego tysiące inwestorów mi zaufało?
+              Dlaczego kilkudziesięciu inwestorów mi zaufało?
             </h2>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
               Profesjonalne podejście do inwestowania oparte na wieloletnim doświadczeniu i sprawdzonych metodach analizy
@@ -266,7 +266,7 @@ export function HomePageClient({ initialPosts }: HomePageClientProps) {
               {
                 icon: BarChart3,
                 title: "Szczegółowa analiza",
-                description: "Analizy fundamentalne oparte na rzetelnych danych finansowych i modelach wyceny",
+                description: "Analizy portfela inwestycyjnego oparte na rzetelnych danych finansowych i modelach wyceny",
                 color: "text-green-600"
               },
               {
@@ -278,7 +278,7 @@ export function HomePageClient({ initialPosts }: HomePageClientProps) {
               {
                 icon: Users,
                 title: "Społeczność",
-                description: "Aktywna społeczność inwestorów dzieląca się wiedzą i doświadczeniem na Telegramie",
+                description: "Aktywna społeczność inwestorów dzieląca się wiedzą i doświadczeniem na Messengerze",
                 color: "text-orange-600"
               }
             ].map((feature, index) => (
@@ -304,7 +304,7 @@ export function HomePageClient({ initialPosts }: HomePageClientProps) {
               Rozwijaj się ze mną finansowo
             </h2>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-              Od analiz spółek po indywidualne konsultacje – wszystko czego potrzebujesz do inteligentnego inwestowania
+              Od analiz twojego portfela po indywidualne konsultacje – wszystko czego potrzebujesz do inteligentnego inwestowania
             </p>
           </div>
 
@@ -312,9 +312,9 @@ export function HomePageClient({ initialPosts }: HomePageClientProps) {
             {[
               {
                 icon: FileText,
-                title: "Analizy spółek",
-                description: "Szczegółowe analizy fundamentalne polskich i zagranicznych spółek z rekomendacjami inwestycyjnymi",
-                features: ["Analiza finansowa", "Wycena spółki", "Poziomy wsparcia", "PDF raport"],
+                title: "Analizy portfela inwestycyjnego",
+                description: "Szczegółowa analiza twojego portfela inwestycyjnego wraz z rekomendacjami ścieżki inwestycyjnej",
+                features: ["Analiza finansowa", "Przedstawienie portfela inwestycyjnego", "Poziomy wsparcia", "PDF raport"],
                 href: "/wpisy",
                 cta: "Przeglądaj analizy"
               },
@@ -335,16 +335,16 @@ export function HomePageClient({ initialPosts }: HomePageClientProps) {
                 cta: "Zapisz się"
               }
             ].map((service, index) => (
-              <Card key={index} className="border-0 shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:scale-105 group relative overflow-hidden">
+              <Card key={index} className="border-0 shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:scale-105 group relative overflow-hidden flex flex-col">
                 <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-accent/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                <CardContent className="p-8 relative z-10">
+                <CardContent className="p-8 relative z-10 flex flex-col flex-grow">
                   <div className="w-16 h-16 mx-auto mb-6 rounded-2xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors duration-300">
                     <service.icon className="h-8 w-8 text-primary" />
                   </div>
                   <h3 className="text-xl font-semibold text-foreground mb-4 text-center">{service.title}</h3>
                   <p className="text-muted-foreground mb-6 text-center leading-relaxed">{service.description}</p>
                   
-                  <div className="space-y-3 mb-8">
+                  <div className="space-y-3 mb-8 flex-grow">
                     {service.features.map((feature, idx) => (
                       <div key={idx} className="flex items-center text-sm text-muted-foreground">
                         <CheckCircle className="h-4 w-4 text-green-500 mr-2 flex-shrink-0" />
@@ -353,7 +353,7 @@ export function HomePageClient({ initialPosts }: HomePageClientProps) {
                     ))}
                   </div>
                   
-                  <Link href={service.href} className="block">
+                  <Link href={service.href} className="block mt-auto">
                     <Button className="w-full bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl font-semibold group-hover:shadow-lg transition-all duration-300">
                       {service.cta}
                       <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform duration-300" />
@@ -615,45 +615,29 @@ export function HomePageClient({ initialPosts }: HomePageClientProps) {
               </Button>
             </Link>
           </div>
-
-          {/* Newsletter signup */}
-          <div className="max-w-md mx-auto">
-            <p className="text-sm text-primary-foreground/80 mb-4">
-              Zapisz się do newslettera i otrzymuj najlepsze analizy prosto na email
-            </p>
-            <div className="flex gap-2">
-              <Input 
-                placeholder="Twój email"
-                className="bg-primary-foreground/10 border-primary-foreground/20 text-primary-foreground placeholder:text-primary-foreground/60 rounded-xl"
-              />
-              <Button className="bg-card text-primary hover:bg-card/90 rounded-xl px-6">
-                Zapisz się
-              </Button>
-            </div>
-          </div>
         </div>
       </section>
 
-      {/* Telegram CTA Banner */}
-      <div className="bg-gradient-to-r from-accent to-accent/90 text-primary-foreground py-8">
+      {/* Messenger CTA Banner */}
+      <div className="bg-gradient-to-r from-secondary to-secondary/90 text-secondary-foreground py-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row items-center justify-between">
             <div className="text-center md:text-left mb-4 md:mb-0">
               <h3 className="text-xl font-bold mb-2">Dołącz do społeczności Kryptodegeneraci!</h3>
-              <p className="text-primary-foreground/90">Otrzymuj najnowsze analizy, sygnały i dyskutuj z innymi inwestorami na Telegramie</p>
+              <p className="text-secondary-foreground/90">Otrzymuj najnowsze analizy, sygnały i dyskutuj z innymi inwestorami na Messengerze</p>
             </div>
             <Button 
               asChild
-              className="bg-card text-primary hover:bg-card/90 font-semibold px-8 py-3 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl"
+              className="bg-primary text-primary-foreground hover:bg-primary/90 font-semibold px-8 py-3 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl"
             >
               <a 
-                href="https://t.me/kryptodegeneraci" 
+                href="https://m.me/kryptodegeneraci" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="flex items-center"
               >
                 <svg className="w-5 h-5 mr-2" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/>
+                  <path d="M12 0C5.373 0 0 4.975 0 11.111c0 3.497 1.745 6.616 4.472 8.652V24l4.086-2.242c1.09.301 2.246.464 3.442.464 6.627 0 12-4.974 12-11.111C24 4.975 18.627 0 12 0zm1.193 14.963l-3.056-3.259-5.963 3.259L10.732 8.1l3.13 3.259L19.752 8.1l-6.559 6.863z"/>
                 </svg>
                 Dołącz do grupy
               </a>
