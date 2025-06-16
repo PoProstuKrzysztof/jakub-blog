@@ -10,8 +10,8 @@
 
 - [Opis Projektu](#-opis-projektu)
 - [Funkcjonalności](#-funkcjonalności)
-- [Stack Technologiczny](#️-stack-technologiczny)
-- [Instalacja i Uruchomienie](#-instalacja-i-uruchomienie)
+- [Stack Technologiczny](#-stack-technologiczny)
+- [Instalacja](#-instalacja)
 - [Konfiguracja](#-konfiguracja)
 - [Struktura Projektu](#-struktura-projektu)
 - [Funkcjonalności Zaawansowane](#-funkcjonalności-zaawansowane)
@@ -20,95 +20,70 @@
 - [Rozwiązywanie Problemów](#-rozwiązywanie-problemów)
 - [Współpraca](#-współpraca)
 - [Licencja](#-licencja)
+- [Kontakt](#-kontakt)
 
-## 🎯 Opis Projektu
+## 📖 Opis Projektu
 
-**JAKUB INWESTYCJE** to nowoczesny blog finansowy o tematyce inwestycyjnej, stworzony w technologii Next.js 15 z TypeScript. Aplikacja oferuje profesjonalną platformę do publikowania analiz finansowych, poradników inwestycyjnych oraz aktualności z rynków kapitałowych.
+**JAKUB INWESTYCJE** to nowoczesny blog finansowy stworzony z myślą o edukacji inwestycyjnej i dzieleniu się wiedzą o rynkach finansowych. Projekt wykorzystuje najnowsze technologie webowe, zapewniając szybkość, bezpieczeństwo i doskonałe doświadczenie użytkownika.
 
-### Główne Cele Aplikacji
-
-1. **Edukacja Finansowa** - Dostarczanie wysokiej jakości treści edukacyjnych z zakresu inwestowania
-2. **Analiza Rynkowa** - Publikowanie szczegółowych analiz spółek, sektorów i trendów rynkowych
-3. **Społeczność Inwestorów** - Budowanie platformy wymiany wiedzy między inwestorami
-4. **Profesjonalne Zarządzanie Treścią** - Zaawansowany panel administratora z edytorem WYSIWYG
+### 🎯 Cel Projektu
+- Edukacja finansowa społeczności
+- Dzielenie się analizami rynkowymi
+- Budowanie zaufanej marki w branży finansowej
+- Demonstracja nowoczesnych technologii webowych
 
 ## ✨ Funkcjonalności
 
-### 📝 Zaawansowany Edytor Tekstów
-- **Formatowanie tekstu** (pogrubienie, kursywa, podkreślenie, indeksy)
-- **Wykresy interaktywne** (słupkowe, liniowe, kołowe) z Chart.js
-- **Filmy YouTube** - bezpośrednie osadzanie
-- **Obrazy** z upload plików i URL do Supabase Storage
-- **Tabele** z edycją komórek
-- **Listy zadań** z interaktywnymi checkboxami
-- **Linki** i cytaty
-- **Cofnij/Ponów** z pełną historią zmian
+### 👤 Dla Czytelników
+- 📚 **Przeglądanie artykułów** - Intuicyjny interfejs z wyszukiwarką i filtrami
+- 🔍 **Zaawansowane wyszukiwanie** - Filtrowanie po kategoriach, tagach i dacie
+- 📱 **Responsywny design** - Optymalizacja dla wszystkich urządzeń
+- ⚡ **Szybkie ładowanie** - Optymalizacja wydajności i SEO
+- 📊 **Interaktywne wykresy** - Wizualizacja danych finansowych
 
-### 🔐 System Uwierzytelniania
-- Integracja z Supabase Auth (email/hasło, OAuth)
-- Ochrona tras z middleware Next.js
-- Automatyczne tworzenie profili użytkowników
-- Role-based access control
-
-### 🎨 Interfejs Użytkownika
-- **Responsywny design** dostosowany do wszystkich urządzeń
-- **Nowoczesny interfejs** oparty na Tailwind CSS i Radix UI
-- **Zunifikowana nawigacja** z Grid Layout CSS
-- **Drag & Drop** dla ofert współpracy
-- **Inline edycja** treści dla administratorów
-
-### 📊 Zarządzanie Treścią
-- System wyszukiwania i filtrowania postów
-- Kategoryzacja treści (Analiza spółek, Kryptowaluty, Edukacja)
-- System przypinania ważnych postów
-- Panel analityczny z metrykami odwiedzin
-- System załączników (PDF, Excel, obrazy)
-
-### 🖼️ Strona O Autorze
-- Nowoczesny landing page z możliwością edycji
-- Upload głównego zdjęcia autora
-- Responsywny design z smooth scrolling
-- Sekcje: Hero, Doświadczenie, Wykształcenie, Filozofia, Osiągnięcia, Kontakt
+### 👨‍💼 Dla Administratorów
+- ✍️ **Zaawansowany edytor WYSIWYG** - TipTap z funkcjami podobnymi do MS Word
+- 📸 **Zarządzanie mediami** - Upload obrazów i filmów YouTube
+- 📈 **Dashboard analityczny** - Statystyki odwiedzin i engagement
+- 🔒 **Bezpieczne uwierzytelnianie** - Supabase Auth z RLS
+- 📌 **System przypinania postów** - Wyróżnianie ważnych treści
 
 ## 🛠️ Stack Technologiczny
 
 ### Frontend
-- **Next.js 15** - Framework React z App Router
-- **React 19** - Biblioteka do budowy interfejsów użytkownika
-- **TypeScript** - Typowany JavaScript
-- **Tailwind CSS** - Framework CSS utility-first
-- **Radix UI** - Komponenty UI dostępne i konfigurowalne
+- **Next.js 15** - React framework z App Router
+- **React 19** - Najnowsza wersja z Server Components
+- **TypeScript** - Statyczne typowanie
+- **Tailwind CSS** - Utility-first CSS framework
+- **Radix UI + Shadcn/ui** - Komponenty UI wysokiej jakości
 
-### Backend i Baza Danych
-- **Supabase** - Backend-as-a-Service z PostgreSQL
-- **Supabase Auth** - System uwierzytelniania z obsługą OAuth
-- **Row Level Security** - Bezpieczeństwo na poziomie wierszy
-- **Real-time subscriptions** - Aktualizacje w czasie rzeczywistym
+### Backend & Database
+- **Supabase** - Backend-as-a-Service
+  - PostgreSQL database z Row Level Security
+  - Real-time subscriptions
+  - Authentication & Authorization
+  - File Storage
+- **Redis (Upstash)** - Cache i rate limiting
 
-### Edytor i Formularze
-- **TipTap** - Zaawansowany edytor WYSIWYG
+### Narzędzia Deweloperskie
+- **TipTap** - Rich text editor
+- **Chart.js** - Interaktywne wykresy
+- **Framer Motion** - Animacje
 - **React Hook Form** - Zarządzanie formularzami
 - **Zod** - Walidacja schematów
 
-### UI/UX i Narzędzia
-- **Lucide React** - Ikony
-- **Next Themes** - Zarządzanie motywami
-- **Sonner** - Powiadomienia toast
-- **Chart.js** - Wykresy interaktywne
-- **@dnd-kit** - Drag & Drop functionality
-
-## 🚀 Instalacja i Uruchomienie
+## 🚀 Instalacja
 
 ### Wymagania Systemowe
-- **Node.js** 18.0 lub nowszy
-- **pnpm** (zalecane), **npm** lub **yarn**
+- **Node.js** 18.17 lub nowszy
+- **pnpm** (zalecane) lub npm/yarn
 - **Git**
 
 ### Kroki Instalacji
 
 1. **Klonowanie repozytorium**
 ```bash
-git clone <repository-url>
+git clone https://github.com/your-username/jakub-blog.git
 cd jakub-blog
 ```
 
@@ -317,46 +292,25 @@ Edytor oferuje funkcjonalności podobne do Microsoft Word:
   "datasets": [{
     "label": "Przychody",
     "data": [1200, 1900, 800, 1700],
-    "borderColor": "#36a2eb",
-    "backgroundColor": "rgba(54, 162, 235, 0.1)"
+    "backgroundColor": "rgba(54, 162, 235, 0.2)",
+    "borderColor": "rgba(54, 162, 235, 1)"
   }]
 }
 ```
 
-### Drag & Drop dla Ofert Współpracy
+### System Nawigacji
 
-Implementacja z biblioteką `@dnd-kit`:
+Responsywna nawigacja z trzema sekcjami:
 
+#### Implementacja:
 ```typescript
-import {
-  DndContext,
-  closestCenter,
-  KeyboardSensor,
-  PointerSensor,
-  useSensor,
-  useSensors,
-} from "@dnd-kit/core"
-import {
-  arrayMove,
-  SortableContext,
-  verticalListSortingStrategy,
-} from "@dnd-kit/sortable"
+// Struktura nawigacji
+const navigationSections = {
+  left: ['Blog', 'O Autorze', 'Współpraca'],
+  center: 'Logo',
+  right: ['Admin Panel', 'User Menu']
+}
 ```
-
-#### Funkcjonalności:
-- Przeciąganie i upuszczanie ofert
-- Inline edycja treści
-- Automatyczne zapisywanie zmian
-- Responsywny design
-
-### Zunifikowana Nawigacja (SiteHeader)
-
-Komponent nawigacji z Grid Layout CSS:
-
-#### Struktura (3 kolumny):
-1. **Lewa sekcja**: Logo i badge administratora
-2. **Środkowa sekcja**: Menu nawigacji (zawsze wyśrodkowane)
-3. **Prawa sekcja**: Przyciski administratora/użytkownika
 
 #### Funkcjonalności:
 - Globalny dostęp do panelu twórcy
@@ -388,6 +342,62 @@ export async function togglePostPin(postId: string) {
   revalidatePath('/')
 }
 ```
+
+## 🛡️ Bezpieczeństwo
+
+### Zaimplementowane Zabezpieczenia
+
+#### 1. Middleware Bezpieczeństwa
+- **Rate Limiting**: 2000 żądań na 60 sekund na IP
+- **Request Validation**: Walidacja User-Agent i Content-Type
+- **Security Headers**: CSP, HSTS, X-Frame-Options, X-XSS-Protection
+- **Authentication Guards**: Ochrona tras administracyjnych
+
+#### 2. Content Security Policy (CSP)
+```
+default-src 'self';
+script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net;
+style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+font-src 'self' https://fonts.gstatic.com;
+img-src 'self' data: https: blob:;
+connect-src 'self' https://*.supabase.co wss://*.supabase.co;
+frame-ancestors 'none';
+base-uri 'self';
+form-action 'self';
+upgrade-insecure-requests;
+```
+
+#### 3. Row Level Security (RLS)
+- Wszystkie tabele mają włączone RLS
+- Polityki dostępu oparte na rolach użytkowników
+- Bezpieczne funkcje z `SET search_path = ''`
+
+#### 4. Walidacja i Sanityzacja Danych
+- Input Validation Hook dla formularzy
+- XSS Protection - sanityzacja HTML i JavaScript
+- SQL Injection Prevention - parametryzowane zapytania
+- Pattern Matching - walidacja formatów (email, URL, UUID)
+
+#### 5. Bezpieczny Upload Plików
+- Type Validation - sprawdzanie MIME types
+- Size Limits - ograniczenie rozmiaru plików (5MB)
+- Content Scanning - detekcja niebezpiecznej zawartości
+- Hash Verification - SHA-256 dla integralności plików
+
+### Ochrona przed Atakami OWASP Top 10
+
+✅ **A01:2021 – Broken Access Control** - RLS policies, role-based authorization  
+✅ **A02:2021 – Cryptographic Failures** - HTTPS enforcement, secure cookies  
+✅ **A03:2021 – Injection** - Parametrized queries, input sanitization  
+✅ **A04:2021 – Insecure Design** - Security-first architecture  
+✅ **A05:2021 – Security Misconfiguration** - Security headers, secure defaults  
+✅ **A06:2021 – Vulnerable Components** - Dependency scanning, regular updates  
+✅ **A07:2021 – Authentication Failures** - Strong password policy, session management  
+✅ **A08:2021 – Data Integrity Failures** - File integrity checks, secure CI/CD  
+✅ **A09:2021 – Logging Failures** - Comprehensive logging, security monitoring  
+✅ **A10:2021 – Server-Side Request Forgery** - URL validation, request filtering  
+
+## 🚀 Wdrożenie
 
 ### Vercel (Zalecane)
 
@@ -543,7 +553,7 @@ npx webpack-bundle-analyzer .next/static/chunks
 
 ### Zgłaszanie Błędów
 
-Używaj [GitHub Issues](https://github.com/your-repo/issues) do zgłaszania błędów. Dołącz:
+Jeśli znajdziesz błąd, utwórz issue z następującymi informacjami:
 - Opis problemu
 - Kroki do reprodukcji
 - Oczekiwane zachowanie
@@ -555,3 +565,19 @@ Używaj [GitHub Issues](https://github.com/your-repo/issues) do zgłaszania bł�
 Ten projekt jest licencjonowany na licencji MIT - zobacz plik [LICENSE](LICENSE) dla szczegółów.
 
 ---
+
+## 📞 Kontakt
+
+**Projekt Open Source** - Blog Finansowy JAKUB INWESTYCJE
+
+- 📧 Email: [kontakt@example.com](mailto:kontakt@example.com)
+- 🌐 Website: [https://example.com](https://example.com)
+- 💼 LinkedIn: [Example Profile](https://linkedin.com/in/example)
+
+> **Uwaga:** To jest projekt demonstracyjny. Dane kontaktowe powyżej są przykładowe.
+
+---
+
+**Projekt stworzony z ❤️ dla społeczności inwestorów**
+
+*Dokumentacja aktualizowana na bieżąco wraz z rozwojem projektu.*
