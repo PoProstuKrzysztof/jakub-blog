@@ -166,8 +166,11 @@ export function HomePageClient({ initialPosts }: HomePageClientProps) {
                 </Badge>
                 <h1 className="text-4xl lg:text-6xl font-bold text-foreground leading-tight">
                   Osiągnij{" "}
-                  <span className="text-primary">finansową niezależność</span>{" "}
-                  dzięki inteligentnym inwestycjom
+                  <span className="text-primary">finansową niezależność</span>
+                  <span style={{ marginRight: "81px" }}>
+                    {" "}
+                    dzięki inteligentnym inwestycjom
+                  </span>
                 </h1>
                 <p className="text-xl text-muted-foreground leading-relaxed max-w-2xl">
                   Wykorzystaj moje 8-letnie doświadczenie w analizie rynków
