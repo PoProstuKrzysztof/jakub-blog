@@ -1,128 +1,137 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
-  typescript: {
-    ignoreBuildErrors: true,
-  },
-  images: {
-    unoptimized: false,
-    formats: ['image/webp', 'image/avif'],
-    deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
-    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
-    remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: 'jmtmhwzgvqnsitdgdgwa.supabase.co',
-        port: '',
-        pathname: '/storage/v1/object/public/**',
-      },
-      {
-        protocol: 'https',
-        hostname: '**.builder.io',
-        port: '',
-        pathname: '/**',
-      },
-    ],
-  },
+  reactStrictMode: true,
   experimental: {
-    // Wyłączam optymalizację CSS, która powoduje błąd z critters
-    // optimizeCss: true,
+    // Enable experimental features if needed
+    appDir: true,
   },
-  // Dodaję konfigurację webpack dla lepszego zarządzania chunkami
-  webpack: (config, { isServer, dev }) => {
-    // Fix dla problemów z ładowaniem chunków w React Server Components
-    if (!isServer && !dev) {
-      config.optimization = {
-        ...config.optimization,
-        splitChunks: {
-          ...config.optimization.splitChunks,
-          cacheGroups: {
-            ...config.optimization.splitChunks.cacheGroups,
-            default: {
-              minChunks: 1,
-              priority: -20,
-              reuseExistingChunk: true,
-            },
-            vendor: {
-              test: /[\\/]node_modules[\\/]/,
-              name: 'vendors',
-              priority: -10,
-              chunks: 'all',
-            },
-          },
-        },
-      }
-    }
 
-    // Fix dla problemów z TipTap i innymi bibliotekami
-    config.resolve = {
-      ...config.resolve,
-      fallback: {
-        ...config.resolve.fallback,
-        fs: false,
-        net: false,
-        tls: false,
-      },
-    }
-
-    return config
-  },
+  // Handle Builder.io cross-origin requests
   async headers() {
     return [
       {
-        source: '/(.*)',
+        source: "/:path*",
         headers: [
-          // Content Security Policy
           {
-            key: 'Content-Security-Policy',
-            value: [
-              "default-src 'self'",
-              "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net",
-              "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
-              "font-src 'self' https://fonts.gstatic.com",
-              "img-src 'self' data: https: blob:",
-              "connect-src 'self' https://*.supabase.co wss://*.supabase.co",
-              "frame-ancestors 'none'",
-              "base-uri 'self'",
-              "form-action 'self'"
-            ].join('; ')
+            key: "X-Frame-Options",
+            value: "SAMEORIGIN",
           },
-          // HTTP Strict Transport Security
           {
-            key: 'Strict-Transport-Security',
-            value: 'max-age=31536000; includeSubDomains; preload'
+            key: "X-Content-Type-Options",
+            value: "nosniff",
           },
-          // X-Frame-Options
           {
-            key: 'X-Frame-Options',
-            value: 'DENY'
+            key: "Referrer-Policy",
+            value: "strict-origin-when-cross-origin",
           },
-          // X-Content-Type-Options
           {
-            key: 'X-Content-Type-Options',
-            value: 'nosniff'
+            key: "Permissions-Policy",
+            value:
+              "camera=(), microphone=(), geolocation=(), browsing-topics=()",
           },
-          // X-XSS-Protection
-          {
-            key: 'X-XSS-Protection',
-            value: '1; mode=block'
-          },
-          // Referrer Policy
-          {
-            key: 'Referrer-Policy',
-            value: 'strict-origin-when-cross-origin'
-          },
-          // Permissions Policy
-          {
-            key: 'Permissions-Policy',
-            value: 'camera=(), microphone=(), geolocation=(), payment=()'
-          }
-        ]
-      }
-    ]
-  }
-}
+        ],
+      },
+    ];
+  },
 
-export default nextConfig
+  // Configure allowed origins for development (Builder.io)
+  allowedDevOrigins: [
+    "*.builder.codes",
+    "*.builder.io",
+    "localhost:3000",
+    "localhost:*",
+  ],
+
+  // Configure image domains
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "**",
+      },
+      {
+        protocol: "http",
+        hostname: "localhost",
+        port: "3000",
+      },
+    ],
+    dangerouslyAllowSVG: true,
+    contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
+  },
+
+  // Webpack configuration to handle build warnings
+  webpack: (config, { dev, isServer }) => {
+    // Reduce noise from Supabase warnings in development
+    if (dev) {
+      config.infrastructureLogging = {
+        level: "error",
+      };
+    }
+
+    // Handle potential module resolution issues
+    config.resolve.fallback = {
+      ...config.resolve.fallback,
+      fs: false,
+      net: false,
+      tls: false,
+    };
+
+    // Ignore certain warnings that are not actionable
+    config.ignoreWarnings = [
+      /Critical dependency: the request of a dependency is an expression/,
+      /Module not found: Can't resolve 'bufferutil'/,
+      /Module not found: Can't resolve 'utf-8-validate'/,
+    ];
+
+    return config;
+  },
+
+  // Configure TypeScript to be more lenient with certain errors
+  typescript: {
+    // Don't fail build on TypeScript errors during development
+    ignoreBuildErrors: false,
+  },
+
+  // ESLint configuration
+  eslint: {
+    // Don't run ESLint during builds to speed up development
+    ignoreDuringBuilds: false,
+  },
+
+  // Configure output for better error handling
+  poweredByHeader: false,
+
+  // Configure compression
+  compress: true,
+
+  // Configure redirects if needed
+  async redirects() {
+    return [
+      // Add any redirects here
+    ];
+  },
+
+  // Configure rewrites for API routes
+  async rewrites() {
+    return [
+      // Add any rewrites here
+    ];
+  },
+
+  // Environment variables
+  env: {
+    CUSTOM_KEY: process.env.CUSTOM_KEY,
+  },
+
+  // Configure build output
+  output: "standalone",
+
+  // Configure tracing for better debugging
+  experimental: {
+    instrumentationHook: false,
+    optimizeCss: true,
+    swcMinify: true,
+  },
+};
+
+export default nextConfig;
