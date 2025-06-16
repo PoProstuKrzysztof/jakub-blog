@@ -106,7 +106,7 @@ export function SiteHeader({
             {/* Center Section - Navigation Menu (stała pozycja) */}
             <div className="flex justify-center">
               {!adminMode && (
-                <nav className="hidden md:flex items-center space-x-2">
+                <nav className="hidden lg:flex items-center space-x-2">
                   <Link href="/" className={getNavLinkClass('home')}>
                     Home
                   </Link>
@@ -122,12 +122,12 @@ export function SiteHeader({
                 </nav>
               )}
               
-              {/* Mobile Menu Button - tylko w centrum na mobile */}
+              {/* Mobile Menu Button - widoczny na tablet i mobile */}
               {!adminMode && (
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="md:hidden"
+                  className="lg:hidden"
                   onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                 >
                   {isMobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
@@ -185,9 +185,9 @@ export function SiteHeader({
                   </>
                 )}
 
-                {/* Regular Mode Buttons - Hidden on mobile */}
+                {/* Regular Mode Buttons - Responsive visibility */}
                 {!adminMode && (
-                  <div className="hidden md:flex items-center space-x-2">
+                  <div className="hidden lg:flex items-center space-x-1 xl:space-x-2">
                     {/* Przyciski dla zalogowanych użytkowników */}
                     {user && (
                       <>
@@ -195,16 +195,22 @@ export function SiteHeader({
                           <Button 
                             variant="outline" 
                             size="sm"
-                            className="border-primary text-primary hover:bg-primary hover:text-primary-foreground transition-all duration-300 rounded-xl"
+                            className="border-primary text-primary hover:bg-primary hover:text-primary-foreground transition-all duration-300 rounded-xl text-xs lg:text-sm px-2 lg:px-3"
                           >
-                            <Settings className="h-4 w-4 mr-2" />
-                            Panel Twórcy
+                            <Settings className="h-3 w-3 lg:h-4 lg:w-4 mr-1 lg:mr-2" />
+                            <span className="hidden xl:inline">Panel Twórcy</span>
+                            <span className="xl:hidden">Panel</span>
                           </Button>
                         </Link>
                         <Link href="/admin/nowy-post">
-                          <Button variant="outline" size="sm">
-                            <Plus className="h-4 w-4 mr-2" />
-                            Nowy post
+                          <Button 
+                            variant="outline" 
+                            size="sm"
+                            className="text-xs lg:text-sm px-2 lg:px-3"
+                          >
+                            <Plus className="h-3 w-3 lg:h-4 lg:w-4 mr-1 lg:mr-2" />
+                            <span className="hidden xl:inline">Nowy post</span>
+                            <span className="xl:hidden">Nowy</span>
                           </Button>
                         </Link>
                         {showEditButton && (
@@ -212,42 +218,50 @@ export function SiteHeader({
                             onClick={onEditToggle}
                             variant="outline"
                             size="sm"
+                            className="text-xs lg:text-sm px-2 lg:px-3"
                           >
-                            <Edit className="h-4 w-4 mr-2" />
-                            {isEditing ? "Zakończ edycję" : "Edytuj usługi"}
+                            <Edit className="h-3 w-3 lg:h-4 lg:w-4 mr-1 lg:mr-2" />
+                            <span className="hidden xl:inline">{isEditing ? "Zakończ edycję" : "Edytuj usługi"}</span>
+                            <span className="xl:hidden">Edytuj</span>
                           </Button>
                         )}
                         <Button
                           variant="outline"
                           size="sm"
                           onClick={handleSignOut}
+                          className="text-xs lg:text-sm px-2 lg:px-3"
                         >
-                          <LogOut className="h-4 w-4 mr-2" />
-                          Wyloguj
+                          <LogOut className="h-3 w-3 lg:h-4 lg:w-4 mr-1 lg:mr-2" />
+                          <span className="hidden xl:inline">Wyloguj</span>
+                          <span className="xl:hidden">Exit</span>
                         </Button>
                       </>
                     )}
                     
-                    {/* Panel administratora dla niezalogowanych - maksymalnie po prawej */}
+                    {/* Panel administratora dla niezalogowanych */}
                     {!user && (
                       <Link href="/admin/login">
-                        <Button variant="outline" size="sm">
+                        <Button 
+                          variant="outline" 
+                          size="sm"
+                          className="text-xs lg:text-sm px-2 lg:px-3"
+                        >
                           Zaloguj
                         </Button>
                       </Link>
                     )}
                     
                     {/* Kontekstowe przyciski */}
-
                     {currentPage === 'post' && (
                       <Link href="/">
                         <Button
                           variant="outline"
                           size="sm"
-                          className="border-primary text-primary hover:bg-primary hover:text-primary-foreground transition-all duration-300 rounded-xl"
+                          className="border-primary text-primary hover:bg-primary hover:text-primary-foreground transition-all duration-300 rounded-xl text-xs lg:text-sm px-2 lg:px-3"
                         >
-                          <ArrowLeft className="h-4 w-4 mr-2" />
-                          Powrót do strony głównej
+                          <ArrowLeft className="h-3 w-3 lg:h-4 lg:w-4 mr-1 lg:mr-2" />
+                          <span className="hidden xl:inline">Powrót do strony głównej</span>
+                          <span className="xl:hidden">Powrót</span>
                         </Button>
                       </Link>
                     )}
@@ -261,7 +275,7 @@ export function SiteHeader({
 
       {/* Mobile Navigation Menu */}
       {!adminMode && isMobileMenuOpen && (
-        <div className="md:hidden bg-card border-b border-border shadow-lg">
+        <div className="lg:hidden bg-card border-b border-border shadow-lg">
           <nav className="max-w-7xl mx-auto px-4 py-4 space-y-1">
             <Link 
               href="/" 
