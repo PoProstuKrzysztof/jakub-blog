@@ -154,7 +154,7 @@ export const cspDirectives = {
     'https://*.supabase.co',
     'wss://*.supabase.co'
   ],
-  'frame-ancestors': ["'none'"],
+  'frame-ancestors': ["*"],
   'base-uri': ["'self'"],
   'form-action': ["'self'"],
   'upgrade-insecure-requests': []
@@ -162,7 +162,6 @@ export const cspDirectives = {
 
 // Security headers configuration
 export const securityHeaders = {
-  'X-Frame-Options': 'DENY',
   'X-Content-Type-Options': 'nosniff',
   'X-XSS-Protection': '1; mode=block',
   'Referrer-Policy': 'strict-origin-when-cross-origin',
