@@ -514,8 +514,7 @@ export const HeroSectionInfo = {
     {
       name: "title",
       type: "text",
-      defaultValue:
-        "Osiągnij finansową niezależność dzięki inteligentnym inwestycjom",
+      defaultValue: "Osiągnij finansową niezależność DZIĘKI NAM",
       friendlyName: "Tytuł główny",
     },
     {
