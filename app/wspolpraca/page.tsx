@@ -4,6 +4,7 @@ import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
+import { Switch } from "@/components/ui/switch"
 import { SiteHeader } from "@/components/common/site-header"
 import {
   Users,
@@ -33,6 +34,8 @@ import {
   HelpCircle,
   Sparkles,
   CheckCircle2,
+  Layers,
+  GraduationCap,
 } from "lucide-react"
 import Link from "next/link"
 
@@ -50,6 +53,7 @@ interface Service {
   type: 'jednorazowa' | 'subskrypcja'
   ctaText: string
   badge?: string
+  featured?: boolean
 }
 
 // Service Item Component
@@ -58,17 +62,31 @@ function ServiceItem({ service }: { service: Service }) {
     <Card
       className={`border-0 shadow-2xl hover:shadow-3xl transition-all duration-500 transform hover:scale-[1.02] group relative overflow-hidden ${
         service.popular ? 'ring-4 ring-primary ring-opacity-50 scale-105' : ''
+      } ${
+        service.featured ? 'ring-8 ring-gradient-to-r ring-yellow-400 ring-opacity-70 shadow-yellow-200/50 shadow-2xl' : ''
       }`}
     >
       {service.badge && (
         <div className="absolute top-0 left-1/2 transform -translate-x-1/2 z-20">
-          <Badge className={`${service.popular ? 'bg-primary text-primary-foreground' : 'bg-purple-600 text-white'} px-4 py-1 text-xs font-semibold rounded-b-lg`}>
+          <Badge className={`${service.featured ? 'bg-gradient-to-r from-yellow-500 to-orange-500 text-white animate-pulse' : service.popular ? 'bg-primary text-primary-foreground' : 'bg-purple-600 text-white'} px-4 py-1 text-xs font-semibold rounded-b-lg text-center whitespace-nowrap shadow-lg`}>
             {service.badge}
           </Badge>
         </div>
       )}
 
-      <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-accent/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+      {service.featured && (
+        <div className="absolute top-4 right-4 z-20">
+          <div className="bg-gradient-to-r from-yellow-400 to-orange-400 text-white px-3 py-1 rounded-full text-xs font-bold animate-bounce shadow-lg">
+            ⭐ POLECANE
+          </div>
+        </div>
+      )}
+
+      <div className={`absolute inset-0 ${service.featured ? 'bg-gradient-to-br from-yellow-50 to-orange-50' : 'bg-gradient-to-br from-primary/5 to-accent/5'} opacity-0 group-hover:opacity-100 transition-opacity duration-500`}></div>
+      
+      {service.featured && (
+        <div className="absolute inset-0 bg-gradient-to-br from-yellow-100/30 to-orange-100/30 pointer-events-none"></div>
+      )}
       
       <CardContent className="p-8 relative z-10 pt-12 flex flex-col h-full">
         <div className="text-center mb-8">
@@ -76,6 +94,8 @@ function ServiceItem({ service }: { service: Service }) {
             {service.icon === "Target" && <Target className="h-10 w-10 text-white" />}
             {service.icon === "BarChart3" && <BarChart3 className="h-10 w-10 text-white" />}
             {service.icon === "BookOpen" && <BookOpen className="h-10 w-10 text-white" />}
+            {service.icon === "Layers" && <Layers className="h-10 w-10 text-white" />}
+            {service.icon === "GraduationCap" && <GraduationCap className="h-10 w-10 text-white" />}
           </div>
           
           <h3 className="text-2xl font-bold text-foreground mb-4">
@@ -131,35 +151,15 @@ function ServiceItem({ service }: { service: Service }) {
 }
 
 export default function CooperationPage() {
-  const services: Service[] = [
-    {
-      id: 1,
-      title: "Wsparcie Inwestycyjne",
-      description:
-        "Dla tych, którzy chcą mieć pewność, że ich inwestycje są na właściwej ścieżce. Regularne monitorowanie, raporty kwartalne i wsparcie przy zmianach strategii. Idealne uzupełnienie po konsultacji głównej.",
-      price: "297 zł",
-      priceNote: "miesięcznie",
-      type: "subskrypcja",
-      ctaText: "Rozpocznij subskrypcję",
-      badge: "NAJLEPSZA WARTOŚĆ",
-      features: [
-        "Monitorowanie portfela - śledzenie wyników Twoich inwestycji",
-        "Raporty kwartalne z analizą osiągnięć i wykresami",
-        "Wsparcie przy modyfikacjach portfela",
-        "Pomoc podatkowa - rozliczenie zysków kapitałowych (PIT-38)",
-        "Priorytetowy kontakt mailowy/telefoniczny",
-        "Dostęp do ekskluzywnych materiałów edukacyjnych",
-      ],
-      color: "from-purple-600 to-purple-700",
-      icon: "BarChart3",
-    },
+  const [showSubscriptions, setShowSubscriptions] = useState(false)
+
+  const jednorazoweServices: Service[] = [
     {
       id: 2,
       title: "Konsultacja Majątkowa-Edukacyjna",
       description:
         "Inwestowanie bywa wyzwaniem, zwłaszcza gdy zaczynasz przygodę z rynkami. Ta konsultacja pomoże Ci zrozumieć zasady gry i pewniej budować własny portfel. Nie obiecuję łatwych zysków – nauczę Cię, jak krok po kroku analizować własne podejście do ryzyka i samodzielnie zarządzać inwestycjami.",
       price: "899 zł",
-      originalPrice: "1,497 zł",
       priceNote: "jednorazowo",
       type: "jednorazowa",
       ctaText: "Zarezerwuj konsultację",
@@ -175,6 +175,30 @@ export default function CooperationPage() {
       color: "from-blue-600 to-blue-700",
       icon: "Target",
       popular: true,
+      featured: true,
+    },
+    {
+      id: 5,
+      title: "Pakiet Biedny Student",
+      description: 
+        "Młody inwestor z ograniczonym budżetem, ale ogromnymi ambicjami? Ten pakiet to kompleksowy zestaw wszystkich kluczowych usług w jednym - za ułamek ceny. Pełne wsparcie merytoryczne i praktyczne narzędzia, które przygotują Cię do samodzielnego inwestowania.",
+      price: "2500 zł",
+      originalPrice: "3500 zł",
+      priceNote: "jednorazowo - oszczędzasz 30%", 
+      type: "jednorazowa",
+      ctaText: "Rozpocznij przygodę",
+      badge: "NAJLEPSZA OFERTA",
+      features: [
+        "Indywidualna konsultacja finansowa (wartość 999 zł) - analiza ryzyka i portfele modelowe",
+        "Roczny dostęp do mojego portfela inwestycyjnego (wartość 1400 zł) - uczenie na prawdziwych przykładach",
+        "Roczne wsparcie strategiczne (wartość 900 zł) - comiesięczny mentoring i opieka nad strategią",
+        "Prenumerata raportów kwartalnych na rok (wartość 150 zł) - analizy i wnioski rynkowe",
+        "Pakiet edukacyjny na start (wartość 100 zł) - solidne podstawy teoretyczne i praktyczne",
+      ],
+      color: "from-emerald-600 to-teal-600", 
+      icon: "GraduationCap",
+      popular: true,
+      featured: true,
     },
     {
       id: 3,
@@ -195,7 +219,53 @@ export default function CooperationPage() {
       color: "from-green-600 to-green-700", 
       icon: "BookOpen",
     },
+    {
+      id: 4,
+      title: "Dostęp do modeli",
+      description: 
+        "Gotowy zestaw autorskich modeli inwestycyjnych – stworzonych na bazie doświadczenia i przetestowanych w praktyce. Proste narzędzia, które pomogą Ci zrozumieć, jak może wyglądać przykładowy portfel inwestycyjny.",
+      price: "300 zł",
+      priceNote: "jednorazowo", 
+      type: "jednorazowa",
+      ctaText: "Zakup modele",
+      features: [
+        "Zestaw modeli portfeli - różne podejścia inwestycyjne (pasywny, defensywny, dynamiczny)",
+        "Gotowe struktury alokacji aktywów - podział między akcje, obligacje, ETF-y",
+        "Praktyczne szablony do organizacji własnego podejścia",
+        "Materiały w formie plików do analizy we własnym tempie",
+        "Uniwersalne modele edukacyjne jako punkt wyjścia do nauki",
+      ],
+      color: "from-orange-600 to-orange-700", 
+      icon: "Layers",
+    },
   ]
+
+  const subskrypcyjneServices: Service[] = [
+    {
+      id: 1,
+      title: "Wsparcie Inwestycyjne",
+      description:
+        "Dla tych, którzy chcą mieć pewność, że ich inwestycje są na właściwej ścieżce. Regularne monitorowanie, raporty kwartalne i wsparcie przy zmianach strategii. Idealne uzupełnienie po konsultacji głównej.",
+      price: "297 zł",
+      priceNote: "miesięcznie",
+      type: "subskrypcja",
+      ctaText: "Rozpocznij subskrypcję",
+      badge: "NAJLEPSZA WARTOŚĆ",
+      features: [
+        "Monitorowanie portfela - śledzenie wyników Twoich inwestycji",
+        "Raporty kwartalne z analizą osiągnięć i wykresami",
+        "Wsparcie przy modyfikacjach portfela",
+        "Pomoc podatkowa - rozliczenie zysków kapitałowych (PIT-38)",
+        "Priorytetowy kontakt mailowy/telefoniczny",
+        "Dostęp do ekskluzywnych materiałów edukacyjnych",
+      ],
+      color: "from-purple-600 to-purple-700",
+      icon: "BarChart3",
+      popular: true,
+    },
+  ]
+
+  const currentServices = showSubscriptions ? subskrypcyjneServices : jednorazoweServices
 
   const problemPoints = [
     {
@@ -369,15 +439,70 @@ export default function CooperationPage() {
             <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-foreground mb-4 sm:mb-6">
               Wybierz pakiet dla siebie
             </h2>
-            <p className="text-lg sm:text-xl text-muted-foreground max-w-3xl mx-auto">
+            <p className="text-lg sm:text-xl text-muted-foreground max-w-3xl mx-auto mb-8">
               Każdy pakiet został zaprojektowany tak, aby dostarczyć maksymalną wartość na różnych etapach Twojej inwestycyjnej podróży
             </p>
+            
+            {/* Toggle Switch */}
+            <div className="flex items-center justify-center gap-4 mb-8">
+              <span className={`text-lg font-medium transition-colors duration-300 ${!showSubscriptions ? 'text-primary' : 'text-muted-foreground'}`}>
+                Płatności jednorazowe
+              </span>
+              <Switch
+                checked={showSubscriptions}
+                onCheckedChange={setShowSubscriptions}
+                className="data-[state=checked]:bg-purple-600"
+              />
+              <span className={`text-lg font-medium transition-colors duration-300 ${showSubscriptions ? 'text-primary' : 'text-muted-foreground'}`}>
+                Subskrypcje
+              </span>
+            </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
-            {services.map((service) => (
-              <ServiceItem key={service.id} service={service} />
-            ))}
+                                {/* Services Grid with Animation */}
+           <div className="relative min-h-[600px]">
+             <div 
+               className={`transition-all duration-700 ease-in-out ${
+                 showSubscriptions ? 'opacity-0 translate-y-8' : 'opacity-100 translate-y-0'
+               }`}
+               style={{ 
+                 position: showSubscriptions ? 'absolute' : 'relative',
+                 width: '100%',
+                 pointerEvents: showSubscriptions ? 'none' : 'auto'
+               }}
+             >
+               {/* Górny rząd - główne oferty (featured) */}
+               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-6xl mx-auto mb-12">
+                 {jednorazoweServices.filter(service => service.featured).map((service) => (
+                   <ServiceItem key={service.id} service={service} />
+                 ))}
+               </div>
+               
+               {/* Dolny rząd - pozostałe oferty */}
+               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                 {jednorazoweServices.filter(service => !service.featured).map((service) => (
+                   <ServiceItem key={service.id} service={service} />
+                 ))}
+               </div>
+             </div>
+
+                                      <div 
+               className={`flex justify-center transition-all duration-700 ease-in-out ${
+                 showSubscriptions ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+               }`}
+               style={{ 
+                 position: showSubscriptions ? 'relative' : 'absolute',
+                 width: '100%',
+                 top: showSubscriptions ? 0 : '0',
+                 pointerEvents: showSubscriptions ? 'auto' : 'none'
+               }}
+             >
+               <div className="w-full max-w-md">
+                 {subskrypcyjneServices.map((service) => (
+                   <ServiceItem key={service.id} service={service} />
+                 ))}
+               </div>
+             </div>
           </div>
         </section>
 
@@ -390,10 +515,10 @@ export default function CooperationPage() {
             <h2 className="text-2xl sm:text-3xl font-bold mb-3 sm:mb-4">Gwarancja satysfakcji 100%</h2>
             <p className="text-lg sm:text-xl opacity-90 mb-4 sm:mb-6 max-w-3xl mx-auto">
               Jeśli po konsultacji nie będziesz zadowolony z otrzymanej wiedzy i materiałów, 
-              zwrócę Ci <strong>100% wpłaconej kwoty</strong> w ciągu 14 dni. Bez pytań, bez problemów.
+              zwrócę Ci <strong>100% wpłaconej kwoty</strong> w ciągu 7 dni. Bez pytań, bez problemów.
             </p>
             <div className="text-xs sm:text-sm opacity-80">
-              * Gwarancja obowiązuje dla usługi głównej przez 14 dni od daty konsultacji
+              * Gwarancja obowiązuje dla usługi głównej przez 7 dni od daty konsultacji
             </div>
           </div>
         </section>
@@ -483,7 +608,7 @@ export default function CooperationPage() {
               },
               {
                 question: "Co jeśli nie będę zadowolony?",
-                answer: "Oferuję 100% gwarancję zwrotu w ciągu 14 dni od konsultacji. Jeśli uznajesz, że nie otrzymałeś wartości za swoje pieniądze, zwracam pełną kwotę."
+                answer: "Oferuję 100% gwarancję zwrotu w ciągu 7 dni od konsultacji. Jeśli uznajesz, że nie otrzymałeś wartości za swoje pieniądze, zwracam pełną kwotę."
               },
               {
                 question: "Czy subskrypcja Premium jest obowiązkowa?",
@@ -492,6 +617,10 @@ export default function CooperationPage() {
               {
                 question: "Jak długo trwa konsultacja?",
                 answer: "Konsultacja główna trwa 60-90 minut. Dodatkowo otrzymujesz pakiet materiałów do samodzielnego przerobienia w swoim tempie."
+              },
+              {
+                question: "Czy Pakiet Biedny Student to prawdziwa oszczędność?",
+                answer: "Tak! Kupując wszystkie elementy osobno zapłaciłbyś ponad 3500 zł. W pakiecie płacisz tylko 2500 zł, oszczędzając niemal 30%. To kompleksowe wsparcie na cały rok w jednej atrakcyjnej cenie."
               }
             ].map((faq, index) => (
               <Card key={index} className="border-0 shadow-lg hover:shadow-xl transition-all duration-300">
