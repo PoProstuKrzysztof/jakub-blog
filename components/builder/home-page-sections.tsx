@@ -118,7 +118,7 @@ function HeroSection({
               <div className="space-y-3 sm:space-y-4 lg:space-y-6">
                 <div className="flex items-center justify-between">
                   <h3 className="text-sm sm:text-base lg:text-lg font-semibold text-foreground">
-                    Portfolio
+                    Portfel inwestycyjny&nbsp;
                   </h3>
                   <Badge className="bg-green-100 text-green-800 rounded-lg text-xs sm:text-sm">
                     +15.2%
