@@ -1,10 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  experimental: {
-    // Enable experimental features if needed
-    appDir: true,
-  },
 
   // Handle Builder.io cross-origin requests
   async headers() {
@@ -33,14 +29,6 @@ const nextConfig = {
       },
     ];
   },
-
-  // Configure allowed origins for development (Builder.io)
-  allowedDevOrigins: [
-    "*.builder.codes",
-    "*.builder.io",
-    "localhost:3000",
-    "localhost:*",
-  ],
 
   // Configure image domains
   images: {
@@ -88,49 +76,33 @@ const nextConfig = {
 
   // Configure TypeScript to be more lenient with certain errors
   typescript: {
-    // Don't fail build on TypeScript errors during development
     ignoreBuildErrors: false,
   },
 
   // ESLint configuration
   eslint: {
-    // Don't run ESLint during builds to speed up development
     ignoreDuringBuilds: false,
   },
-
-  // Configure output for better error handling
-  poweredByHeader: false,
 
   // Configure compression
   compress: true,
 
+  // Disable powered by header for security
+  poweredByHeader: false,
+
   // Configure redirects if needed
   async redirects() {
-    return [
-      // Add any redirects here
-    ];
+    return [];
   },
 
   // Configure rewrites for API routes
   async rewrites() {
-    return [
-      // Add any rewrites here
-    ];
+    return [];
   },
 
-  // Environment variables
-  env: {
-    CUSTOM_KEY: process.env.CUSTOM_KEY,
-  },
-
-  // Configure build output
-  output: "standalone",
-
-  // Configure tracing for better debugging
+  // Experimental features (only include valid ones for Next.js 15)
   experimental: {
-    instrumentationHook: false,
     optimizeCss: true,
-    swcMinify: true,
   },
 };
 
