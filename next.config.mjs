@@ -18,11 +18,19 @@ const nextConfig = {
         port: '',
         pathname: '/storage/v1/object/public/**',
       },
+      {
+        protocol: 'https',
+        hostname: '**.builder.io',
+        port: '',
+        pathname: '/**',
+      },
     ],
   },
   experimental: {
     // Wyłączam optymalizację CSS, która powoduje błąd z critters
     // optimizeCss: true,
+    // Poprawki dla Next.js 15 i React Server Components
+    serverComponentsExternalPackages: ['@tiptap/core', '@tiptap/pm', '@tiptap/starter-kit'],
   },
   // Dodaję konfigurację webpack dla lepszego zarządzania chunkami
   webpack: (config, { isServer, dev }) => {
@@ -32,6 +40,9 @@ const nextConfig = {
         ...config.optimization,
         splitChunks: {
           ...config.optimization.splitChunks,
+          chunks: 'all',
+          minSize: 20000,
+          maxSize: 244000,
           cacheGroups: {
             ...config.optimization.splitChunks.cacheGroups,
             default: {
@@ -44,6 +55,23 @@ const nextConfig = {
               name: 'vendors',
               priority: -10,
               chunks: 'all',
+              enforce: true,
+            },
+            // Oddzielny chunk dla edytora TipTap
+            editor: {
+              test: /[\\/]node_modules[\\/](@tiptap|prosemirror)/,
+              name: 'editor',
+              priority: 10,
+              chunks: 'all',
+              enforce: true,
+            },
+            // Oddzielny chunk dla Chart.js
+            charts: {
+              test: /[\\/]node_modules[\\/](chart\.js|react-chartjs-2)/,
+              name: 'charts',
+              priority: 10,
+              chunks: 'all',
+              enforce: true,
             },
           },
         },
@@ -58,8 +86,18 @@ const nextConfig = {
         fs: false,
         net: false,
         tls: false,
+        crypto: false,
       },
     }
+
+    // Poprawka dla dynamicznych importów w Next.js 15
+    config.module.rules.push({
+      test: /\.m?js$/,
+      type: 'javascript/auto',
+      resolve: {
+        fullySpecified: false,
+      },
+    })
 
     return config
   },
@@ -73,11 +111,11 @@ const nextConfig = {
             key: 'Content-Security-Policy',
             value: [
               "default-src 'self'",
-              "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net",
-              "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+              "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://cdn.builder.io",
+              "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.builder.io",
               "font-src 'self' https://fonts.gstatic.com",
-              "img-src 'self' data: https: blob:",
-              "connect-src 'self' https://*.supabase.co wss://*.supabase.co",
+              "img-src 'self' data: https: blob: https://cdn.builder.io",
+              "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://cdn.builder.io https://builder.io",
               "frame-ancestors 'none'",
               "base-uri 'self'",
               "form-action 'self'"

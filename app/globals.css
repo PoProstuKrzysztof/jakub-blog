@@ -3,14 +3,86 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Mobile-first font sizing */
 body {
   font-family: 'Sora', sans-serif;
-  font-size: 85%; /* Zmniejszenie czcionki o 15% */
+  font-size: 14px; /* Smaller base font for mobile */
+}
+
+/* Responsive font scaling */
+@media (min-width: 640px) {
+  body {
+    font-size: 15px;
+  }
+}
+
+@media (min-width: 768px) {
+  body {
+    font-size: 16px;
+  }
 }
 
 @layer utilities {
   .text-balance {
     text-wrap: balance;
+  }
+  
+  /* Mobile-specific utilities */
+  .touch-manipulation {
+    touch-action: manipulation;
+  }
+  
+  .tap-highlight-none {
+    -webkit-tap-highlight-color: transparent;
+  }
+  
+  /* Mobile-optimized scrolling */
+  .scroll-smooth-mobile {
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+  }
+  
+  /* Safe area insets for mobile devices */
+  .safe-top {
+    padding-top: env(safe-area-inset-top);
+  }
+  
+  .safe-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  
+  .safe-left {
+    padding-left: env(safe-area-inset-left);
+  }
+  
+  .safe-right {
+    padding-right: env(safe-area-inset-right);
+  }
+  
+  /* Mobile-first button sizes */
+  .btn-touch {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  /* Mobile-optimized spacing */
+  .mobile-padding {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+  
+  @media (min-width: 640px) {
+    .mobile-padding {
+      padding-left: 1.5rem;
+      padding-right: 1.5rem;
+    }
+  }
+  
+  @media (min-width: 1024px) {
+    .mobile-padding {
+      padding-left: 2rem;
+      padding-right: 2rem;
+    }
   }
 }
 
@@ -94,5 +166,81 @@ body {
     @apply bg-background text-foreground;
     font-family: 'Sora', sans-serif;
     background-color: #F6F6F6; /* fallback using new main background color */
+  }
+  
+  /* Mobile-first typography */
+  h1 {
+    @apply text-2xl font-bold leading-tight;
+  }
+  
+  h2 {
+    @apply text-xl font-semibold leading-tight;
+  }
+  
+  h3 {
+    @apply text-lg font-medium leading-tight;
+  }
+  
+  /* Responsive typography */
+  @media (min-width: 640px) {
+    h1 {
+      @apply text-3xl;
+    }
+    
+    h2 {
+      @apply text-2xl;
+    }
+    
+    h3 {
+      @apply text-xl;
+    }
+  }
+  
+  @media (min-width: 768px) {
+    h1 {
+      @apply text-4xl;
+    }
+    
+    h2 {
+      @apply text-3xl;
+    }
+    
+    h3 {
+      @apply text-2xl;
+    }
+  }
+  
+  /* Touch-friendly interactive elements */
+  button, [role="button"], input[type="button"], input[type="submit"] {
+    @apply touch-manipulation tap-highlight-none;
+    min-height: 44px;
+  }
+  
+  /* Mobile-optimized focus states */
+  button:focus, 
+  input:focus, 
+  textarea:focus, 
+  select:focus,
+  [tabindex]:focus {
+    @apply outline-none ring-2 ring-primary ring-offset-2;
+  }
+  
+  /* Mobile-friendly scrollbars */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+  }
+  
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.3);
   }
 }

@@ -24,9 +24,17 @@ import {
   Users,
   Shield,
   Lightbulb,
+  Quote,
+  Award,
+  BookOpen,
+  Facebook,
+  Twitter,
+  Youtube,
+  Linkedin,
 } from "lucide-react"
 import Link from "next/link"
 import { useAuth } from "@/hooks/use-auth"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 
 export default function ContactPage() {
   const { user } = useAuth()
@@ -71,321 +79,406 @@ export default function ContactPage() {
         searchPlaceholder="Szukaj informacji kontaktowych..."
       />
 
-      {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-primary/5 via-background to-accent/5 py-20 lg:py-32 overflow-hidden">
+      {/* Hero Section - Mobile Optimized */}
+      <section className="bg-gradient-to-br from-primary/5 via-background to-accent/5 py-12 sm:py-16 lg:py-20 relative overflow-hidden">
         <div className="absolute inset-0 bg-grid-pattern opacity-5"></div>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="text-center space-y-8">
-            <div className="space-y-4">
-              <Badge className="bg-primary/10 text-primary border-primary/20 px-4 py-2 rounded-full text-sm font-medium">
-                💬 Skontaktuj się bezpośrednio
-              </Badge>
-              <h1 className="text-4xl lg:text-6xl font-bold text-foreground leading-tight">
-                Masz pytania o <span className="text-primary">inwestowanie</span>?
-              </h1>
-              <p className="text-xl text-muted-foreground leading-relaxed max-w-3xl mx-auto">
-                Napisz do mnie – odpowiem w ciągu 24 godzin. Czy to pytanie o konkretną analizę, 
-                chęć umówienia konsultacji, czy ogólne zagadnienia inwestycyjne – jestem tutaj, aby pomóc.
-              </p>
-            </div>
-
-            {/* Response Time Highlight */}
-            <div className="flex items-center justify-center space-x-8 pt-4">
-              <div className="flex items-center space-x-2">
-                <Clock className="h-5 w-5 text-green-600" />
-                <span className="text-sm font-medium text-foreground">Odpowiedź w 24h</span>
+        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 relative z-10">
+          <div className="text-center mb-8 sm:mb-12">
+            <Badge className="bg-primary/10 border-primary/20 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-medium mb-4 sm:mb-6">
+              💬 Skontaktuj się ze mną
+            </Badge>
+            <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-foreground mb-4 sm:mb-6 leading-tight">
+              Masz pytania o <span className="text-primary">inwestycje</span>?
+            </h1>
+            <p className="text-sm sm:text-base lg:text-xl text-muted-foreground max-w-3xl mx-auto mb-6 sm:mb-8 leading-relaxed">
+              Jestem tutaj, aby pomóc Ci w podejmowaniu mądrych decyzji inwestycyjnych. 
+              Skontaktuj się ze mną w sprawie konsultacji, współpracy lub pytań dotyczących analizy rynków finansowych.
+            </p>
+            
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 max-w-4xl mx-auto">
+              <div className="text-center p-3 sm:p-4 bg-card/50 rounded-xl border border-border backdrop-blur-sm">
+                <div className="text-lg sm:text-xl lg:text-2xl font-bold text-foreground">24h</div>
+                <div className="text-xs sm:text-sm text-muted-foreground">Czas odpowiedzi</div>
               </div>
-              <div className="flex items-center space-x-2">
-                <MessageCircle className="h-5 w-5 text-blue-600" />
-                <span className="text-sm font-medium text-foreground">Bezpłatna konsultacja wstępna</span>
+              <div className="text-center p-3 sm:p-4 bg-card/50 rounded-xl border border-border backdrop-blur-sm">
+                <div className="text-lg sm:text-xl lg:text-2xl font-bold text-foreground">8+</div>
+                <div className="text-xs sm:text-sm text-muted-foreground">Lat doświadczenia</div>
               </div>
-              <div className="flex items-center space-x-2">
-                <Calendar className="h-5 w-5 text-purple-600" />
-                <span className="text-sm font-medium text-foreground">Dni robocze 9:00-17:00</span>
+              <div className="text-center p-3 sm:p-4 bg-card/50 rounded-xl border border-border backdrop-blur-sm">
+                <div className="text-lg sm:text-xl lg:text-2xl font-bold text-foreground">500+</div>
+                <div className="text-xs sm:text-sm text-muted-foreground">Zadowolonych klientów</div>
+              </div>
+              <div className="text-center p-3 sm:p-4 bg-card/50 rounded-xl border border-border backdrop-blur-sm">
+                <div className="text-lg sm:text-xl lg:text-2xl font-bold text-foreground">95%</div>
+                <div className="text-xs sm:text-sm text-muted-foreground">Skuteczność porad</div>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-        <div className="grid lg:grid-cols-2 gap-16">
-          {/* Contact Information */}
-          <div className="space-y-8">
-            {/* Main Contact Card */}
-            <Card className="border-0 shadow-2xl hover:shadow-3xl transition-all duration-500 transform hover:scale-[1.02] group relative overflow-hidden">
-              <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-accent/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-              <CardContent className="p-8 relative z-10">
-                <div className="text-center mb-8">
-                  <h3 className="text-2xl font-bold text-foreground mb-2">Informacje kontaktowe</h3>
-                  <p className="text-muted-foreground">Najszybsze sposoby na skontaktowanie się ze mną</p>
-                </div>
-                
-                <div className="space-y-6">
-                  <div className="flex items-center space-x-4 p-4 bg-background rounded-xl group-hover:bg-card/50 transition-colors duration-300">
-                    <div className="bg-primary p-3 rounded-xl shadow-lg group-hover:shadow-xl transition-shadow duration-300">
-                      <Mail className="h-6 w-6 text-primary-foreground" />
-                    </div>
-                    <div>
-                      <p className="font-semibold text-foreground">Email</p>
-                      <p className="text-muted-foreground">jakub@inwestycje.pl</p>
-                      <p className="text-xs text-green-600 mt-1">Odpowiedź w ciągu 2-4h</p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center space-x-4 p-4 bg-background rounded-xl group-hover:bg-card/50 transition-colors duration-300">
-                    <div className="bg-green-600 p-3 rounded-xl shadow-lg group-hover:shadow-xl transition-shadow duration-300">
-                      <Phone className="h-6 w-6 text-white" />
-                    </div>
-                    <div>
-                      <p className="font-semibold text-foreground">Telefon</p>
-                      <p className="text-muted-foreground">+48 123 456 789</p>
-                      <p className="text-xs text-green-600 mt-1">Dni robocze 9:00-17:00</p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center space-x-4 p-4 bg-background rounded-xl group-hover:bg-card/50 transition-colors duration-300">
-                    <div className="bg-blue-600 p-3 rounded-xl shadow-lg group-hover:shadow-xl transition-shadow duration-300">
-                      <MapPin className="h-6 w-6 text-white" />
-                    </div>
-                    <div>
-                      <p className="font-semibold text-foreground">Lokalizacja</p>
-                      <p className="text-muted-foreground">Warszawa, Polska</p>
-                      <p className="text-xs text-blue-600 mt-1">Konsultacje online i stacjonarne</p>
-                    </div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Quick Actions */}
-            <div className="grid md:grid-cols-2 gap-4">
-              <Link href="/wspolpraca">
-                <Card className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 group cursor-pointer">
-                  <CardContent className="p-6 text-center">
-                    <div className="w-12 h-12 mx-auto mb-4 rounded-xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors duration-300">
-                      <TrendingUp className="h-6 w-6 text-primary" />
-                    </div>
-                    <h4 className="font-semibold text-foreground mb-2">Współpraca</h4>
-                    <p className="text-sm text-muted-foreground">Konsultacje i analizy</p>
-                  </CardContent>
-                </Card>
-              </Link>
-
-                              <Link href="/wpisy">
-                <Card className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 group cursor-pointer">
-                  <CardContent className="p-6 text-center">
-                    <div className="w-12 h-12 mx-auto mb-4 rounded-xl bg-accent/10 flex items-center justify-center group-hover:bg-accent/20 transition-colors duration-300">
-                      <Lightbulb className="h-6 w-6 text-accent" />
-                    </div>
-                    <h4 className="font-semibold text-foreground mb-2">Blog</h4>
-                    <p className="text-sm text-muted-foreground">Analizy i poradniki</p>
-                  </CardContent>
-                </Card>
-              </Link>
-            </div>
-
-            {/* FAQ Section */}
+      <main className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-8 sm:py-12 lg:py-16">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8 lg:gap-12">
+          
+          {/* Contact Form - Mobile Optimized */}
+          <div className="lg:col-span-2">
             <Card className="border-0 shadow-lg">
-              <CardContent className="p-8">
-                <h3 className="text-xl font-semibold text-foreground mb-6 flex items-center">
-                  <MessageCircle className="h-5 w-5 text-primary mr-2" />
-                  Często zadawane pytania
-                </h3>
-                <div className="space-y-6">
-                  <div className="p-4 bg-background rounded-xl">
-                    <p className="font-medium text-foreground mb-2">Czy udzielasz indywidualnych porad inwestycyjnych?</p>
-                    <p className="text-sm text-muted-foreground">
-                      Tak, oferuję konsultacje indywidualne dostosowane do Twojego profilu ryzyka i celów finansowych. 
-                      Skontaktuj się ze mną, aby omówić szczegóły.
-                    </p>
+              <CardHeader className="p-4 sm:p-6 lg:p-8">
+                <CardTitle className="text-xl sm:text-2xl lg:text-3xl font-bold text-foreground mb-2 sm:mb-4">
+                  Wyślij wiadomość
+                </CardTitle>
+                <p className="text-sm sm:text-base text-muted-foreground">
+                  Wypełnij formularz poniżej, a odpowiem w ciągu 24 godzin
+                </p>
+              </CardHeader>
+              <CardContent className="p-4 sm:p-6 lg:p-8 pt-0">
+                <form className="space-y-4 sm:space-y-6">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+                    <div className="space-y-2">
+                      <Label htmlFor="firstName" className="text-xs sm:text-sm font-medium">
+                        Imię *
+                      </Label>
+                      <Input 
+                        id="firstName"
+                        placeholder="Twoje imię"
+                        className="rounded-xl border-border text-sm sm:text-base touch-manipulation tap-highlight-none"
+                        required
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="lastName" className="text-xs sm:text-sm font-medium">
+                        Nazwisko *
+                      </Label>
+                      <Input 
+                        id="lastName"
+                        placeholder="Twoje nazwisko"
+                        className="rounded-xl border-border text-sm sm:text-base touch-manipulation tap-highlight-none"
+                        required
+                      />
+                    </div>
                   </div>
-                  <div className="p-4 bg-background rounded-xl">
-                    <p className="font-medium text-foreground mb-2">Czy analizy są bezpłatne?</p>
-                    <p className="text-sm text-muted-foreground">
-                      Podstawowe analizy publikowane na blogu są bezpłatne. Szczegółowe, spersonalizowane raporty 
-                      są częścią płatnych usług konsultacyjnych.
-                    </p>
+                  
+                  <div className="space-y-2">
+                    <Label htmlFor="email" className="text-xs sm:text-sm font-medium">
+                      Email *
+                    </Label>
+                    <Input 
+                      id="email"
+                      type="email"
+                      placeholder="twoj@email.pl"
+                      className="rounded-xl border-border text-sm sm:text-base touch-manipulation tap-highlight-none"
+                      required
+                    />
                   </div>
-                  <div className="p-4 bg-background rounded-xl">
-                    <p className="font-medium text-foreground mb-2">Jak długo trwa konsultacja?</p>
-                    <p className="text-sm text-muted-foreground">
-                      Standardowa konsultacja trwa 60 minut. W przypadku bardziej złożonych zagadnień 
-                      możemy przedłużyć sesję lub umówić dodatkowe spotkania.
-                    </p>
+                  
+                  <div className="space-y-2">
+                    <Label htmlFor="phone" className="text-xs sm:text-sm font-medium">
+                      Telefon
+                    </Label>
+                    <Input 
+                      id="phone"
+                      type="tel"
+                      placeholder="+48 123 456 789"
+                      className="rounded-xl border-border text-sm sm:text-base touch-manipulation tap-highlight-none"
+                    />
                   </div>
-                </div>
+                  
+                  <div className="space-y-2">
+                    <Label htmlFor="subject" className="text-xs sm:text-sm font-medium">
+                      Temat *
+                    </Label>
+                    <Select>
+                      <SelectTrigger className="rounded-xl border-border text-sm sm:text-base touch-manipulation">
+                        <SelectValue placeholder="Wybierz temat wiadomości" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="consultation">Konsultacja inwestycyjna</SelectItem>
+                        <SelectItem value="analysis">Analiza portfela</SelectItem>
+                        <SelectItem value="education">Edukacja finansowa</SelectItem>
+                        <SelectItem value="cooperation">Współpraca biznesowa</SelectItem>
+                        <SelectItem value="media">Współpraca medialna</SelectItem>
+                        <SelectItem value="other">Inne</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Label htmlFor="message" className="text-xs sm:text-sm font-medium">
+                      Wiadomość *
+                    </Label>
+                    <Textarea 
+                      id="message"
+                      placeholder="Opisz szczegółowo, w czym mogę Ci pomóc..."
+                      rows={6}
+                      className="rounded-xl border-border resize-none text-sm sm:text-base touch-manipulation tap-highlight-none"
+                      required
+                    />
+                  </div>
+                  
+                  <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 pt-4">
+                    <Button 
+                      type="submit" 
+                      className="flex-1 sm:flex-none bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl px-6 sm:px-8 py-3 text-sm sm:text-base font-semibold touch-manipulation tap-highlight-none"
+                    >
+                      <Send className="h-4 w-4 mr-2" />
+                      Wyślij wiadomość
+                    </Button>
+                    <Button 
+                      type="button" 
+                      variant="outline"
+                      className="flex-1 sm:flex-none border-border rounded-xl px-6 sm:px-8 py-3 text-sm sm:text-base touch-manipulation tap-highlight-none"
+                    >
+                      Wyczyść formularz
+                    </Button>
+                  </div>
+                </form>
               </CardContent>
             </Card>
           </div>
 
-          {/* Contact Form */}
-          <div className="lg:order-last">
-            <Card className="border-0 shadow-2xl hover:shadow-3xl transition-all duration-500 sticky top-8">
-              <CardHeader className="text-center pb-6">
-                <CardTitle className="text-2xl font-bold text-foreground">Napisz do mnie</CardTitle>
-                <CardDescription className="text-muted-foreground">
-                  Wypełnij formularz, a skontaktuję się z Tobą w ciągu 24 godzin
-                </CardDescription>
+          {/* Contact Info & Additional Content - Mobile Optimized */}
+          <div className="space-y-6 sm:space-y-8">
+            
+            {/* Contact Information */}
+            <Card className="border-0 shadow-lg">
+              <CardHeader className="p-4 sm:p-6">
+                <CardTitle className="text-lg sm:text-xl font-bold text-foreground mb-2 sm:mb-4">
+                  Informacje kontaktowe
+                </CardTitle>
               </CardHeader>
-              <CardContent>
-                {isSubmitted ? (
-                  <div className="text-center py-12 animate-fade-in">
-                    <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-green-100 flex items-center justify-center">
-                      <CheckCircle className="h-10 w-10 text-green-600" />
-                    </div>
-                    <h3 className="text-xl font-semibold text-foreground mb-3">Wiadomość wysłana!</h3>
-                    <p className="text-muted-foreground mb-6">
-                      Dziękuję za kontakt. Odpowiem tak szybko, jak to możliwe.
-                    </p>
-                    <div className="flex items-center justify-center space-x-2 text-sm text-green-600">
-                      <Clock className="h-4 w-4" />
-                      <span>Czas odpowiedzi: 2-24 godziny</span>
-                    </div>
+              <CardContent className="p-4 sm:p-6 pt-0 space-y-4 sm:space-y-6">
+                <div className="flex items-start space-x-3 sm:space-x-4">
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 bg-primary/10 rounded-xl flex items-center justify-center flex-shrink-0">
+                    <Mail className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
                   </div>
-                ) : (
-                  <form onSubmit={handleSubmit} className="space-y-6">
-                    <div className="grid md:grid-cols-2 gap-4">
-                      <div className="space-y-2">
-                        <Label htmlFor="name" className="text-foreground font-medium">
-                          Imię i nazwisko *
-                        </Label>
-                        <Input
-                          id="name"
-                          name="name"
-                          value={formData.name}
-                          onChange={handleChange}
-                          required
-                          className="border-border rounded-xl focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-300"
-                          placeholder="Jan Kowalski"
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="email" className="text-foreground font-medium">
-                          Email *
-                        </Label>
-                        <Input
-                          id="email"
-                          name="email"
-                          type="email"
-                          value={formData.email}
-                          onChange={handleChange}
-                          required
-                          className="border-border rounded-xl focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-300"
-                          placeholder="jan@example.com"
-                        />
-                      </div>
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="subject" className="text-foreground font-medium">
-                        Temat *
-                      </Label>
-                      <Input
-                        id="subject"
-                        name="subject"
-                        value={formData.subject}
-                        onChange={handleChange}
-                        required
-                        className="border-border rounded-xl focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-300"
-                        placeholder="Pytanie dotyczące analizy PKN Orlen"
-                      />
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="message" className="text-foreground font-medium">
-                        Wiadomość *
-                      </Label>
-                      <Textarea
-                        id="message"
-                        name="message"
-                        value={formData.message}
-                        onChange={handleChange}
-                        required
-                        rows={6}
-                        className="border-border rounded-xl focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-300 resize-none"
-                        placeholder="Opisz swoje pytanie lub temat, który chcesz omówić..."
-                      />
-                    </div>
-
-                    <Button
-                      type="submit"
-                      disabled={isSubmitting}
-                      className="w-full bg-primary hover:bg-primary/90 text-primary-foreground transition-all duration-500 rounded-xl px-8 py-4 font-semibold shadow-xl hover:shadow-2xl transform hover:scale-105 disabled:transform-none disabled:opacity-70"
+                  <div>
+                    <h4 className="text-sm sm:text-base font-semibold text-foreground mb-1">Email</h4>
+                    <a 
+                      href="mailto:kontakt@jakubblog.pl" 
+                      className="text-xs sm:text-sm text-muted-foreground hover:text-primary transition-colors touch-manipulation tap-highlight-none"
                     >
-                      {isSubmitting ? (
-                        <div className="flex items-center justify-center space-x-2">
-                          <div className="w-5 h-5 border-2 border-primary-foreground/20 border-t-primary-foreground rounded-full animate-spin"></div>
-                          <span>Wysyłanie...</span>
-                        </div>
-                      ) : (
-                        <div className="flex items-center justify-center space-x-2">
-                          <Send className="h-5 w-5" />
-                          <span>Wyślij wiadomość</span>
-                          <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform duration-300" />
-                        </div>
-                      )}
-                    </Button>
-
-                    <p className="text-xs text-muted-foreground text-center">
-                      Wysyłając formularz, zgadzasz się na przetwarzanie danych w celu odpowiedzi na Twoje pytanie
+                      kontakt@jakubblog.pl
+                    </a>
+                  </div>
+                </div>
+                
+                <div className="flex items-start space-x-3 sm:space-x-4">
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 bg-primary/10 rounded-xl flex items-center justify-center flex-shrink-0">
+                    <Phone className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
+                  </div>
+                  <div>
+                    <h4 className="text-sm sm:text-base font-semibold text-foreground mb-1">Telefon</h4>
+                    <a 
+                      href="tel:+48123456789" 
+                      className="text-xs sm:text-sm text-muted-foreground hover:text-primary transition-colors touch-manipulation tap-highlight-none"
+                    >
+                      +48 123 456 789
+                    </a>
+                  </div>
+                </div>
+                
+                <div className="flex items-start space-x-3 sm:space-x-4">
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 bg-primary/10 rounded-xl flex items-center justify-center flex-shrink-0">
+                    <MapPin className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
+                  </div>
+                  <div>
+                    <h4 className="text-sm sm:text-base font-semibold text-foreground mb-1">Lokalizacja</h4>
+                    <p className="text-xs sm:text-sm text-muted-foreground">
+                      Warszawa, Polska
                     </p>
-                  </form>
-                )}
+                  </div>
+                </div>
+                
+                <div className="flex items-start space-x-3 sm:space-x-4">
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 bg-primary/10 rounded-xl flex items-center justify-center flex-shrink-0">
+                    <Clock className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
+                  </div>
+                  <div>
+                    <h4 className="text-sm sm:text-base font-semibold text-foreground mb-1">Godziny pracy</h4>
+                    <p className="text-xs sm:text-sm text-muted-foreground">
+                      Pon-Pt: 9:00 - 18:00<br />
+                      Sob-Ndz: Na umówienie
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Social Media */}
+            <Card className="border-0 shadow-lg">
+              <CardHeader className="p-4 sm:p-6">
+                <CardTitle className="text-lg sm:text-xl font-bold text-foreground mb-2 sm:mb-4">
+                  Obserwuj mnie
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="p-4 sm:p-6 pt-0">
+                <div className="grid grid-cols-2 gap-3 sm:gap-4">
+                  <a 
+                    href="#" 
+                    className="flex items-center p-3 bg-blue-50 hover:bg-blue-100 rounded-xl transition-colors touch-manipulation tap-highlight-none"
+                  >
+                    <Facebook className="h-4 w-4 sm:h-5 sm:w-5 text-blue-600 mr-2 sm:mr-3" />
+                    <span className="text-xs sm:text-sm font-medium text-blue-600">Facebook</span>
+                  </a>
+                  <a 
+                    href="#" 
+                    className="flex items-center p-3 bg-sky-50 hover:bg-sky-100 rounded-xl transition-colors touch-manipulation tap-highlight-none"
+                  >
+                    <Twitter className="h-4 w-4 sm:h-5 sm:w-5 text-sky-600 mr-2 sm:mr-3" />
+                    <span className="text-xs sm:text-sm font-medium text-sky-600">Twitter</span>
+                  </a>
+                  <a 
+                    href="#" 
+                    className="flex items-center p-3 bg-blue-50 hover:bg-blue-100 rounded-xl transition-colors touch-manipulation tap-highlight-none"
+                  >
+                    <Linkedin className="h-4 w-4 sm:h-5 sm:w-5 text-blue-600 mr-2 sm:mr-3" />
+                    <span className="text-xs sm:text-sm font-medium text-blue-600">LinkedIn</span>
+                  </a>
+                  <a 
+                    href="#" 
+                    className="flex items-center p-3 bg-red-50 hover:bg-red-100 rounded-xl transition-colors touch-manipulation tap-highlight-none"
+                  >
+                    <Youtube className="h-4 w-4 sm:h-5 sm:w-5 text-red-600 mr-2 sm:mr-3" />
+                    <span className="text-xs sm:text-sm font-medium text-red-600">YouTube</span>
+                  </a>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Quick Services */}
+            <Card className="border-0 shadow-lg">
+              <CardHeader className="p-4 sm:p-6">
+                <CardTitle className="text-lg sm:text-xl font-bold text-foreground mb-2 sm:mb-4">
+                  Moje usługi
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="p-4 sm:p-6 pt-0 space-y-3 sm:space-y-4">
+                <div className="flex items-center space-x-3">
+                  <CheckCircle className="h-4 w-4 sm:h-5 sm:w-5 text-green-600 flex-shrink-0" />
+                  <span className="text-xs sm:text-sm text-foreground">Konsultacje inwestycyjne</span>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <CheckCircle className="h-4 w-4 sm:h-5 sm:w-5 text-green-600 flex-shrink-0" />
+                  <span className="text-xs sm:text-sm text-foreground">Analiza portfela</span>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <CheckCircle className="h-4 w-4 sm:h-5 sm:w-5 text-green-600 flex-shrink-0" />
+                  <span className="text-xs sm:text-sm text-foreground">Edukacja finansowa</span>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <CheckCircle className="h-4 w-4 sm:h-5 sm:w-5 text-green-600 flex-shrink-0" />
+                  <span className="text-xs sm:text-sm text-foreground">Analizy spółek</span>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <CheckCircle className="h-4 w-4 sm:h-5 sm:w-5 text-green-600 flex-shrink-0" />
+                  <span className="text-xs sm:text-sm text-foreground">Strategie inwestycyjne</span>
+                </div>
+                
+                <div className="pt-3 sm:pt-4">
+                  <Link href="/wspolpraca">
+                    <Button 
+                      variant="outline" 
+                      className="w-full border-border rounded-xl text-xs sm:text-sm touch-manipulation tap-highlight-none"
+                    >
+                      <Award className="h-3 w-3 sm:h-4 sm:w-4 mr-2" />
+                      Zobacz pełną ofertę
+                    </Button>
+                  </Link>
+                </div>
               </CardContent>
             </Card>
           </div>
         </div>
+      </main>
 
-        {/* Trust Indicators */}
-        <section className="mt-20 py-16 bg-gradient-to-br from-primary/5 to-accent/5 rounded-3xl">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-foreground mb-4">
-              Dlaczego warto się skontaktować?
+      {/* Testimonials Section - Mobile Optimized */}
+      <section className="bg-muted/30 border-y border-border">
+        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-8 sm:py-12 lg:py-16">
+          <div className="text-center mb-8 sm:mb-12">
+            <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-foreground mb-3 sm:mb-4">
+              Co mówią o mnie klienci
             </h2>
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Dołącz do tysięcy zadowolonych inwestorów, którzy skorzystali z moich usług
+            <p className="text-sm sm:text-base text-muted-foreground">
+              Opinie zadowolonych inwestorów
             </p>
           </div>
-
-          <div className="grid md:grid-cols-4 gap-8">
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
             {[
               {
-                icon: Shield,
-                title: "8+ lat doświadczenia",
-                description: "Profesjonalna analiza rynków finansowych",
-                color: "text-blue-600"
+                name: "Anna Kowalska",
+                role: "Inwestor indywidualny",
+                content: "Dzięki poradom Jakuba zwiększyłam rentowność portfela o 25% w ciągu roku. Profesjonalne podejście i konkretne wskazówki.",
+                rating: 5
               },
               {
-                icon: Users,
-                title: "1000+ konsultacji",
-                description: "Zadowoleni klienci na całym świecie",
-                color: "text-green-600"
+                name: "Marcin Nowak",
+                role: "Przedsiębiorca",
+                content: "Analizy spółek są bardzo szczegółowe i pomocne. Jakub ma świetne oko do wykrywania potencjału wzrostowego.",
+                rating: 5
               },
               {
-                icon: TrendingUp,
-                title: "15.2% średnia stopa zwrotu",
-                description: "Potwierdzona skuteczność rekomendacji",
-                color: "text-purple-600"
-              },
-              {
-                icon: Star,
-                title: "4.9/5 ocena",
-                description: "Najwyższa jakość usług",
-                color: "text-orange-600"
+                name: "Katarzyna Wiśniewska",
+                role: "Inwestor początkujący",
+                content: "Świetna edukacja finansowa dla początkujących. Wszystko wyjaśnione w prosty i zrozumiały sposób.",
+                rating: 5
               }
-            ].map((feature, index) => (
-              <div key={index} className="text-center group">
-                <div className={`w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-primary/10 to-accent/10 flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}>
-                  <feature.icon className={`h-8 w-8 ${feature.color}`} />
-                </div>
-                <h3 className="text-lg font-semibold text-foreground mb-2">{feature.title}</h3>
-                <p className="text-sm text-muted-foreground">{feature.description}</p>
-              </div>
+            ].map((testimonial, index) => (
+              <Card key={index} className="border-0 shadow-lg">
+                <CardContent className="p-4 sm:p-6">
+                  <div className="flex items-center mb-3 sm:mb-4">
+                    <div className="flex space-x-1 mr-3">
+                      {Array.from({ length: testimonial.rating }).map((_, i) => (
+                        <Star key={i} className="h-3 w-3 sm:h-4 sm:w-4 fill-yellow-400 text-yellow-400" />
+                      ))}
+                    </div>
+                    <Quote className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
+                  </div>
+                  <p className="text-xs sm:text-sm text-muted-foreground mb-4 leading-relaxed">
+                    "{testimonial.content}"
+                  </p>
+                  <div>
+                    <p className="text-sm sm:text-base font-semibold text-foreground">
+                      {testimonial.name}
+                    </p>
+                    <p className="text-xs sm:text-sm text-muted-foreground">
+                      {testimonial.role}
+                    </p>
+                  </div>
+                </CardContent>
+              </Card>
             ))}
           </div>
-        </section>
-      </main>
+        </div>
+      </section>
+
+      {/* CTA Section - Mobile Optimized */}
+      <section className="bg-gradient-to-br from-primary/5 via-background to-accent/5">
+        <div className="max-w-4xl mx-auto px-3 sm:px-6 lg:px-8 py-8 sm:py-12 lg:py-16 text-center">
+          <div className="w-12 h-12 sm:w-16 sm:h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-6">
+            <MessageCircle className="h-6 w-6 sm:h-8 sm:w-8 text-primary" />
+          </div>
+          <h3 className="text-lg sm:text-xl lg:text-2xl font-bold text-foreground mb-3 sm:mb-4">
+            Gotowy na rozmowę?
+          </h3>
+          <p className="text-sm sm:text-base text-muted-foreground mb-6 sm:mb-8 max-w-2xl mx-auto">
+            Zacznijmy współpracę już dziś. Skontaktuj się ze mną, aby omówić Twoje cele inwestycyjne 
+            i wspólnie wypracować strategię sukcesu.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
+            <Button size="lg" className="w-full sm:w-auto touch-manipulation tap-highlight-none">
+              <Calendar className="h-4 w-4 mr-2" />
+              Umów konsultację
+            </Button>
+            <Link href="/wspolpraca">
+              <Button variant="outline" size="lg" className="w-full sm:w-auto touch-manipulation tap-highlight-none">
+                <BookOpen className="h-4 w-4 mr-2" />
+                Zobacz ofertę
+              </Button>
+            </Link>
+          </div>
+        </div>
+      </section>
     </div>
   )
 }

@@ -1,5 +1,5 @@
 /**
- * Redis Integration for Next.js Blog Application
+ * Redis Integration for Next.js Wpisy Application
  * 
  * This module provides a comprehensive Redis integration with support for:
  * - Universal client (Upstash & traditional Redis)
