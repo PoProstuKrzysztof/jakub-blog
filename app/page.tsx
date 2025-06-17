@@ -1,6 +1,6 @@
 import { Suspense } from "react"
-import { HomePageClient } from "@/components/home-page-client"
-import { PostsLoading } from "@/components/posts-loading"
+import { HomePageClient } from "@/components/home-page/home-page-client"
+import { PostsLoading } from "@/components/post-page/posts-loading"
 import { createClient } from "@/lib/supabase"
 import { PostFull } from "@/lib/models/post"
 

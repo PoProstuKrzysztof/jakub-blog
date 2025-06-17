@@ -1,37 +1,10 @@
 "use client"
 
-import { useState, useCallback } from "react"
+import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
-import { SiteHeader } from "@/components/site-header"
-import {
-  DndContext,
-  closestCenter,
-  KeyboardSensor,
-  PointerSensor,
-  useSensor,
-  useSensors,
-  DragEndEvent,
-  DragStartEvent,
-  DragOverlay,
-  Active,
-  Over,
-} from "@dnd-kit/core"
-import {
-  arrayMove,
-  SortableContext,
-  sortableKeyboardCoordinates,
-  verticalListSortingStrategy,
-} from "@dnd-kit/sortable"
-
-import {
-  useSortable,
-} from "@dnd-kit/sortable"
-import { CSS } from "@dnd-kit/utilities"
+import { SiteHeader } from "@/components/common/site-header"
 import {
   Users,
   TrendingUp,
@@ -39,10 +12,7 @@ import {
   Star,
   Clock,
   FileText,
-  Trash2,
   MessageCircle,
-  Edit,
-  Plus,
   Calendar,
   ArrowRight,
   Shield,
@@ -63,12 +33,8 @@ import {
   HelpCircle,
   Sparkles,
   CheckCircle2,
-  GripVertical,
-  Check,
-  X,
 } from "lucide-react"
 import Link from "next/link"
-import { useAuth } from "@/hooks/use-auth"
 
 interface Service {
   id: number
@@ -86,172 +52,19 @@ interface Service {
   badge?: string
 }
 
-// Inline Editor Component
-function InlineEditor({ 
-  value, 
-  onSave, 
-  onCancel, 
-  multiline = false,
-  placeholder = "Wprowadź tekst..."
-}: {
-  value: string
-  onSave: (value: string) => void
-  onCancel: () => void
-  multiline?: boolean
-  placeholder?: string
-}) {
-  const [editValue, setEditValue] = useState(value)
-
-  const handleSave = () => {
-    if (editValue.trim()) {
-      onSave(editValue.trim())
-    }
-  }
-
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' && !multiline) {
-      e.preventDefault()
-      handleSave()
-    } else if (e.key === 'Escape') {
-      onCancel()
-    }
-  }
-
-  return (
-    <div className="flex items-center gap-2 w-full">
-      {multiline ? (
-        <Textarea
-          value={editValue}
-          onChange={(e) => setEditValue(e.target.value)}
-          onKeyDown={handleKeyDown}
-          placeholder={placeholder}
-          className="flex-1 min-h-[60px]"
-          autoFocus
-        />
-      ) : (
-        <Input
-          value={editValue}
-          onChange={(e) => setEditValue(e.target.value)}
-          onKeyDown={handleKeyDown}
-          placeholder={placeholder}
-          className="flex-1"
-          autoFocus
-        />
-      )}
-      <Button
-        size="sm"
-        onClick={handleSave}
-        className="bg-green-600 hover:bg-green-700 text-white p-2 h-8 w-8"
-        type="button"
-      >
-        <Check className="h-3 w-3" />
-      </Button>
-      <Button
-        size="sm"
-        onClick={onCancel}
-        variant="outline"
-        className="p-2 h-8 w-8"
-        type="button"
-      >
-        <X className="h-3 w-3" />
-      </Button>
-    </div>
-  )
-}
-
-// Sortable Service Item Component
-function SortableServiceItem({ service, onEdit, onDelete, user }: {
-  service: Service
-  onEdit: (id: number, field: string, value: string) => void
-  onDelete: (id: number) => void
-  user: any
-}) {
-  const [editingField, setEditingField] = useState<string | null>(null)
-  
-  const {
-    attributes,
-    listeners,
-    setNodeRef,
-    setActivatorNodeRef,
-    transform,
-    transition,
-    isDragging,
-  } = useSortable({ id: service.id })
-
-  const style = {
-    transform: CSS.Transform.toString(transform),
-    transition,
-    opacity: isDragging ? 0.8 : 1,
-    zIndex: isDragging ? 1000 : 'auto',
-  }
-
-  // Dla 3 usług: umieść popular w środku
-  const isPopular = service.popular
-  const orderClass = isPopular ? 'md:order-2' : ''
-
-  // Obsługa przycisków z poprawną propagacją zdarzeń
-  const handleEditField = useCallback((field: string) => {
-    setEditingField(field)
-  }, [])
-
-  const handleSaveField = useCallback((field: string, value: string) => {
-    onEdit(service.id, field, value)
-    setEditingField(null)
-  }, [service.id, onEdit])
-
-  const handleCancelEdit = useCallback(() => {
-    setEditingField(null)
-  }, [])
-
-  const handleDelete = useCallback((e: React.MouseEvent) => {
-    e.preventDefault()
-    e.stopPropagation()
-    onDelete(service.id)
-  }, [service.id, onDelete])
-
+// Service Item Component
+function ServiceItem({ service }: { service: Service }) {
   return (
     <Card
-      ref={setNodeRef}
-      style={style}
       className={`border-0 shadow-2xl hover:shadow-3xl transition-all duration-500 transform hover:scale-[1.02] group relative overflow-hidden ${
         service.popular ? 'ring-4 ring-primary ring-opacity-50 scale-105' : ''
-      } ${isDragging ? 'shadow-2xl ring-2 ring-primary/50' : ''}`}
+      }`}
     >
       {service.badge && (
         <div className="absolute top-0 left-1/2 transform -translate-x-1/2 z-20">
           <Badge className={`${service.popular ? 'bg-primary text-primary-foreground' : 'bg-purple-600 text-white'} px-4 py-1 text-xs font-semibold rounded-b-lg`}>
             {service.badge}
           </Badge>
-        </div>
-      )}
-
-      {user && (
-        <div className="absolute top-2 right-2 z-30 flex space-x-1">
-          {/* Drag Handle - używamy setActivatorNodeRef */}
-          <Button
-            ref={setActivatorNodeRef}
-            {...attributes}
-            {...listeners}
-            size="sm"
-            variant="ghost"
-            className="bg-gray-100 hover:bg-gray-200 text-gray-600 p-1 h-8 w-8 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-110 transition-all duration-300 cursor-grab active:cursor-grabbing"
-            type="button"
-            data-dnd-handle="true"
-          >
-            <GripVertical className="h-3 w-3" />
-          </Button>
-          
-          {/* Delete Button - bez listeners, osobny event handler */}
-          <Button
-            size="sm"
-            onClick={handleDelete}
-            className="bg-destructive hover:bg-destructive/90 text-destructive-foreground p-1 h-8 w-8 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-110 transition-all duration-300"
-            type="button"
-            onMouseDown={(e) => e.stopPropagation()}
-            onPointerDown={(e) => e.stopPropagation()}
-          >
-            <Trash2 className="h-3 w-3" />
-          </Button>
         </div>
       )}
 
@@ -265,42 +78,13 @@ function SortableServiceItem({ service, onEdit, onDelete, user }: {
             {service.icon === "BookOpen" && <BookOpen className="h-10 w-10 text-white" />}
           </div>
           
-          {/* Editable Title */}
-          {user && editingField === 'title' ? (
-            <InlineEditor
-              value={service.title}
-              onSave={(value) => handleSaveField('title', value)}
-              onCancel={handleCancelEdit}
-              placeholder="Tytuł usługi"
-            />
-          ) : (
-            <h3 
-              className={`text-2xl font-bold text-foreground mb-4 ${user ? 'cursor-pointer hover:bg-gray-100 rounded p-2 transition-colors' : ''}`}
-              onClick={user ? () => handleEditField('title') : undefined}
-            >
-              {service.title}
-              {user && <Edit className="inline-block ml-2 h-4 w-4 opacity-50" />}
-            </h3>
-          )}
+          <h3 className="text-2xl font-bold text-foreground mb-4">
+            {service.title}
+          </h3>
           
-          {/* Editable Description */}
-          {user && editingField === 'description' ? (
-            <InlineEditor
-              value={service.description}
-              onSave={(value) => handleSaveField('description', value)}
-              onCancel={handleCancelEdit}
-              placeholder="Opis usługi"
-              multiline
-            />
-          ) : (
-            <p 
-              className={`text-muted-foreground leading-relaxed text-sm ${user ? 'cursor-pointer hover:bg-gray-100 rounded p-2 transition-colors' : ''}`}
-              onClick={user ? () => handleEditField('description') : undefined}
-            >
-              {service.description}
-              {user && <Edit className="inline-block ml-2 h-3 w-3 opacity-50" />}
-            </p>
-          )}
+          <p className="text-muted-foreground leading-relaxed text-sm">
+            {service.description}
+          </p>
         </div>
 
         <div className="space-y-3 mb-8 flex-grow">
@@ -314,28 +98,14 @@ function SortableServiceItem({ service, onEdit, onDelete, user }: {
 
         <div className="mt-auto">
           <div className="text-center mb-8">
-            {/* Editable Price */}
-            {user && editingField === 'price' ? (
-              <InlineEditor
-                value={service.price}
-                onSave={(value) => handleSaveField('price', value)}
-                onCancel={handleCancelEdit}
-                placeholder="Cena"
-              />
-            ) : (
-              <div 
-                className={`text-4xl font-bold text-foreground mb-1 ${user ? 'cursor-pointer hover:bg-gray-100 rounded p-2 transition-colors' : ''}`}
-                onClick={user ? () => handleEditField('price') : undefined}
-              >
-                {service.price}
-                {service.originalPrice && (
-                  <span className="text-lg text-gray-400 line-through ml-2">
-                    {service.originalPrice}
-                  </span>
-                )}
-                {user && <Edit className="inline-block ml-2 h-4 w-4 opacity-50" />}
-              </div>
-            )}
+            <div className="text-4xl font-bold text-foreground mb-1">
+              {service.price}
+              {service.originalPrice && (
+                <span className="text-lg text-gray-400 line-through ml-2">
+                  {service.originalPrice}
+                </span>
+              )}
+            </div>
             
             <div className="text-sm text-muted-foreground mb-2">{service.priceNote}</div>
             {service.type === 'subskrypcja' && (
@@ -361,10 +131,7 @@ function SortableServiceItem({ service, onEdit, onDelete, user }: {
 }
 
 export default function CooperationPage() {
-  const { user } = useAuth()
-  const [activeId, setActiveId] = useState<number | null>(null)
-  const [services, setServices] = useState<Service[]>([
-    
+  const services: Service[] = [
     {
       id: 1,
       title: "Wsparcie Inwestycyjne",
@@ -385,7 +152,8 @@ export default function CooperationPage() {
       ],
       color: "from-purple-600 to-purple-700",
       icon: "BarChart3",
-    },{
+    },
+    {
       id: 2,
       title: "Konsultacja Majątkowa-Edukacyjna",
       description:
@@ -427,73 +195,7 @@ export default function CooperationPage() {
       color: "from-green-600 to-green-700", 
       icon: "BookOpen",
     },
-  ])
-
-  const sensors = useSensors(
-    useSensor(PointerSensor, {
-      activationConstraint: {
-        distance: 10,
-        tolerance: 8,
-      },
-    }),
-    useSensor(KeyboardSensor, {
-      coordinateGetter: sortableKeyboardCoordinates,
-    })
-  )
-
-  const handleEditService = useCallback((serviceId: number, field: string, value: string) => {
-    setServices(prevServices => 
-      prevServices.map(service => 
-        service.id === serviceId 
-          ? { ...service, [field]: value }
-          : service
-      )
-    )
-  }, [])
-
-  const handleDeleteService = useCallback((serviceId: number) => {
-    if (window.confirm('Czy na pewno chcesz usunąć tę usługę?')) {
-      setServices(prevServices => prevServices.filter(service => service.id !== serviceId))
-    }
-  }, [])
-
-  const handleAddService = useCallback(() => {
-    const newService: Service = {
-      id: Date.now(),
-      title: "Nowa usługa",
-      description: "Opis nowej usługi",
-      price: "0 zł",
-      priceNote: "jednorazowo",
-      type: "jednorazowa",
-      ctaText: "Zamów usługę",
-      features: ["Funkcja 1", "Funkcja 2"],
-      color: "from-gray-500 to-gray-600",
-      icon: "Target",
-    }
-    setServices(prevServices => [...prevServices, newService])
-  }, [])
-
-  function handleDragStart(event: DragStartEvent) {
-    const { active } = event
-    setActiveId(active.id as number)
-  }
-
-  function handleDragEnd(event: DragEndEvent) {
-    const { active, over } = event
-
-    if (active.id !== over?.id) {
-      setServices((items) => {
-        const oldIndex = items.findIndex((item) => item.id === active.id)
-        const newIndex = items.findIndex((item) => item.id === over?.id)
-
-        return arrayMove(items, oldIndex, newIndex)
-      })
-    }
-
-    setActiveId(null)
-  }
-
-  const activeService = services.find(service => service.id === activeId)
+  ]
 
   const problemPoints = [
     {
@@ -661,7 +363,7 @@ export default function CooperationPage() {
           </div>
         </section>
 
-        {/* Pricing Section with Drag & Drop */}
+        {/* Pricing Section */}
         <section id="cennik" className="py-16 sm:py-20">
           <div className="text-center mb-12 sm:mb-16">
             <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-foreground mb-4 sm:mb-6">
@@ -670,62 +372,13 @@ export default function CooperationPage() {
             <p className="text-lg sm:text-xl text-muted-foreground max-w-3xl mx-auto">
               Każdy pakiet został zaprojektowany tak, aby dostarczyć maksymalną wartość na różnych etapach Twojej inwestycyjnej podróży
             </p>
-            {user && (
-              <div className="mt-4 sm:mt-6 p-3 sm:p-4 bg-blue-50 border border-blue-200 rounded-xl max-w-2xl mx-auto">
-                <p className="text-xs sm:text-sm text-blue-800">
-                  🔧 <strong>Tryb edycji:</strong> Przeciągnij za uchwyt <GripVertical className="inline h-4 w-4" /> aby zmienić kolejność. 
-                  Kliknij na tekst aby edytować inline.
-                </p>
-              </div>
-            )}
           </div>
 
-          <DndContext
-            sensors={sensors}
-            collisionDetection={closestCenter}
-            onDragStart={handleDragStart}
-            onDragEnd={handleDragEnd}
-          >
-            <SortableContext items={services.map(s => s.id)} strategy={verticalListSortingStrategy}>
-              {/* Grid layout dla ofert obok siebie */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
-                {services.map((service) => (
-                  <SortableServiceItem
-                    key={service.id}
-                    service={service}
-                    onEdit={handleEditService}
-                    onDelete={handleDeleteService}
-                    user={user}
-                  />
-                ))}
-              </div>
-            </SortableContext>
-
-            <DragOverlay>
-              {activeService ? (
-                <div className="opacity-95 rotate-1 scale-105 max-w-4xl">
-                  <SortableServiceItem
-                    service={activeService}
-                    onEdit={() => {}}
-                    onDelete={() => {}}
-                    user={user}
-                  />
-                </div>
-              ) : null}
-            </DragOverlay>
-          </DndContext>
-
-          {user && (
-            <div className="text-center">
-              <Button
-                onClick={handleAddService}
-                className="bg-primary hover:bg-primary/90 text-primary-foreground transition-all duration-500 rounded-xl px-8 py-3 font-semibold shadow-xl hover:shadow-2xl transform hover:scale-105"
-              >
-                <Plus className="h-4 w-4 mr-2" />
-                Dodaj usługę
-              </Button>
-            </div>
-          )}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+            {services.map((service) => (
+              <ServiceItem key={service.id} service={service} />
+            ))}
+          </div>
         </section>
 
         {/* Risk Reversal Section */}

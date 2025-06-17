@@ -4,9 +4,9 @@ import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { SiteHeader } from "@/components/site-header"
+import { SiteHeader } from "@/components/common/site-header"
 import { ShareButton } from "@/components/share-button"
-import { PinButton } from "@/components/pin-button"
+import { PinButton } from "@/components/common/pin-button"
 import {
   CalendarDays,
   Eye,
@@ -27,7 +27,7 @@ import {
 import Link from "next/link"
 import Image from "next/image"
 import { PostFull } from "@/lib/models/post"
-import { PostContentRenderer } from "@/components/post-content-renderer"
+import { PostContentRenderer } from "@/components/post-page/post-content-renderer"
 import type { User } from '@supabase/supabase-js'
 
 interface PostPageClientProps {

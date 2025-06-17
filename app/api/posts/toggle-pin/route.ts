@@ -1,20 +1,28 @@
-"use server"
-
+import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase-server'
 import { revalidatePath } from 'next/cache'
 
-export async function togglePostPin(postId: string) {
+export async function POST(request: NextRequest) {
   try {
+    const { postId } = await request.json()
+    
+    if (!postId) {
+      return NextResponse.json(
+        { success: false, error: 'Post ID is required' },
+        { status: 400 }
+      )
+    }
+
     const supabase = await createClient()
     
     // Check if user is authenticated
     const { data: { user }, error: authError } = await supabase.auth.getUser()
     
     if (authError || !user) {
-      return { 
-        success: false, 
-        error: 'Nie jesteś zalogowany' 
-      }
+      return NextResponse.json(
+        { success: false, error: 'Nie jesteś zalogowany' },
+        { status: 401 }
+      )
     }
 
     // Call database function that handles admin verification and update
@@ -28,38 +36,38 @@ export async function togglePostPin(postId: string) {
       
       // Handle specific error cases
       if (error.message.includes('insufficient_privileges')) {
-        return { 
-          success: false, 
-          error: 'Brak uprawnień administratora' 
-        }
+        return NextResponse.json(
+          { success: false, error: 'Brak uprawnień administratora' },
+          { status: 403 }
+        )
       }
       
       if (error.message.includes('post_not_found')) {
-        return { 
-          success: false, 
-          error: 'Nie znaleziono posta' 
-        }
+        return NextResponse.json(
+          { success: false, error: 'Nie znaleziono posta' },
+          { status: 404 }
+        )
       }
       
-      return { 
-        success: false, 
-        error: 'Błąd podczas aktualizacji posta' 
-      }
+      return NextResponse.json(
+        { success: false, error: 'Błąd podczas aktualizacji posta' },
+        { status: 500 }
+      )
     }
 
     // Revalidate in the background
     revalidatePath('/')
     revalidatePath('/wpisy')
     
-    return { 
+    return NextResponse.json({ 
       success: true, 
       isPinned: data.is_featured 
-    }
+    })
   } catch (error) {
     console.error('Error toggling post pin:', error)
-    return { 
-      success: false, 
-      error: 'Wystąpił nieoczekiwany błąd' 
-    }
+    return NextResponse.json(
+      { success: false, error: 'Wystąpił nieoczekiwany błąd' },
+      { status: 500 }
+    )
   }
 } 

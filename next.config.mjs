@@ -30,10 +30,52 @@ const nextConfig = {
     // Wyłączam optymalizację CSS, która powoduje błąd z critters
     // optimizeCss: true,
     // Poprawki dla Next.js 15 i React Server Components
-    serverComponentsExternalPackages: ['@tiptap/core', '@tiptap/pm', '@tiptap/starter-kit'],
+    // serverComponentsExternalPackages is deprecated; use top-level serverExternalPackages instead
   },
+  // External packages that should not be bundled on the server – Next.js 15+
+  serverExternalPackages: ['@tiptap/core', '@tiptap/pm', '@tiptap/starter-kit'],
   // Dodaję konfigurację webpack dla lepszego zarządzania chunkami
   webpack: (config, { isServer, dev }) => {
+    // Fix dla ostrzeżeń "Critical dependency" w @supabase/realtime-js
+    config.module = {
+      ...config.module,
+      unknownContextCritical: false,
+      exprContextCritical: false,
+      unknownContextRegExp: /^\.\/.*$/,
+      unknownContextRequest: '.',
+      rules: [
+        ...config.module.rules,
+        {
+          test: /\.m?js$/,
+          type: 'javascript/auto',
+          resolve: {
+            fullySpecified: false,
+          },
+        }
+      ]
+    }
+
+    // Ignoruj ostrzeżenia dla znanych pakietów z dynamicznymi importami
+    config.ignoreWarnings = [
+      ...(config.ignoreWarnings || []),
+      {
+        module: /node_modules\/@supabase\/realtime-js/,
+        message: /Critical dependency: the request of a dependency is an expression/,
+      },
+      {
+        module: /node_modules\/@supabase\/supabase-js/,
+        message: /Critical dependency: the request of a dependency is an expression/,
+      },
+      {
+        module: /node_modules\/ws/,
+        message: /Critical dependency: the request of a dependency is an expression/,
+      },
+      {
+        module: /node_modules\/@tiptap/,
+        message: /Critical dependency: the request of a dependency is an expression/,
+      },
+    ]
+
     // Fix dla problemów z ładowaniem chunków w React Server Components
     if (!isServer && !dev) {
       config.optimization = {
@@ -54,6 +96,14 @@ const nextConfig = {
               test: /[\\/]node_modules[\\/]/,
               name: 'vendors',
               priority: -10,
+              chunks: 'all',
+              enforce: true,
+            },
+            // Oddzielny chunk dla Supabase
+            supabase: {
+              test: /[\\/]node_modules[\\/]@supabase/,
+              name: 'supabase',
+              priority: 20,
               chunks: 'all',
               enforce: true,
             },
@@ -89,15 +139,6 @@ const nextConfig = {
         crypto: false,
       },
     }
-
-    // Poprawka dla dynamicznych importów w Next.js 15
-    config.module.rules.push({
-      test: /\.m?js$/,
-      type: 'javascript/auto',
-      resolve: {
-        fullySpecified: false,
-      },
-    })
 
     return config
   },

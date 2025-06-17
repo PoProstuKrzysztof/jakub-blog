@@ -106,6 +106,7 @@ export function SiteHeader({
     { href: '/wpisy', label: 'Wpisy', page: 'wpisy', icon: BookOpen },
     { href: '/wspolpraca', label: 'Współpraca', page: 'cooperation', icon: MessageCircle },
     { href: '/kontakt', label: 'Kontakt', page: 'contact', icon: Phone },
+    ...(actualUser ? [{ href: '/admin', label: 'Panel twórcy', page: 'admin', icon: BarChart3 }] : []),
   ]
 
   const MobileNavItem = ({ href, label, page, icon: Icon, onClick }: any) => (
@@ -229,7 +230,7 @@ export function SiteHeader({
             )}
 
             {/* User Menu - Desktop only */}
-            {actualUser && (
+            {actualUser ? (
               <div className="hidden sm:flex items-center space-x-2">
                 {adminMode && (
                   <Link href="/admin/nowy-post">
@@ -248,6 +249,19 @@ export function SiteHeader({
                   <LogOut className="h-4 w-4" />
                   <span className="ml-2 hidden lg:inline">Wyloguj</span>
                 </Button>
+              </div>
+            ) : (
+              <div className="hidden sm:flex items-center">
+                <Link href="/admin/login">
+                  <Button 
+                    variant="ghost" 
+                    size="sm"
+                    className="text-muted-foreground  transition-colors duration-300 btn-touch"
+                  >
+                    <User className="h-4 w-4" />
+                    <span className="ml-2 hidden lg:inline">Zaloguj</span>
+                  </Button>
+                </Link>
               </div>
             )}
 
@@ -392,7 +406,7 @@ export function SiteHeader({
 
                     {!actualUser && (
                       <Link href="/admin/login" onClick={() => setIsMenuOpen(false)}>
-                        <Button variant="ghost" className="w-full justify-start btn-touch">
+                        <Button variant="ghost" className="w-full justify-start btn-touch ">
                           <User className="h-4 w-4 mr-3" />
                           Zaloguj się
                         </Button>

@@ -179,8 +179,10 @@ export async function middleware(request: NextRequest) {
         .eq('id', user.id)
         .single()
       
-      if (!profile || !profile.is_active || !['admin', 'editor'].includes(profile.role)) {
-        return new NextResponse('Forbidden', { status: 403 })
+      if (!profile || !profile.is_active || profile.role !== 'admin') {
+        const url = request.nextUrl.clone()
+        url.pathname = '/admin/login'
+        return NextResponse.redirect(url)
       }
     }
   }

@@ -20,7 +20,7 @@ import { createClient } from '@/lib/supabase'
 import { Category } from '@/lib/models/category'
 import { Tag } from '@/lib/models/tag'
 import { RichTextEditorDynamic } from '@/components/editor/rich-text-editor-dynamic'
-import { SiteHeader } from '@/components/site-header'
+import { SiteHeader } from '@/components/common/site-header'
 import Image from 'next/image'
 import Link from 'next/link'
 

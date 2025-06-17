@@ -92,53 +92,36 @@ export default function AdminLoginPage() {
       }
 
       if (data.user) {
-        // Check if user has admin role
-        const { data: profile } = await supabase
-          .from('profiles')
-          .select('role')
-          .eq('id', data.user.id)
-          .single()
+        setSuccessMessage('Logowanie pomyślne! Przekierowywanie...')
+        setIsRedirecting(true)
+        
+        // Show success toast
+        toast({
+          title: "Logowanie pomyślne! ✅",
+          description: "Przekierowywanie do panelu administratora...",
+          duration: 2000,
+        })
+        
+        // Small delay to show success message
+        const redirectTimeout = setTimeout(() => {
+          try {
+            router.push('/admin')
+          } catch (error) {
+            console.error('Redirect error:', error)
+            setErrorMessage('Błąd podczas przekierowywania. Spróbuj ponownie.')
+            setIsRedirecting(false)
+            setSuccessMessage('')
+            
+            toast({
+              title: "Błąd przekierowywania",
+              description: "Spróbuj ponownie lub odśwież stronę.",
+              variant: "destructive",
+            })
+          }
+        }, 1500)
 
-        if (profile?.role === 'admin') {
-          setSuccessMessage('Logowanie pomyślne! Przekierowywanie...')
-          setIsRedirecting(true)
-          
-          // Show success toast
-          toast({
-            title: "Logowanie pomyślne! ✅",
-            description: "Przekierowywanie do panelu administratora...",
-            duration: 2000,
-          })
-          
-          // Small delay to show success message
-          const redirectTimeout = setTimeout(() => {
-            try {
-              router.push('/admin')
-            } catch (error) {
-              console.error('Redirect error:', error)
-              setErrorMessage('Błąd podczas przekierowywania. Spróbuj ponownie.')
-              setIsRedirecting(false)
-              setSuccessMessage('')
-              
-              toast({
-                title: "Błąd przekierowywania",
-                description: "Spróbuj ponownie lub odśwież stronę.",
-                variant: "destructive",
-              })
-            }
-          }, 1500)
-
-          // Cleanup timeout if component unmounts
-          return () => clearTimeout(redirectTimeout)
-        } else {
-          setErrorMessage('Brak uprawnień administratora')
-          toast({
-            title: "Brak uprawnień",
-            description: "Nie masz uprawnień administratora.",
-            variant: "destructive",
-          })
-          await supabase.auth.signOut()
-        }
+        // Cleanup timeout if component unmounts
+        return () => clearTimeout(redirectTimeout)
       }
     } catch {
       setErrorMessage('Wystąpił błąd podczas logowania')

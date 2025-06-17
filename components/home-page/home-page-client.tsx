@@ -35,7 +35,7 @@ import {
 import Link from "next/link"
 import Image from "next/image"
 import { PostFull } from "@/lib/models/post"
-import { PinButton } from "@/components/blog-page/pin-button"
+import { PinButton } from "@/components/common/pin-button"
 import { useAuth } from "@/hooks/use-auth"
 import type { User } from '@supabase/supabase-js'
 
@@ -150,14 +150,8 @@ export function HomePageClient({ initialPosts }: HomePageClientProps) {
 
       {/* Hero Section - Mobile Optimized */}
       <section className="relative bg-gradient-to-br from-primary/5 via-background to-accent/5 py-12 sm:py-16 lg:py-24 overflow-hidden">
-      {/* Hero Section - Mobile Optimized */}
-      <section className="relative bg-gradient-to-br from-primary/5 via-background to-accent/5 py-12 sm:py-16 lg:py-24 overflow-hidden">
         <div className="absolute inset-0 bg-grid-pattern opacity-5"></div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
-            <div className="space-y-6 sm:space-y-8 lg:space-y-10 text-center lg:text-left">
-              <div className="space-y-4 sm:space-y-6">
-                <Badge className="bg-primary/10 border-primary/20 px-3 py-2 sm:px-4 sm:py-2 rounded-full text-sm sm:text-base font-medium">
           <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
             <div className="space-y-6 sm:space-y-8 lg:space-y-10 text-center lg:text-left">
               <div className="space-y-4 sm:space-y-6">
@@ -175,15 +169,15 @@ export function HomePageClient({ initialPosts }: HomePageClientProps) {
               </div>
 
               <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center lg:justify-start">
-                <Button 
-                  size="lg" 
-                  className="bg-primary hover:bg-primary/90 text-primary-foreground px-6 sm:px-8 lg:px-10 py-4 sm:py-5 lg:py-6 rounded-xl text-base sm:text-lg lg:text-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 touch-manipulation tap-highlight-none"
-                  onClick={() => setShowBlogSection(true)}
-                >
-                  <BookOpen className="mr-3 h-5 w-5 sm:h-6 sm:w-6" />
-                  <BookOpen className="mr-3 h-5 w-5 sm:h-6 sm:w-6" />
-                  Poznaj moje analizy
-                </Button>
+                <Link href="/wpisy">
+                  <Button 
+                    size="lg" 
+                    className="bg-primary hover:bg-primary/90 text-primary-foreground px-6 sm:px-8 lg:px-10 py-4 sm:py-5 lg:py-6 rounded-xl text-base sm:text-lg lg:text-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 touch-manipulation tap-highlight-none"
+                  >
+                    <BookOpen className="mr-3 h-5 w-5 sm:h-6 sm:w-6" />
+                    Poznaj moje analizy
+                  </Button>
+                </Link>
                 <Link href="/wspolpraca">
                   <Button 
                     size="lg" 
@@ -191,14 +185,11 @@ export function HomePageClient({ initialPosts }: HomePageClientProps) {
                     className="border-2 border-border hover:border-primary px-6 sm:px-8 lg:px-10 py-4 sm:py-5 lg:py-6 rounded-xl text-base sm:text-lg lg:text-xl font-semibold transition-all duration-300 hover:bg-primary/5 w-full sm:w-auto touch-manipulation tap-highlight-none"
                   >
                     <MessageCircle className="mr-3 h-5 w-5 sm:h-6 sm:w-6" />
-                    <MessageCircle className="mr-3 h-5 w-5 sm:h-6 sm:w-6" />
                     Współpraca
                   </Button>
                 </Link>
               </div>
 
-              {/* Social Proof - Mobile Optimized */}
-              <div className="flex flex-col xs:flex-row items-center justify-center lg:justify-start space-y-4 xs:space-y-0 xs:space-x-8 pt-6">
               {/* Social Proof - Mobile Optimized */}
               <div className="flex flex-col xs:flex-row items-center justify-center lg:justify-start space-y-4 xs:space-y-0 xs:space-x-8 pt-6">
                 <div className="text-center">
@@ -216,61 +207,70 @@ export function HomePageClient({ initialPosts }: HomePageClientProps) {
               </div>
             </div>
 
-            {/* Hero Visual - Mobile Optimized */}
+            {/* Hero Visual - Investment Chart with Profit Effects */}
             <div className="relative order-first lg:order-last">
-              <div className="relative bg-card rounded-2xl p-4 sm:p-6 lg:p-8 shadow-2xl border border-border">
-                <div className="space-y-3 sm:space-y-4 lg:space-y-6">
-            {/* Hero Visual - Mobile Optimized */}
-            <div className="relative order-first lg:order-last">
-              <div className="relative bg-card rounded-2xl p-4 sm:p-6 lg:p-8 shadow-2xl border border-border">
-                <div className="space-y-3 sm:space-y-4 lg:space-y-6">
-                  <div className="flex items-center justify-between">
-                    <h3 className="text-sm sm:text-base lg:text-lg font-semibold text-foreground">Portfolio</h3>
-                    <Badge className="bg-green-100 text-green-800 rounded-lg text-xs sm:text-sm">+15.2%</Badge>
-                  </div>
+              <div className="relative rounded-2xl overflow-hidden shadow-2xl border border-border group">
+                {/* Main Chart Image */}
+                <div className="relative h-64 sm:h-80 lg:h-96">
+                  <Image
+                    src="/concept-prrof.jpeg"
+                    alt="Wykres zysków z portfela inwestycyjnego"
+                    fill
+                    className="object-cover transition-transform duration-700 group-hover:scale-105"
+                    priority
+                  />
                   
-                  <div className="space-y-2 sm:space-y-3 lg:space-y-4">
-                    <div className="flex justify-between items-center p-2 sm:p-2.5 lg:p-3 bg-background rounded-lg">
-                      <span className="text-xs sm:text-sm font-medium">PKN Orlen</span>
-                      <span className="text-green-600 font-semibold text-xs sm:text-sm">+18.5%</span>
-                    </div>
-                    <div className="flex justify-between items-center p-2 sm:p-2.5 lg:p-3 bg-background rounded-lg">
-                      <span className="text-xs sm:text-sm font-medium">CD Projekt</span>
-                      <span className="text-green-600 font-semibold text-xs sm:text-sm">+12.3%</span>
-                    </div>
-                    <div className="flex justify-between items-center p-2 sm:p-2.5 lg:p-3 bg-background rounded-lg">
-                      <span className="text-xs sm:text-sm font-medium">Allegro</span>
-                      <span className="text-green-600 font-semibold text-xs sm:text-sm">+8.7%</span>
+                  {/* Gradient Overlay for better text visibility */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+                  
+                  {/* Animated Profit Indicators */}
+                  <div className="absolute top-4 right-4 bg-green-500/90 backdrop-blur-sm text-white px-3 py-2 rounded-lg shadow-lg animate-pulse">
+                    <div className="flex items-center space-x-2">
+                      <TrendingUp className="h-4 w-4" />
+                      <span className="font-bold text-sm">+77.95%</span>
                     </div>
                   </div>
                   
-                  <div className="pt-2 sm:pt-3 lg:pt-4 border-t border-border">
-                    <div className="flex items-center justify-between">
-                      <span className="text-xs sm:text-sm text-muted-foreground">Łączny zysk</span>
-                      <span className="text-sm sm:text-base lg:text-lg font-bold text-green-600">+€ 12,450</span>
+                  {/* Floating Profit Numbers */}
+                  <div className="absolute top-1/3 left-4 bg-green-400/90 backdrop-blur-sm text-white px-2 py-1 rounded-md shadow-md animate-bounce" style={{ animationDelay: '0.5s' }}>
+                    <span className="font-semibold text-xs">+42.5%</span>
+                  </div>
+                  
+                  <div className="absolute top-1/2 right-8 bg-green-600/90 backdrop-blur-sm text-white px-2 py-1 rounded-md shadow-md animate-bounce" style={{ animationDelay: '1s' }}>
+                    <span className="font-semibold text-xs">+27.93%</span>
+                  </div>
+                  
+                  <div className="absolute bottom-1/3 left-1/3 bg-green-500/90 backdrop-blur-sm text-white px-2 py-1 rounded-md shadow-md animate-bounce" style={{ animationDelay: '1.5s' }}>
+                    <span className="font-semibold text-xs">+20.9%</span>
+                  </div>
+                  
+                  {/* Main Portfolio Value */}
+                  <div className="absolute bottom-4 left-4 bg-card/95 backdrop-blur-sm rounded-lg p-3 shadow-lg">
+                    <div className="text-xs text-muted-foreground mb-1">Wartość portfela</div>
+                    <div className="flex items-center space-x-2">
+                      <DollarSign className="h-4 w-4 text-green-600" />
+                      <span className="font-bold text-green-600 text-lg">€ 127,450</span>
                     </div>
+                    <div className="text-xs text-green-600 font-medium">Zysk: zł 42,450</div>
                   </div>
                 </div>
               </div>
               
-              {/* Floating badges - Mobile Optimized */}
-              <div className="absolute -top-1 -left-1 sm:-top-2 sm:-left-2 lg:-top-4 lg:-left-4 bg-primary text-primary-foreground px-2 py-1 lg:px-3 lg:py-2 rounded-lg text-xs lg:text-sm font-medium shadow-lg">
-                ✨ Najlepsze analizy
+              {/* Enhanced Floating badges with Glow Effect */}
+              <div className="absolute -top-1 -left-1 sm:-top-2 sm:-left-2 lg:-top-4 lg:-left-4 bg-primary text-primary-foreground px-2 py-1 lg:px-3 lg:py-2 rounded-lg text-xs lg:text-sm font-medium shadow-lg shadow-primary/25 animate-pulse">
+                ✨ Sprawdzone strategie
               </div>
-              <div className="absolute -bottom-1 -right-1 sm:-bottom-2 sm:-right-2 lg:-bottom-4 lg:-right-4 bg-accent text-primary-foreground px-2 py-1 lg:px-3 lg:py-2 rounded-lg text-xs lg:text-sm font-medium shadow-lg">
-              <div className="absolute -bottom-1 -right-1 sm:-bottom-2 sm:-right-2 lg:-bottom-4 lg:-right-4 bg-accent text-primary-foreground px-2 py-1 lg:px-3 lg:py-2 rounded-lg text-xs lg:text-sm font-medium shadow-lg">
-                📊 Real-time updates
+              <div className="absolute -bottom-1 -right-1 sm:-bottom-2 sm:-right-2 lg:-bottom-4 lg:-right-4 bg-green-500 text-white px-2 py-1 lg:px-3 lg:py-2 rounded-lg text-xs lg:text-sm font-medium shadow-lg shadow-green-500/25">
+                📈 +77.95% ROI
               </div>
+              
+              {/* Glowing Success Ring */}
+              <div className="absolute -inset-2 bg-gradient-to-r from-green-400/20 via-primary/20 to-green-400/20 rounded-3xl blur-xl opacity-75 animate-pulse"></div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Features Section - Mobile Optimized */}
-      <section className="py-8 sm:py-12 lg:py-20 bg-card/50">
-        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
-          <div className="text-center mb-8 sm:mb-12 lg:mb-16">
-            <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-foreground mb-3 sm:mb-4">
       {/* Features Section - Mobile Optimized */}
       <section className="py-8 sm:py-12 lg:py-20 bg-card/50">
         <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
@@ -283,7 +283,6 @@ export function HomePageClient({ initialPosts }: HomePageClientProps) {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
             {[
               {
@@ -334,11 +333,6 @@ export function HomePageClient({ initialPosts }: HomePageClientProps) {
         <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
           <div className="text-center mb-8 sm:mb-12 lg:mb-16">
             <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-foreground mb-3 sm:mb-4">
-      {/* Services Section - Mobile Optimized */}
-      <section className="py-8 sm:py-12 lg:py-20">
-        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
-          <div className="text-center mb-8 sm:mb-12 lg:mb-16">
-            <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-foreground mb-3 sm:mb-4">
               Rozwijaj się ze mną finansowo
             </h2>
             <p className="text-sm sm:text-base lg:text-xl text-muted-foreground max-w-3xl mx-auto">
@@ -346,7 +340,6 @@ export function HomePageClient({ initialPosts }: HomePageClientProps) {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
             {[
               {
@@ -397,9 +390,6 @@ export function HomePageClient({ initialPosts }: HomePageClientProps) {
                 <CardContent className="p-4 sm:p-6 lg:p-8 relative z-10 flex flex-col flex-grow">
                   <div className="w-10 h-10 sm:w-12 sm:h-12 lg:w-16 lg:h-16 mx-auto mb-4 sm:mb-6 rounded-2xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors duration-300">
                     <service.icon className="h-5 w-5 sm:h-6 sm:w-6 lg:h-8 lg:w-8 text-primary" />
-                <CardContent className="p-4 sm:p-6 lg:p-8 relative z-10 flex flex-col flex-grow">
-                  <div className="w-10 h-10 sm:w-12 sm:h-12 lg:w-16 lg:h-16 mx-auto mb-4 sm:mb-6 rounded-2xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors duration-300">
-                    <service.icon className="h-5 w-5 sm:h-6 sm:w-6 lg:h-8 lg:w-8 text-primary" />
                   </div>
                   <h3 className="text-base sm:text-lg lg:text-xl font-semibold text-foreground mb-3 sm:mb-4 text-center">{service.title}</h3>
                   <p className="text-xs sm:text-sm lg:text-base text-muted-foreground mb-4 sm:mb-6 text-center leading-relaxed">{service.description}</p>
@@ -415,9 +405,7 @@ export function HomePageClient({ initialPosts }: HomePageClientProps) {
 
                   <Link href={service.href} className="block mt-auto">
                     <Button className="w-full bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl font-semibold group-hover:shadow-lg transition-all duration-300 text-xs sm:text-sm lg:text-base py-2 sm:py-2.5 lg:py-3 touch-manipulation tap-highlight-none">
-                    <Button className="w-full bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl font-semibold group-hover:shadow-lg transition-all duration-300 text-xs sm:text-sm lg:text-base py-2 sm:py-2.5 lg:py-3 touch-manipulation tap-highlight-none">
                       {service.cta}
-                      <ArrowRight className="ml-2 h-3 w-3 sm:h-4 sm:w-4 group-hover:translate-x-1 transition-transform duration-300" />
                       <ArrowRight className="ml-2 h-3 w-3 sm:h-4 sm:w-4 group-hover:translate-x-1 transition-transform duration-300" />
                     </Button>
                   </Link>
@@ -433,20 +421,13 @@ export function HomePageClient({ initialPosts }: HomePageClientProps) {
         <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
           <div className="text-center mb-8 sm:mb-12 lg:mb-16">
             <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-foreground mb-3 sm:mb-4">
-      {/* Testimonials Section - Mobile Optimized */}
-      <section className="py-8 sm:py-12 lg:py-20 bg-gradient-to-br from-primary/5 to-accent/5">
-        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
-          <div className="text-center mb-8 sm:mb-12 lg:mb-16">
-            <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-foreground mb-3 sm:mb-4">
               Co mówią o mnie inwestorzy?
             </h2>
-            <p className="text-sm sm:text-base lg:text-xl text-muted-foreground">
             <p className="text-sm sm:text-base lg:text-xl text-muted-foreground">
               Opinie od osób, które zaufały moim analizom i konsultacjom
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
             {[
               {
@@ -479,7 +460,6 @@ export function HomePageClient({ initialPosts }: HomePageClientProps) {
                     ))}
                   </div>
                   <p className="text-xs sm:text-sm lg:text-base text-muted-foreground mb-4 sm:mb-6 leading-relaxed italic">
-                  <p className="text-xs sm:text-sm lg:text-base text-muted-foreground mb-4 sm:mb-6 leading-relaxed italic">
                     "{testimonial.content}"
                   </p>
                   <div>
@@ -494,12 +474,7 @@ export function HomePageClient({ initialPosts }: HomePageClientProps) {
       </section>
 
       {/* Blog Section (conditionally rendered) - Mobile Optimized */}
-      {/* Blog Section (conditionally rendered) - Mobile Optimized */}
       {showBlogSection && (
-        <section className="py-8 sm:py-12 lg:py-20 bg-background">
-          <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
-            <div className="text-center mb-6 sm:mb-8 lg:mb-12">
-              <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-foreground mb-3 sm:mb-4">
         <section className="py-8 sm:py-12 lg:py-20 bg-background">
           <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
             <div className="text-center mb-6 sm:mb-8 lg:mb-12">
@@ -513,15 +488,11 @@ export function HomePageClient({ initialPosts }: HomePageClientProps) {
               {/* Search and Filters - Mobile Optimized */}
               <div className="flex flex-col gap-3 sm:gap-4 mb-6 sm:mb-8 max-w-4xl mx-auto">
                 <div className="relative flex-1">
-              {/* Search and Filters - Mobile Optimized */}
-              <div className="flex flex-col gap-3 sm:gap-4 mb-6 sm:mb-8 max-w-4xl mx-auto">
-                <div className="relative flex-1">
                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                   <Input
                     placeholder="Szukaj analiz, poradników..."
                     value={searchTerm}
                     onChange={(e) => handleSearchChange(e.target.value)}
-                    className="pl-10 rounded-xl border-border text-sm sm:text-base touch-manipulation tap-highlight-none"
                     className="pl-10 rounded-xl border-border text-sm sm:text-base touch-manipulation tap-highlight-none"
                   />
                 </div>
@@ -569,9 +540,6 @@ export function HomePageClient({ initialPosts }: HomePageClientProps) {
                         <Card className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 group overflow-hidden touch-manipulation tap-highlight-none">
                           <div className="relative h-32 sm:h-40 lg:h-48 w-full">
                             <Badge className="absolute top-2 sm:top-3 left-2 sm:left-3 z-10 bg-primary text-primary-foreground rounded-xl text-xs">
-                        <Card className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 group overflow-hidden touch-manipulation tap-highlight-none">
-                          <div className="relative h-32 sm:h-40 lg:h-48 w-full">
-                            <Badge className="absolute top-2 sm:top-3 left-2 sm:left-3 z-10 bg-primary text-primary-foreground rounded-xl text-xs">
                               Wyróżnione
                             </Badge>
                             <Image
@@ -583,22 +551,17 @@ export function HomePageClient({ initialPosts }: HomePageClientProps) {
                           </div>
                           <CardContent className="p-3 sm:p-4 lg:p-6">
                             <Badge className="mb-2 sm:mb-3 bg-accent/10 text-accent-foreground rounded-lg text-xs">
-                          <CardContent className="p-3 sm:p-4 lg:p-6">
-                            <Badge className="mb-2 sm:mb-3 bg-accent/10 text-accent-foreground rounded-lg text-xs">
                               {getMainCategory(post).toUpperCase()}
                             </Badge>
                             <h4 className="text-sm sm:text-base lg:text-lg font-bold text-foreground mb-2 sm:mb-3 line-clamp-2">
-                            <h4 className="text-sm sm:text-base lg:text-lg font-bold text-foreground mb-2 sm:mb-3 line-clamp-2">
                               {post.title}
                             </h4>
-                            <div className="flex items-center text-xs sm:text-sm text-muted-foreground mb-2 sm:mb-3 space-x-3 sm:space-x-4">
                             <div className="flex items-center text-xs sm:text-sm text-muted-foreground mb-2 sm:mb-3 space-x-3 sm:space-x-4">
                               <div className="flex items-center">
                                 <CalendarDays className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
                                 {formatDate(post.published_at || post.created_at)}
                               </div>
                               <div className="flex items-center">
-                                <Eye className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
                                 <Eye className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
                                 {post.view_count || 0}
                               </div>
@@ -613,7 +576,6 @@ export function HomePageClient({ initialPosts }: HomePageClientProps) {
             )}
 
             {/* All Posts - Mobile Optimized */}
-            {/* All Posts - Mobile Optimized */}
             <div>
               <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 sm:mb-6 gap-3 sm:gap-4">
                 <h3 className="text-lg sm:text-xl lg:text-2xl font-bold text-foreground">
@@ -623,20 +585,17 @@ export function HomePageClient({ initialPosts }: HomePageClientProps) {
                   <Button variant="outline" className="rounded-xl text-sm sm:text-base touch-manipulation tap-highlight-none">
                     Zobacz wszystkie
                     <ArrowRight className="ml-2 h-3 w-3 sm:h-4 sm:w-4" />
-                    <ArrowRight className="ml-2 h-3 w-3 sm:h-4 sm:w-4" />
                   </Button>
                 </Link>
               </div>
 
               {isFiltering ? (
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
                   {Array.from({ length: 6 }).map((_, i) => (
                     <PostSkeleton key={i} variant="card" />
                   ))}
                 </div>
               ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
                   {filteredAndSortedPosts
                     .filter((post) => !post.is_featured)
@@ -683,10 +642,7 @@ export function HomePageClient({ initialPosts }: HomePageClientProps) {
 
       {/* CTA Section - Mobile Optimized */}
       <section className="bg-gradient-to-r from-primary to-primary/90 text-primary-foreground py-12 sm:py-16 lg:py-24">
-      {/* CTA Section - Mobile Optimized */}
-      <section className="bg-gradient-to-r from-primary to-primary/90 text-primary-foreground py-12 sm:py-16 lg:py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-4 sm:mb-6">
           <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-4 sm:mb-6">
             Gotowy na rozpoczęcie swojej inwestycyjnej podróży?
           </h2>
@@ -695,22 +651,21 @@ export function HomePageClient({ initialPosts }: HomePageClientProps) {
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center mb-8 sm:mb-10 lg:mb-16">
-            <Button 
-              size="lg" 
-              className="bg-card text-primary hover:bg-card/90 font-semibold px-6 sm:px-8 lg:px-10 py-4 sm:py-5 lg:py-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 text-base sm:text-lg touch-manipulation tap-highlight-none"
-              onClick={() => setShowBlogSection(true)}
-            >
-              <BookOpen className="mr-3 h-5 w-5 sm:h-6 sm:w-6" />
-              <BookOpen className="mr-3 h-5 w-5 sm:h-6 sm:w-6" />
-              Rozpocznij lekturę
-            </Button>
+            <Link href="/wpisy">
+              <Button 
+                size="lg" 
+                className="bg-card text-primary hover:bg-card/90 font-semibold px-6 sm:px-8 lg:px-10 py-4 sm:py-5 lg:py-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 text-base sm:text-lg w-full sm:w-auto touch-manipulation tap-highlight-none"
+              >
+                <BookOpen className="mr-3 h-5 w-5 sm:h-6 sm:w-6" />
+                Rozpocznij lekturę
+              </Button>
+            </Link>
             <Link href="/wspolpraca">
               <Button 
                 size="lg" 
                 variant="outline" 
-                className="border-2 border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary font-semibold px-6 sm:px-8 lg:px-10 py-4 sm:py-5 lg:py-6 rounded-xl transition-all duration-300 text-base sm:text-lg w-full sm:w-auto touch-manipulation tap-highlight-none"
+                className="border-2 border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary font-semibold px-6 sm:px-8 lg:px-10 py-4 sm:py-5 lg:py-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 text-base sm:text-lg w-full sm:w-auto touch-manipulation tap-highlight-none"
               >
-                <MessageCircle className="mr-3 h-5 w-5 sm:h-6 sm:w-6" />
                 <MessageCircle className="mr-3 h-5 w-5 sm:h-6 sm:w-6" />
                 Umów konsultację
               </Button>
@@ -719,8 +674,6 @@ export function HomePageClient({ initialPosts }: HomePageClientProps) {
         </div>
       </section>
 
-      {/* Messenger CTA Banner - Mobile Optimized */}
-      <div className="bg-gradient-to-r from-secondary to-secondary/90 text-secondary-foreground py-6 sm:py-8 lg:py-12">
       {/* Messenger CTA Banner - Mobile Optimized */}
       <div className="bg-gradient-to-r from-secondary to-secondary/90 text-secondary-foreground py-6 sm:py-8 lg:py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -732,13 +685,11 @@ export function HomePageClient({ initialPosts }: HomePageClientProps) {
             <Button
               asChild
               className="bg-primary text-primary-foreground hover:bg-primary/90 font-semibold px-6 sm:px-8 lg:px-10 py-3 sm:py-4 lg:py-5 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl text-sm sm:text-base lg:text-lg w-full lg:w-auto touch-manipulation tap-highlight-none"
-              className="bg-primary text-primary-foreground hover:bg-primary/90 font-semibold px-6 sm:px-8 lg:px-10 py-3 sm:py-4 lg:py-5 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl text-sm sm:text-base lg:text-lg w-full lg:w-auto touch-manipulation tap-highlight-none"
             >
               <a
                 href="https://m.me/kryptodegeneraci"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center justify-center"
                 className="flex items-center justify-center"
               >
                 <svg className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 mr-3" viewBox="0 0 24 24" fill="currentColor">

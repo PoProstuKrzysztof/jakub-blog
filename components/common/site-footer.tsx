@@ -66,16 +66,7 @@ export function SiteFooter({ categories, onCategoryClick }: SiteFooterProps) {
               Profesjonalne analizy finansowe i edukacja inwestycyjna. 
               Pomagam budować świadome portfele inwestycyjne oparte na fundamentalnej analizie spółek.
             </p>
-            <div className="flex items-center mb-4 sm:mb-6">
-              <div className="flex items-center text-xs sm:text-sm text-muted-foreground mr-4 sm:mr-6">
-                <TrendingUp className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
-                <span>15.2% średnia stopa zwrotu</span>
-              </div>
-              <div className="flex items-center text-xs sm:text-sm text-muted-foreground">
-                <Users className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
-                <span>100+ zadowolonych klientów</span>
-              </div>
-            </div>
+
             
             {/* Social Media - Mobile Optimized */}
             <div className="flex items-center gap-2 sm:gap-3">
