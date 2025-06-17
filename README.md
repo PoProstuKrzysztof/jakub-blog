@@ -1,4 +1,4 @@
-# JAKUB INWESTYCJE - Blog Finansowy
+# JAKUB INWESTYCJE - Wpisy Finansowe
 
 [![Next.js](https://img.shields.io/badge/Next.js-15-black?style=flat-square&logo=next.js)](https://nextjs.org/)
 [![React](https://img.shields.io/badge/React-19-blue?style=flat-square&logo=react)](https://reactjs.org/)
@@ -245,7 +245,6 @@ jakub-blog/
 │   │   ├── redis/health/      # Health check Redis
 │   │   └── security/csp-report/ # CSP violation reports
 │   ├── auth/callback/         # OAuth callback
-│   ├── blog/                  # Strona bloga
 │   ├── kontakt/              # Strona kontaktowa
 │   ├── post/[id]/            # Dynamiczne strony postów
 │   ├── wpisy/                # Lista wszystkich postów
@@ -309,7 +308,7 @@ Responsywna nawigacja z trzema sekcjami:
 ```typescript
 // Struktura nawigacji
 const navigationSections = {
-  left: ['Blog', 'O Autorze', 'Współpraca'],
+  left: ['Wpisy', 'O Autorze', 'Współpraca'],
   center: 'Logo',
   right: ['Admin Panel', 'User Menu']
 }
@@ -571,7 +570,7 @@ Ten projekt jest licencjonowany na licencji MIT - zobacz plik [LICENSE](LICENSE)
 
 ## 📞 Kontakt
 
-**Projekt Open Source** - Blog Finansowy JAKUB INWESTYCJE
+**Projekt Open Source** - Wpisy Finansowe JAKUB INWESTYCJE
 
 - 📧 Email: [kontakt@example.com](mailto:kontakt@example.com)
 - 🌐 Website: [https://example.com](https://example.com)

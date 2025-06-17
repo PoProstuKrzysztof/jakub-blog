@@ -17,16 +17,22 @@ function ChartSkeleton() {
   )
 }
 
-// Dynamicznie importowany komponent wykresów z wyłączonym SSR
-const ChartComponentCore = dynamic(() => import('./chart-component').then(mod => ({ default: mod.ChartComponent })), {
-  ssr: false,
-  loading: () => <ChartSkeleton />
-})
+// Uproszczone dynamiczne importy dla Next.js 15
+const ChartComponentCore = dynamic(
+  () => import('./chart-component').then(mod => ({ default: mod.ChartComponent })),
+  {
+    ssr: false,
+    loading: () => <ChartSkeleton />,
+  }
+)
 
-const ChartRendererCore = dynamic(() => import('./chart-component').then(mod => ({ default: mod.ChartRenderer })), {
-  ssr: false,
-  loading: () => <ChartSkeleton />
-})
+const ChartRendererCore = dynamic(
+  () => import('./chart-component').then(mod => ({ default: mod.ChartRenderer })),
+  {
+    ssr: false,
+    loading: () => <ChartSkeleton />,
+  }
+)
 
 interface ChartComponentProps {
   type: 'bar' | 'line' | 'pie'

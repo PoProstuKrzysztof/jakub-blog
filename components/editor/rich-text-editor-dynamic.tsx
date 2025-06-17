@@ -30,11 +30,14 @@ function EditorSkeleton() {
   )
 }
 
-// Dynamicznie importowany edytor z wyłączonym SSR
-const RichTextEditorCore = dynamic(() => import('./rich-text-editor').then(mod => ({ default: mod.RichTextEditor })), {
-  ssr: false,
-  loading: () => <EditorSkeleton />
-})
+// Uproszczony dynamiczny import dla Next.js 15
+const RichTextEditorCore = dynamic(
+  () => import('./rich-text-editor').then(mod => ({ default: mod.RichTextEditor })),
+  {
+    ssr: false,
+    loading: () => <EditorSkeleton />,
+  }
+)
 
 interface RichTextEditorProps {
   content: string

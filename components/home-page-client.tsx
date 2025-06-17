@@ -140,102 +140,102 @@ export function HomePageClient({ initialPosts }: HomePageClientProps) {
         onSearchChange={handleSearchChange}
       />
 
-      {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-primary/5 via-background to-accent/5 py-20 lg:py-32 overflow-hidden">
+      {/* Hero Section - Mobile Optimized */}
+      <section className="relative bg-gradient-to-br from-primary/5 via-background to-accent/5 py-12 sm:py-16 lg:py-24 overflow-hidden">
         <div className="absolute inset-0 bg-grid-pattern opacity-5"></div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <div className="space-y-8">
-              <div className="space-y-4">
-                <Badge className="bg-primary/10  border-primary/20 px-4 py-2 rounded-full text-sm font-medium">
+          <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+            <div className="space-y-6 sm:space-y-8 lg:space-y-10 text-center lg:text-left">
+              <div className="space-y-4 sm:space-y-6">
+                <Badge className="bg-primary/10 border-primary/20 px-3 py-2 sm:px-4 sm:py-2 rounded-full text-sm sm:text-base font-medium">
                   🚀 Profesjonalne analizy finansowe
                 </Badge>
-                <h1 className="text-4xl lg:text-6xl font-bold text-foreground leading-tight">
+                <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-foreground leading-tight">
                   Osiągnij <span className="text-primary">finansową niezależność</span> dzięki inteligentnym inwestycjom
                 </h1>
-                <p className="text-xl text-muted-foreground leading-relaxed max-w-2xl">
+                <p className="text-base sm:text-lg lg:text-xl text-muted-foreground leading-relaxed">
                   Wykorzystaj moje 8-letnie doświadczenie w analizie rynków finansowych. 
                   Otrzymuj profesjonalne analizy spółek, strategie inwestycyjne i edukację finansową 
                   – wszystko w jednym miejscu.
                 </p>
               </div>
 
-              <div className="flex flex-col sm:flex-row gap-4">
+              <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center lg:justify-start">
                 <Button 
                   size="lg" 
-                  className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-4 rounded-xl text-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+                  className="bg-primary hover:bg-primary/90 text-primary-foreground px-6 sm:px-8 lg:px-10 py-4 sm:py-5 lg:py-6 rounded-xl text-base sm:text-lg lg:text-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 touch-manipulation tap-highlight-none"
                   onClick={() => setShowBlogSection(true)}
                 >
-                  <BookOpen className="mr-2 h-5 w-5" />
+                  <BookOpen className="mr-3 h-5 w-5 sm:h-6 sm:w-6" />
                   Poznaj moje analizy
                 </Button>
                 <Link href="/wspolpraca">
                   <Button 
                     size="lg" 
                     variant="outline" 
-                    className="border-2 border-border hover:border-primary px-8 py-4 rounded-xl text-lg font-semibold transition-all duration-300 hover:bg-primary/5"
+                    className="border-2 border-border hover:border-primary px-6 sm:px-8 lg:px-10 py-4 sm:py-5 lg:py-6 rounded-xl text-base sm:text-lg lg:text-xl font-semibold transition-all duration-300 hover:bg-primary/5 w-full sm:w-auto touch-manipulation tap-highlight-none"
                   >
-                    <MessageCircle className="mr-2 h-5 w-5" />
+                    <MessageCircle className="mr-3 h-5 w-5 sm:h-6 sm:w-6" />
                     Współpraca
                   </Button>
                 </Link>
               </div>
 
-              {/* Social Proof */}
-              <div className="flex items-center space-x-8 pt-4">
+              {/* Social Proof - Mobile Optimized */}
+              <div className="flex flex-col xs:flex-row items-center justify-center lg:justify-start space-y-4 xs:space-y-0 xs:space-x-8 pt-6">
                 <div className="text-center">
-                  <div className="text-2xl font-bold text-foreground">100+</div>
-                  <div className="text-sm text-muted-foreground">Zadowolonych klientów</div>
+                  <div className="text-xl sm:text-2xl lg:text-3xl font-bold text-foreground">100+</div>
+                  <div className="text-sm sm:text-base text-muted-foreground">Zadowolonych klientów</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-2xl font-bold text-foreground">15.2%</div>
-                  <div className="text-sm text-muted-foreground">Średnia stopa zwrotu</div>
+                  <div className="text-xl sm:text-2xl lg:text-3xl font-bold text-foreground">15.2%</div>
+                  <div className="text-sm sm:text-base text-muted-foreground">Średnia stopa zwrotu</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-2xl font-bold text-foreground">5+</div>
-                  <div className="text-sm text-muted-foreground">lat doświadczenia</div>
+                  <div className="text-xl sm:text-2xl lg:text-3xl font-bold text-foreground">5+</div>
+                  <div className="text-sm sm:text-base text-muted-foreground">lat doświadczenia</div>
                 </div>
               </div>
             </div>
 
-            {/* Hero Visual */}
-            <div className="relative">
-              <div className="relative bg-card rounded-2xl p-8 shadow-2xl border border-border">
-                <div className="space-y-6">
+            {/* Hero Visual - Mobile Optimized */}
+            <div className="relative order-first lg:order-last">
+              <div className="relative bg-card rounded-2xl p-4 sm:p-6 lg:p-8 shadow-2xl border border-border">
+                <div className="space-y-3 sm:space-y-4 lg:space-y-6">
                   <div className="flex items-center justify-between">
-                    <h3 className="text-lg font-semibold text-foreground">Portfolio</h3>
-                    <Badge className="bg-green-100 text-green-800 rounded-lg">+15.2%</Badge>
+                    <h3 className="text-sm sm:text-base lg:text-lg font-semibold text-foreground">Portfolio</h3>
+                    <Badge className="bg-green-100 text-green-800 rounded-lg text-xs sm:text-sm">+15.2%</Badge>
                   </div>
                   
-                  <div className="space-y-4">
-                    <div className="flex justify-between items-center p-3 bg-background rounded-lg">
-                      <span className="text-sm font-medium">PKN Orlen</span>
-                      <span className="text-green-600 font-semibold">+18.5%</span>
+                  <div className="space-y-2 sm:space-y-3 lg:space-y-4">
+                    <div className="flex justify-between items-center p-2 sm:p-2.5 lg:p-3 bg-background rounded-lg">
+                      <span className="text-xs sm:text-sm font-medium">PKN Orlen</span>
+                      <span className="text-green-600 font-semibold text-xs sm:text-sm">+18.5%</span>
                     </div>
-                    <div className="flex justify-between items-center p-3 bg-background rounded-lg">
-                      <span className="text-sm font-medium">CD Projekt</span>
-                      <span className="text-green-600 font-semibold">+12.3%</span>
+                    <div className="flex justify-between items-center p-2 sm:p-2.5 lg:p-3 bg-background rounded-lg">
+                      <span className="text-xs sm:text-sm font-medium">CD Projekt</span>
+                      <span className="text-green-600 font-semibold text-xs sm:text-sm">+12.3%</span>
                     </div>
-                    <div className="flex justify-between items-center p-3 bg-background rounded-lg">
-                      <span className="text-sm font-medium">Allegro</span>
-                      <span className="text-green-600 font-semibold">+8.7%</span>
+                    <div className="flex justify-between items-center p-2 sm:p-2.5 lg:p-3 bg-background rounded-lg">
+                      <span className="text-xs sm:text-sm font-medium">Allegro</span>
+                      <span className="text-green-600 font-semibold text-xs sm:text-sm">+8.7%</span>
                     </div>
                   </div>
                   
-                  <div className="pt-4 border-t border-border">
+                  <div className="pt-2 sm:pt-3 lg:pt-4 border-t border-border">
                     <div className="flex items-center justify-between">
-                      <span className="text-sm text-muted-foreground">Łączny zysk</span>
-                      <span className="text-lg font-bold text-green-600">+€ 12,450</span>
+                      <span className="text-xs sm:text-sm text-muted-foreground">Łączny zysk</span>
+                      <span className="text-sm sm:text-base lg:text-lg font-bold text-green-600">+€ 12,450</span>
                     </div>
                   </div>
                 </div>
               </div>
               
-              {/* Floating badges */}
-              <div className="absolute -top-4 -left-4 bg-primary text-primary-foreground px-3 py-2 rounded-lg text-sm font-medium shadow-lg">
+              {/* Floating badges - Mobile Optimized */}
+              <div className="absolute -top-1 -left-1 sm:-top-2 sm:-left-2 lg:-top-4 lg:-left-4 bg-primary text-primary-foreground px-2 py-1 lg:px-3 lg:py-2 rounded-lg text-xs lg:text-sm font-medium shadow-lg">
                 ✨ Najlepsze analizy
               </div>
-              <div className="absolute -bottom-4 -right-4 bg-accent text-primary-foreground px-3 py-2 rounded-lg text-sm font-medium shadow-lg">
+              <div className="absolute -bottom-1 -right-1 sm:-bottom-2 sm:-right-2 lg:-bottom-4 lg:-right-4 bg-accent text-primary-foreground px-2 py-1 lg:px-3 lg:py-2 rounded-lg text-xs lg:text-sm font-medium shadow-lg">
                 📊 Real-time updates
               </div>
             </div>
@@ -243,19 +243,19 @@ export function HomePageClient({ initialPosts }: HomePageClientProps) {
         </div>
       </section>
 
-      {/* Features Section */}
-      <section className="py-20 bg-card/50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl lg:text-4xl font-bold text-foreground mb-4">
+      {/* Features Section - Mobile Optimized */}
+      <section className="py-8 sm:py-12 lg:py-20 bg-card/50">
+        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
+          <div className="text-center mb-8 sm:mb-12 lg:mb-16">
+            <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-foreground mb-3 sm:mb-4">
               Dlaczego kilkudziesięciu inwestorów mi zaufało?
             </h2>
-            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+            <p className="text-sm sm:text-base lg:text-xl text-muted-foreground max-w-3xl mx-auto">
               Profesjonalne podejście do inwestowania oparte na wieloletnim doświadczeniu i sprawdzonych metodach analizy
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
             {[
               {
                 icon: Shield,
@@ -282,13 +282,13 @@ export function HomePageClient({ initialPosts }: HomePageClientProps) {
                 color: "text-orange-600"
               }
             ].map((feature, index) => (
-              <Card key={index} className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 group">
-                <CardContent className="p-8 text-center">
-                  <div className={`w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-primary/10 to-accent/10 flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}>
-                    <feature.icon className={`h-8 w-8 ${feature.color}`} />
+              <Card key={index} className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 group touch-manipulation">
+                <CardContent className="p-4 sm:p-6 lg:p-8 text-center">
+                  <div className={`w-10 h-10 sm:w-12 sm:h-12 lg:w-16 lg:h-16 mx-auto mb-3 sm:mb-4 rounded-2xl bg-gradient-to-br from-primary/10 to-accent/10 flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}>
+                    <feature.icon className={`h-5 w-5 sm:h-6 sm:w-6 lg:h-8 lg:w-8 ${feature.color}`} />
                   </div>
-                  <h3 className="text-xl font-semibold text-foreground mb-3">{feature.title}</h3>
-                  <p className="text-muted-foreground leading-relaxed">{feature.description}</p>
+                  <h3 className="text-base sm:text-lg lg:text-xl font-semibold text-foreground mb-2 sm:mb-3">{feature.title}</h3>
+                  <p className="text-xs sm:text-sm lg:text-base text-muted-foreground leading-relaxed">{feature.description}</p>
                 </CardContent>
               </Card>
             ))}
@@ -296,19 +296,19 @@ export function HomePageClient({ initialPosts }: HomePageClientProps) {
         </div>
       </section>
 
-      {/* Services Section */}
-      <section className="py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl lg:text-4xl font-bold text-foreground mb-4">
+      {/* Services Section - Mobile Optimized */}
+      <section className="py-8 sm:py-12 lg:py-20">
+        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
+          <div className="text-center mb-8 sm:mb-12 lg:mb-16">
+            <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-foreground mb-3 sm:mb-4">
               Rozwijaj się ze mną finansowo
             </h2>
-            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+            <p className="text-sm sm:text-base lg:text-xl text-muted-foreground max-w-3xl mx-auto">
               Od analiz twojego portfela po indywidualne konsultacje – wszystko czego potrzebujesz do inteligentnego inwestowania
             </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
             {[
               {
                 icon: FileText,
@@ -335,28 +335,28 @@ export function HomePageClient({ initialPosts }: HomePageClientProps) {
                 cta: "Zapisz się"
               }
             ].map((service, index) => (
-              <Card key={index} className="border-0 shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:scale-105 group relative overflow-hidden flex flex-col">
+              <Card key={index} className="border-0 shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:scale-105 group relative overflow-hidden flex flex-col touch-manipulation">
                 <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-accent/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                <CardContent className="p-8 relative z-10 flex flex-col flex-grow">
-                  <div className="w-16 h-16 mx-auto mb-6 rounded-2xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors duration-300">
-                    <service.icon className="h-8 w-8 text-primary" />
+                <CardContent className="p-4 sm:p-6 lg:p-8 relative z-10 flex flex-col flex-grow">
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 lg:w-16 lg:h-16 mx-auto mb-4 sm:mb-6 rounded-2xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors duration-300">
+                    <service.icon className="h-5 w-5 sm:h-6 sm:w-6 lg:h-8 lg:w-8 text-primary" />
                   </div>
-                  <h3 className="text-xl font-semibold text-foreground mb-4 text-center">{service.title}</h3>
-                  <p className="text-muted-foreground mb-6 text-center leading-relaxed">{service.description}</p>
+                  <h3 className="text-base sm:text-lg lg:text-xl font-semibold text-foreground mb-3 sm:mb-4 text-center">{service.title}</h3>
+                  <p className="text-xs sm:text-sm lg:text-base text-muted-foreground mb-4 sm:mb-6 text-center leading-relaxed">{service.description}</p>
                   
-                  <div className="space-y-3 mb-8 flex-grow">
+                  <div className="space-y-2 sm:space-y-3 mb-6 sm:mb-8 flex-grow">
                     {service.features.map((feature, idx) => (
-                      <div key={idx} className="flex items-center text-sm text-muted-foreground">
-                        <CheckCircle className="h-4 w-4 text-green-500 mr-2 flex-shrink-0" />
+                      <div key={idx} className="flex items-center text-xs sm:text-sm text-muted-foreground">
+                        <CheckCircle className="h-3 w-3 sm:h-4 sm:w-4 text-green-500 mr-2 flex-shrink-0" />
                         {feature}
                       </div>
                     ))}
                   </div>
                   
                   <Link href={service.href} className="block mt-auto">
-                    <Button className="w-full bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl font-semibold group-hover:shadow-lg transition-all duration-300">
+                    <Button className="w-full bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl font-semibold group-hover:shadow-lg transition-all duration-300 text-xs sm:text-sm lg:text-base py-2 sm:py-2.5 lg:py-3 touch-manipulation tap-highlight-none">
                       {service.cta}
-                      <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform duration-300" />
+                      <ArrowRight className="ml-2 h-3 w-3 sm:h-4 sm:w-4 group-hover:translate-x-1 transition-transform duration-300" />
                     </Button>
                   </Link>
                 </CardContent>
@@ -366,19 +366,19 @@ export function HomePageClient({ initialPosts }: HomePageClientProps) {
         </div>
       </section>
 
-      {/* Testimonials Section */}
-      <section className="py-20 bg-gradient-to-br from-primary/5 to-accent/5">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl lg:text-4xl font-bold text-foreground mb-4">
+      {/* Testimonials Section - Mobile Optimized */}
+      <section className="py-8 sm:py-12 lg:py-20 bg-gradient-to-br from-primary/5 to-accent/5">
+        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
+          <div className="text-center mb-8 sm:mb-12 lg:mb-16">
+            <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-foreground mb-3 sm:mb-4">
               Co mówią o mnie inwestorzy?
             </h2>
-            <p className="text-xl text-muted-foreground">
+            <p className="text-sm sm:text-base lg:text-xl text-muted-foreground">
               Opinie od osób, które zaufały moim analizom i konsultacjom
             </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
             {[
               {
                 name: "Marcin K.",
@@ -400,18 +400,18 @@ export function HomePageClient({ initialPosts }: HomePageClientProps) {
               }
             ].map((testimonial, index) => (
               <Card key={index} className="border-0 shadow-lg bg-card/80 backdrop-blur-sm">
-                <CardContent className="p-8">
-                  <div className="flex mb-4">
+                <CardContent className="p-4 sm:p-6 lg:p-8">
+                  <div className="flex mb-3 sm:mb-4">
                     {[...Array(testimonial.rating)].map((_, i) => (
-                      <Star key={i} className="h-5 w-5 text-yellow-400 fill-current" />
+                      <Star key={i} className="h-3 w-3 sm:h-4 sm:w-4 lg:h-5 lg:w-5 text-yellow-400 fill-current" />
                     ))}
                   </div>
-                  <p className="text-muted-foreground mb-6 leading-relaxed italic">
+                  <p className="text-xs sm:text-sm lg:text-base text-muted-foreground mb-4 sm:mb-6 leading-relaxed italic">
                     "{testimonial.content}"
                   </p>
                   <div>
-                    <div className="font-semibold text-foreground">{testimonial.name}</div>
-                    <div className="text-sm text-muted-foreground">{testimonial.role}</div>
+                    <div className="font-semibold text-foreground text-xs sm:text-sm lg:text-base">{testimonial.name}</div>
+                    <div className="text-xs sm:text-sm text-muted-foreground">{testimonial.role}</div>
                   </div>
                 </CardContent>
               </Card>
@@ -420,71 +420,73 @@ export function HomePageClient({ initialPosts }: HomePageClientProps) {
         </div>
       </section>
 
-      {/* Blog Section (conditionally rendered) */}
+      {/* Blog Section (conditionally rendered) - Mobile Optimized */}
       {showBlogSection && (
-        <section className="py-20 bg-background">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl lg:text-4xl font-bold text-foreground mb-4">
+        <section className="py-8 sm:py-12 lg:py-20 bg-background">
+          <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
+            <div className="text-center mb-6 sm:mb-8 lg:mb-12">
+              <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-foreground mb-3 sm:mb-4">
                 Najnowsze analizy i poradniki
               </h2>
-              <p className="text-xl text-muted-foreground mb-8">
+              <p className="text-sm sm:text-base lg:text-xl text-muted-foreground mb-6 sm:mb-8">
                 Poznaj moje najnowsze analizy spółek, trendy rynkowe i strategie inwestycyjne
               </p>
 
-              {/* Search and Filters */}
-              <div className="flex flex-col md:flex-row gap-4 justify-center mb-8 max-w-4xl mx-auto">
-                <div className="relative flex-1 max-w-md">
+              {/* Search and Filters - Mobile Optimized */}
+              <div className="flex flex-col gap-3 sm:gap-4 mb-6 sm:mb-8 max-w-4xl mx-auto">
+                <div className="relative flex-1">
                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                   <Input
                     placeholder="Szukaj analiz, poradników..."
                     value={searchTerm}
                     onChange={(e) => handleSearchChange(e.target.value)}
-                    className="pl-10 rounded-xl border-border"
+                    className="pl-10 rounded-xl border-border text-sm sm:text-base touch-manipulation tap-highlight-none"
                   />
                 </div>
                 
-                <Select value={selectedCategory} onValueChange={handleCategoryChange}>
-                  <SelectTrigger className="w-48 border-border rounded-xl">
-                    <SelectValue placeholder="Kategoria" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">Wszystkie kategorie</SelectItem>
-                    {categories.slice(1).map((category) => (
-                      <SelectItem key={category} value={category}>
-                        {category}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
+                  <Select value={selectedCategory} onValueChange={handleCategoryChange}>
+                    <SelectTrigger className="border-border rounded-xl text-sm sm:text-base touch-manipulation">
+                      <SelectValue placeholder="Kategoria" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">Wszystkie kategorie</SelectItem>
+                      {categories.slice(1).map((category) => (
+                        <SelectItem key={category} value={category}>
+                          {category}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
 
-                <Select value={sortBy} onValueChange={handleSortChange}>
-                  <SelectTrigger className="w-48 border-border rounded-xl">
-                    <SelectValue placeholder="Sortuj" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="date-desc">Najnowsze</SelectItem>
-                    <SelectItem value="date-asc">Najstarsze</SelectItem>
-                    <SelectItem value="views-desc">Najpopularniejsze</SelectItem>
-                    <SelectItem value="views-asc">Najmniej popularne</SelectItem>
-                  </SelectContent>
-                </Select>
+                  <Select value={sortBy} onValueChange={handleSortChange}>
+                    <SelectTrigger className="border-border rounded-xl text-sm sm:text-base touch-manipulation">
+                      <SelectValue placeholder="Sortuj" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="date-desc">Najnowsze</SelectItem>
+                      <SelectItem value="date-asc">Najstarsze</SelectItem>
+                      <SelectItem value="views-desc">Najpopularniejsze</SelectItem>
+                      <SelectItem value="views-asc">Najmniej popularne</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
               </div>
             </div>
 
-            {/* Featured Posts */}
+            {/* Featured Posts - Mobile Optimized */}
             {filteredAndSortedPosts.filter((post) => post.is_featured).length > 0 && (
-              <div className="mb-12">
-                <h3 className="text-2xl font-bold text-foreground mb-6">Wyróżnione analizy</h3>
-                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+              <div className="mb-6 sm:mb-8 lg:mb-12">
+                <h3 className="text-lg sm:text-xl lg:text-2xl font-bold text-foreground mb-4 sm:mb-6">Wyróżnione analizy</h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
                   {filteredAndSortedPosts
                     .filter((post) => post.is_featured)
                     .slice(0, 3)
                     .map((post) => (
                       <Link key={post.id} href={`/post/${post.id}`}>
-                        <Card className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 group overflow-hidden">
-                          <div className="relative h-48 w-full">
-                            <Badge className="absolute top-4 left-4 z-10 bg-primary text-primary-foreground rounded-xl">
+                        <Card className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 group overflow-hidden touch-manipulation tap-highlight-none">
+                          <div className="relative h-32 sm:h-40 lg:h-48 w-full">
+                            <Badge className="absolute top-2 sm:top-3 left-2 sm:left-3 z-10 bg-primary text-primary-foreground rounded-xl text-xs">
                               Wyróżnione
                             </Badge>
                             <Image
@@ -494,24 +496,24 @@ export function HomePageClient({ initialPosts }: HomePageClientProps) {
                               className="object-cover group-hover:scale-105 transition-transform duration-300"
                             />
                           </div>
-                          <CardContent className="p-6">
-                            <Badge className="mb-3 bg-accent/10 text-accent-foreground rounded-lg text-xs">
+                          <CardContent className="p-3 sm:p-4 lg:p-6">
+                            <Badge className="mb-2 sm:mb-3 bg-accent/10 text-accent-foreground rounded-lg text-xs">
                               {getMainCategory(post).toUpperCase()}
                             </Badge>
-                            <h4 className="text-lg font-bold text-foreground mb-3 line-clamp-2">
+                            <h4 className="text-sm sm:text-base lg:text-lg font-bold text-foreground mb-2 sm:mb-3 line-clamp-2">
                               {post.title}
                             </h4>
-                            <div className="flex items-center text-sm text-muted-foreground mb-3 space-x-4">
+                            <div className="flex items-center text-xs sm:text-sm text-muted-foreground mb-2 sm:mb-3 space-x-3 sm:space-x-4">
                               <div className="flex items-center">
-                                <CalendarDays className="h-4 w-4 mr-1" />
+                                <CalendarDays className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
                                 {formatDate(post.published_at || post.created_at)}
                               </div>
                               <div className="flex items-center">
-                                <Eye className="h-4 w-4 mr-1" />
+                                <Eye className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
                                 {post.view_count || 0}
                               </div>
                             </div>
-                            <p className="text-muted-foreground text-sm line-clamp-3">{post.excerpt}</p>
+                            <p className="text-muted-foreground text-xs sm:text-sm line-clamp-3">{post.excerpt}</p>
                           </CardContent>
                         </Card>
                       </Link>
@@ -520,35 +522,35 @@ export function HomePageClient({ initialPosts }: HomePageClientProps) {
               </div>
             )}
 
-            {/* All Posts */}
+            {/* All Posts - Mobile Optimized */}
             <div>
-              <div className="flex justify-between items-center mb-6">
-                <h3 className="text-2xl font-bold text-foreground">
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 sm:mb-6 gap-3 sm:gap-4">
+                <h3 className="text-lg sm:text-xl lg:text-2xl font-bold text-foreground">
                   Wszystkie publikacje ({filteredAndSortedPosts.filter((post) => !post.is_featured).length})
                 </h3>
                 <Link href="/wpisy">
-                  <Button variant="outline" className="rounded-xl">
+                  <Button variant="outline" className="rounded-xl text-sm sm:text-base touch-manipulation tap-highlight-none">
                     Zobacz wszystkie
-                    <ArrowRight className="ml-2 h-4 w-4" />
+                    <ArrowRight className="ml-2 h-3 w-3 sm:h-4 sm:w-4" />
                   </Button>
                 </Link>
               </div>
               
               {isFiltering ? (
-                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
                   {Array.from({ length: 6 }).map((_, i) => (
                     <PostSkeleton key={i} variant="card" />
                   ))}
                 </div>
               ) : (
-                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
                   {filteredAndSortedPosts
                     .filter((post) => !post.is_featured)
                     .slice(0, 6)
                     .map((post) => (
                     <Link key={post.id} href={`/post/${post.id}`}>
-                      <Card className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 group overflow-hidden">
-                        <div className="relative h-40 w-full">
+                      <Card className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 group overflow-hidden touch-manipulation tap-highlight-none">
+                        <div className="relative h-28 sm:h-32 lg:h-40 w-full">
                           <Image
                             src={getPostImage(post)}
                             alt={post.title}
@@ -556,24 +558,24 @@ export function HomePageClient({ initialPosts }: HomePageClientProps) {
                             className="object-cover group-hover:scale-105 transition-transform duration-300"
                           />
                         </div>
-                        <CardContent className="p-6">
-                          <Badge className="mb-3 bg-accent/10 text-accent-foreground rounded-lg text-xs">
+                        <CardContent className="p-3 sm:p-4 lg:p-6">
+                          <Badge className="mb-2 sm:mb-3 bg-accent/10 text-accent-foreground rounded-lg text-xs">
                             {getMainCategory(post).toUpperCase()}
                           </Badge>
-                          <h4 className="text-lg font-bold text-foreground mb-3 line-clamp-2">
+                          <h4 className="text-sm sm:text-base lg:text-lg font-bold text-foreground mb-2 sm:mb-3 line-clamp-2">
                             {post.title}
                           </h4>
-                          <div className="flex items-center text-sm text-muted-foreground mb-3 space-x-4">
+                          <div className="flex items-center text-xs sm:text-sm text-muted-foreground mb-2 sm:mb-3 space-x-3 sm:space-x-4">
                             <div className="flex items-center">
-                              <CalendarDays className="h-4 w-4 mr-1" />
+                              <CalendarDays className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
                               {formatDate(post.published_at || post.created_at)}
                             </div>
                             <div className="flex items-center">
-                              <Eye className="h-4 w-4 mr-1" />
+                              <Eye className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
                               {post.view_count || 0}
                             </div>
                           </div>
-                          <p className="text-muted-foreground text-sm line-clamp-2">{post.excerpt}</p>
+                          <p className="text-muted-foreground text-xs sm:text-sm line-clamp-2">{post.excerpt}</p>
                         </CardContent>
                       </Card>
                     </Link>
@@ -585,32 +587,32 @@ export function HomePageClient({ initialPosts }: HomePageClientProps) {
         </section>
       )}
 
-      {/* CTA Section */}
-      <section className="bg-gradient-to-r from-primary to-primary/90 text-primary-foreground py-20">
+      {/* CTA Section - Mobile Optimized */}
+      <section className="bg-gradient-to-r from-primary to-primary/90 text-primary-foreground py-12 sm:py-16 lg:py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl lg:text-4xl font-bold mb-4">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-4 sm:mb-6">
             Gotowy na rozpoczęcie swojej inwestycyjnej podróży?
           </h2>
-          <p className="text-xl mb-8 text-primary-foreground/90 max-w-3xl mx-auto">
+          <p className="text-base sm:text-lg lg:text-xl mb-8 sm:mb-10 text-primary-foreground/90 max-w-3xl mx-auto">
             Dołącz do tysięcy inwestorów, którzy już korzystają z moich analiz i osiągają lepsze wyniki finansowe
           </p>
           
-          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
+          <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center mb-8 sm:mb-10 lg:mb-16">
             <Button 
               size="lg" 
-              className="bg-card text-primary hover:bg-card/90 font-semibold px-8 py-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
+              className="bg-card text-primary hover:bg-card/90 font-semibold px-6 sm:px-8 lg:px-10 py-4 sm:py-5 lg:py-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 text-base sm:text-lg touch-manipulation tap-highlight-none"
               onClick={() => setShowBlogSection(true)}
             >
-              <BookOpen className="mr-2 h-5 w-5" />
+              <BookOpen className="mr-3 h-5 w-5 sm:h-6 sm:w-6" />
               Rozpocznij lekturę
             </Button>
             <Link href="/wspolpraca">
               <Button 
                 size="lg" 
                 variant="outline" 
-                className="border-2 border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary font-semibold px-8 py-4 rounded-xl transition-all duration-300"
+                className="border-2 border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary font-semibold px-6 sm:px-8 lg:px-10 py-4 sm:py-5 lg:py-6 rounded-xl transition-all duration-300 text-base sm:text-lg w-full sm:w-auto touch-manipulation tap-highlight-none"
               >
-                <MessageCircle className="mr-2 h-5 w-5" />
+                <MessageCircle className="mr-3 h-5 w-5 sm:h-6 sm:w-6" />
                 Umów konsultację
               </Button>
             </Link>
@@ -618,25 +620,25 @@ export function HomePageClient({ initialPosts }: HomePageClientProps) {
         </div>
       </section>
 
-      {/* Messenger CTA Banner */}
-      <div className="bg-gradient-to-r from-secondary to-secondary/90 text-secondary-foreground py-8">
+      {/* Messenger CTA Banner - Mobile Optimized */}
+      <div className="bg-gradient-to-r from-secondary to-secondary/90 text-secondary-foreground py-6 sm:py-8 lg:py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col md:flex-row items-center justify-between">
-            <div className="text-center md:text-left mb-4 md:mb-0">
-              <h3 className="text-xl font-bold mb-2">Dołącz do społeczności Kryptodegeneraci!</h3>
-              <p className="text-secondary-foreground/90">Otrzymuj najnowsze analizy, sygnały i dyskutuj z innymi inwestorami na Messengerze</p>
+          <div className="flex flex-col lg:flex-row items-center justify-between gap-4 sm:gap-6">
+            <div className="text-center lg:text-left">
+              <h3 className="text-lg sm:text-xl lg:text-2xl font-bold mb-2 sm:mb-3">Dołącz do społeczności Kryptodegeneraci!</h3>
+              <p className="text-sm sm:text-base lg:text-lg text-secondary-foreground/90">Otrzymuj najnowsze analizy, sygnały i dyskutuj z innymi inwestorami na Messengerze</p>
             </div>
             <Button 
               asChild
-              className="bg-primary text-primary-foreground hover:bg-primary/90 font-semibold px-8 py-3 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl"
+              className="bg-primary text-primary-foreground hover:bg-primary/90 font-semibold px-6 sm:px-8 lg:px-10 py-3 sm:py-4 lg:py-5 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl text-sm sm:text-base lg:text-lg w-full lg:w-auto touch-manipulation tap-highlight-none"
             >
               <a 
                 href="https://m.me/kryptodegeneraci" 
                 target="_blank" 
                 rel="noopener noreferrer"
-                className="flex items-center"
+                className="flex items-center justify-center"
               >
-                <svg className="w-5 h-5 mr-2" viewBox="0 0 24 24" fill="currentColor">
+                <svg className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 mr-3" viewBox="0 0 24 24" fill="currentColor">
                   <path d="M12 0C5.373 0 0 4.975 0 11.111c0 3.497 1.745 6.616 4.472 8.652V24l4.086-2.242c1.09.301 2.246.464 3.442.464 6.627 0 12-4.974 12-11.111C24 4.975 18.627 0 12 0zm1.193 14.963l-3.056-3.259-5.963 3.259L10.732 8.1l3.13 3.259L19.752 8.1l-6.559 6.863z"/>
                 </svg>
                 Dołącz do grupy

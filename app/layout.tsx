@@ -4,10 +4,15 @@ import { Toaster } from '@/components/ui/toaster'
 import { Toaster as SonnerToaster } from '@/components/ui/sonner'
 import { AuthProvider } from '@/components/auth-provider'
 import { SiteFooter } from "@/components/site-footer"
-import '@/lib/builder'
+
+// Conditionally import builder only if the API key is available
+let builderImport: Promise<any> | null = null
+if (process.env.NEXT_PUBLIC_BUILDER_PUBLIC_KEY) {
+  builderImport = import('@/lib/builder').catch(() => null)
+}
 
 export const metadata: Metadata = {
-  title: 'Jakub Inwestycje - Blog Finansowy',
+  title: 'Jakub Inwestycje - Wpisy Finansowe',
   description: 'Profesjonalny blog o inwestowaniu, analizach spółek i edukacji finansowej',
   generator: 'Next.js',
 }
