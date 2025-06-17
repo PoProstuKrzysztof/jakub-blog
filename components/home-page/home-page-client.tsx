@@ -367,7 +367,7 @@ export function HomePageClient({ initialPosts }: HomePageClientProps) {
                   "Sesja 1-na-1",
                   "Plan działania",
                 ],
-                href: "/wspolpraca",
+                href: "/wspolpraca#cennik",
                 cta: "Umów konsultację",
               },
               {
@@ -660,7 +660,7 @@ export function HomePageClient({ initialPosts }: HomePageClientProps) {
                 Rozpocznij lekturę
               </Button>
             </Link>
-            <Link href="/wspolpraca">
+            <Link href="/wspolpraca#cennik">
               <Button 
                 size="lg" 
                 variant="outline" 

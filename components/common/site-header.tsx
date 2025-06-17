@@ -229,12 +229,12 @@ export function SiteHeader({
               </Button>
             )}
 
-            {/* User Menu - Desktop only */}
+            {/* User Menu - Desktop and Mobile */}
             {actualUser ? (
-              <div className="hidden sm:flex items-center space-x-2">
+              <div className="flex items-center space-x-1 sm:space-x-2">
                 {adminMode && (
                   <Link href="/admin/nowy-post">
-                    <Button size="sm" className="bg-primary hover:bg-primary/90 text-primary-foreground btn-touch">
+                    <Button size="sm" className="bg-primary hover:bg-primary/90 text-primary-foreground btn-touch hidden sm:flex">
                       <Plus className="h-4 w-4" />
                       <span className="ml-2 hidden lg:inline">Nowy post</span>
                     </Button>
@@ -244,22 +244,43 @@ export function SiteHeader({
                   variant="ghost"
                   size="sm"
                   onClick={handleSignOut}
-                  className="text-muted-foreground hover:text-destructive transition-colors duration-300 btn-touch"
+                  className="text-muted-foreground hover:text-destructive transition-colors duration-300 btn-touch hidden sm:flex"
                 >
                   <LogOut className="h-4 w-4" />
                   <span className="ml-2 hidden lg:inline">Wyloguj</span>
                 </Button>
+                {/* Mobile Logout Button - Visible only on mobile */}
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={handleSignOut}
+                  className="text-muted-foreground hover:text-destructive transition-colors duration-300 btn-touch sm:hidden p-2"
+                  title="Wyloguj się"
+                >
+                  <LogOut className="h-4 w-4" />
+                </Button>
               </div>
             ) : (
-              <div className="hidden sm:flex items-center">
+              <div className="flex items-center">
                 <Link href="/admin/login">
                   <Button 
                     variant="ghost" 
                     size="sm"
-                    className="text-muted-foreground  transition-colors duration-300 btn-touch"
+                    className="text-muted-foreground transition-colors duration-300 btn-touch hidden sm:flex"
                   >
                     <User className="h-4 w-4" />
                     <span className="ml-2 hidden lg:inline">Zaloguj</span>
+                  </Button>
+                </Link>
+                {/* Mobile Login Button - Visible only on mobile */}
+                <Link href="/admin/login">
+                  <Button 
+                    variant="ghost" 
+                    size="sm"
+                    className="text-muted-foreground transition-colors duration-300 btn-touch sm:hidden p-2"
+                    title="Zaloguj się"
+                  >
+                    <User className="h-4 w-4" />
                   </Button>
                 </Link>
               </div>
@@ -392,8 +413,8 @@ export function SiteHeader({
                       </Button>
                     )}
 
-                    {/* User Actions */}
-                    {actualUser && (
+                    {/* User Actions - Always show if user is logged in */}
+                    {actualUser ? (
                       <Button
                         variant="ghost"
                         onClick={handleSignOut}
@@ -402,11 +423,9 @@ export function SiteHeader({
                         <LogOut className="h-4 w-4 mr-3" />
                         Wyloguj się
                       </Button>
-                    )}
-
-                    {!actualUser && (
+                    ) : (
                       <Link href="/admin/login" onClick={() => setIsMenuOpen(false)}>
-                        <Button variant="ghost" className="w-full justify-start btn-touch ">
+                        <Button variant="ghost" className="w-full justify-start btn-touch">
                           <User className="h-4 w-4 mr-3" />
                           Zaloguj się
                         </Button>
