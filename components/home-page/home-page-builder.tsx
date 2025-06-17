@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Card, CardContent } from "@/components/ui/card"
 import { PostSkeleton } from "@/components/ui/post-skeleton"
-import { SiteHeader } from "@/components/site-header"
+import { SiteHeader } from "@/components/common/site-header"
 import {
   CalendarDays,
   Eye,

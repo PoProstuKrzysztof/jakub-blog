@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { SiteHeader } from "@/components/site-header"
+import { SiteHeader } from "@/components/common/site-header"
 import {
   ArrowLeft,
   TrendingUp,
@@ -34,7 +34,7 @@ import {
   LineChart,
   Line
 } from "recharts"
-import { createClient } from '@/lib/supabase-server'
+import { createClient } from '@/lib/supabase/supabase-server'
 
 // Mock analytics data
 const overviewStats = [

@@ -1,4 +1,4 @@
-import { SimpleLoading } from '@/components/simple-loading'
+import { SimpleLoading } from '@/components/common/simple-loading'
 
 export default function Loading() {
   return <SimpleLoading />

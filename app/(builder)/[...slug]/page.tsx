@@ -3,7 +3,7 @@ import {
   fetchOneEntry,
   getBuilderSearchParams,
 } from '@builder.io/sdk-react-nextjs'
-import { builderApiKey } from '@/lib/builder'
+import { builderApiKey } from '@/lib/builder.io/builder'
 import { notFound } from 'next/navigation'
 
 export const revalidate = 60 // ISR – odśwież treść co 60 s

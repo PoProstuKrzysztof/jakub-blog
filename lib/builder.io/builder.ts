@@ -11,7 +11,7 @@ import {
   TestimonialsSectionInfo, 
   CTASectionInfo 
 } from '@/components/builder/home-page-sections'
-import { HomePageBuilderInfo } from '@/components/home-page-builder'
+import { HomePageBuilderInfo } from '@/components/home-page/home-page-builder'
 import { register } from '@builder.io/sdk-react-nextjs'
 
 // Rejestracja komponentów RSC

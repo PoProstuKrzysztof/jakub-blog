@@ -1,5 +1,5 @@
 import { Suspense } from 'react'
-import { createClient } from '@/lib/supabase'
+import { createClient } from '@/lib/supabase/supabase'
 import { redirect } from 'next/navigation'
 import { cookies } from 'next/headers'
 import { AdminPageClient } from '@/components/admin-page-client'

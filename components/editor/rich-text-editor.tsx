@@ -198,7 +198,7 @@ export function RichTextEditor({ content, onChange, placeholder = "Zacznij pisaÄ
 
     try {
       // Import Supabase client
-      const { createClient } = await import('@/lib/supabase')
+      const { createClient } = await import('@/lib/supabase/supabase')
       const supabase = createClient()
 
       // Generate unique filename

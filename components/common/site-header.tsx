@@ -23,7 +23,7 @@ import {
 } from 'lucide-react'
 import Link from 'next/link'
 import { useAuth } from '@/hooks/use-auth'
-import { createClient } from '@/lib/supabase'
+import { createClient } from '@/lib/supabase/supabase'
 import type { User as SupabaseUser } from '@supabase/supabase-js'
 import {
   Sheet,

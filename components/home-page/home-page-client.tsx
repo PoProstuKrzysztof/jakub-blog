@@ -8,7 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { LoadingCard } from "@/components/ui/loading-card"
 import { PostSkeleton } from "@/components/ui/post-skeleton"
-import { SiteHeader } from "@/components/site-header"
+import { SiteHeader } from "@/components/common/site-header"
 import {
   CalendarDays,
   Eye,
@@ -35,7 +35,7 @@ import {
 import Link from "next/link"
 import Image from "next/image"
 import { PostFull } from "@/lib/models/post"
-import { PinButton } from "@/components/pin-button"
+import { PinButton } from "@/components/blog-page/pin-button"
 import { useAuth } from "@/hooks/use-auth"
 import type { User } from '@supabase/supabase-js'
 

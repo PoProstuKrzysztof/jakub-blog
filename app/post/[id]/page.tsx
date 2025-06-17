@@ -1,6 +1,6 @@
-import { createClient } from '@/lib/supabase-server'
+import { createClient } from '@/lib/supabase/supabase-server'
 import { createServerPostService } from '@/lib/services/post-service-server'
-import { PostPageClient } from '@/components/post-page-client'
+import { PostPageClient } from '@/components/blog-page/post-page-client'
 import { notFound } from 'next/navigation'
 
 interface PostPageProps {
