@@ -540,29 +540,29 @@ export default function CooperationPage() {
       />
 
       {/* Hero Section - Problem Aware */}
-      <section className="relative bg-gradient-to-br from-primary/10 via-background to-accent/10 py-16 lg:py-24 overflow-hidden">
+      <section className="relative bg-gradient-to-br from-primary/10 via-background to-accent/10 py-20 lg:py-28 overflow-hidden">
         <div className="absolute inset-0 bg-grid-pattern opacity-5"></div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="text-center space-y-8">
-            <div className="space-y-6">
-              <Badge className="bg-red-100 text-red-800 border-red-200 px-4 py-2 rounded-full text-sm font-medium">
+          <div className="text-center space-y-10">
+            <div className="space-y-8">
+              <Badge className="bg-red-100 text-red-800 border-red-200 px-4 py-2 rounded-full text-sm sm:text-base font-medium">
                 ⚠️ 87% początkujących inwestorów traci pieniądze w pierwszym roku
               </Badge>
-              <h1 className="text-4xl lg:text-6xl font-bold text-foreground leading-tight">
+              <h1 className="text-3xl sm:text-4xl lg:text-6xl font-bold text-foreground leading-tight">
                 Przestań <span className="text-red-600">tracić pieniądze</span><br/>
                 na inwestycjach
               </h1>
-              <p className="text-xl text-muted-foreground leading-relaxed max-w-4xl mx-auto">
+              <p className="text-lg sm:text-xl text-muted-foreground leading-relaxed max-w-4xl mx-auto">
                 <strong>Inwestowanie nie musi być hazardem.</strong> Dzięki sprawdzonej metodologii i 8-letniemu doświadczeniu 
                 nauczysz się budować portfel systematycznie, bez emocji i kosztownych błędów.
               </p>
             </div>
 
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center">
               <Link href="/kontakt">
                 <Button 
                   size="lg" 
-                  className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-4 rounded-xl text-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+                  className="bg-primary hover:bg-primary/90 text-primary-foreground px-6 sm:px-8 py-4 sm:py-5 rounded-xl text-base sm:text-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 w-full sm:w-auto"
                 >
                   <Zap className="mr-2 h-5 w-5" />
                   Zarezerwuj konsultację już dziś
@@ -572,7 +572,7 @@ export default function CooperationPage() {
                 <Button 
                   size="lg" 
                   variant="outline" 
-                  className="border-2 border-border hover:border-primary px-8 py-4 rounded-xl text-lg font-semibold transition-all duration-300 hover:bg-primary/5"
+                  className="border-2 border-border hover:border-primary px-6 sm:px-8 py-4 sm:py-5 rounded-xl text-base sm:text-lg font-semibold transition-all duration-300 hover:bg-primary/5 w-full sm:w-auto"
                 >
                   <DollarSign className="mr-2 h-5 w-5" />
                   Zobacz cennik
@@ -581,18 +581,18 @@ export default function CooperationPage() {
             </div>
 
             {/* Social Proof */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 pt-8">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 pt-8">
               <div className="text-center">
-                <div className="text-3xl font-bold text-primary">150+</div>
-                <div className="text-sm text-muted-foreground">Przeprowadzonych konsultacji</div>
+                <div className="text-2xl sm:text-3xl font-bold text-primary">150+</div>
+                <div className="text-sm sm:text-base text-muted-foreground">Przeprowadzonych konsultacji</div>
               </div>
               <div className="text-center">
-                <div className="text-3xl font-bold text-primary">4.9/5</div>
-                <div className="text-sm text-muted-foreground">Średnia ocena klientów</div>
+                <div className="text-2xl sm:text-3xl font-bold text-primary">4.9/5</div>
+                <div className="text-sm sm:text-base text-muted-foreground">Średnia ocena klientów</div>
               </div>
               <div className="text-center">
-                <div className="text-3xl font-bold text-primary">92%</div>
-                <div className="text-sm text-muted-foreground">Klientów poleca znajomym</div>
+                <div className="text-2xl sm:text-3xl font-bold text-primary">92%</div>
+                <div className="text-sm sm:text-base text-muted-foreground">Klientów poleca znajomym</div>
               </div>
             </div>
           </div>
@@ -602,24 +602,24 @@ export default function CooperationPage() {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Problem Section */}
-        <section className="py-20">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl lg:text-4xl font-bold text-foreground mb-6">
+        <section className="py-16 sm:py-20">
+          <div className="text-center mb-12 sm:mb-16">
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-foreground mb-4 sm:mb-6">
               Czy to brzmi znajomo?
             </h2>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid md:grid-cols-3 gap-6 sm:gap-8">
             {problemPoints.map((problem, index) => (
               <Card key={index} className="border-l-4 border-l-red-500 shadow-lg">
-                <CardContent className="p-6">
-                  <div className="flex items-start space-x-4">
-                    <div className="p-2 bg-red-100 rounded-lg">
-                      <problem.icon className="h-6 w-6 text-red-600" />
+                <CardContent className="p-4 sm:p-6">
+                  <div className="flex items-start space-x-3 sm:space-x-4">
+                    <div className="p-2 bg-red-100 rounded-lg flex-shrink-0">
+                      <problem.icon className="h-5 w-5 sm:h-6 sm:w-6 text-red-600" />
                     </div>
                     <div>
-                      <h3 className="font-semibold text-foreground mb-2">{problem.title}</h3>
-                      <p className="text-sm text-muted-foreground">{problem.description}</p>
+                      <h3 className="font-semibold text-foreground mb-2 text-sm sm:text-base">{problem.title}</h3>
+                      <p className="text-xs sm:text-sm text-muted-foreground">{problem.description}</p>
                     </div>
                   </div>
                 </CardContent>
@@ -627,9 +627,9 @@ export default function CooperationPage() {
             ))}
           </div>
 
-          <div className="text-center mt-12">
-            <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-6 max-w-4xl mx-auto">
-              <p className="text-lg text-gray-800">
+          <div className="text-center mt-8 sm:mt-12">
+            <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-4 sm:p-6 max-w-4xl mx-auto">
+              <p className="text-base sm:text-lg text-gray-800">
                 <strong>Jeśli chociaż jeden punkt Cię dotyczy</strong>, to znaczy, że potrzebujesz systematycznego podejścia do inwestowania. 
                 Nie kolejnych tipów czy "hot stocków" - ale solidnych fundamentów.
               </p>
@@ -638,41 +638,41 @@ export default function CooperationPage() {
         </section>
 
         {/* Solution/Benefits Section */}
-        <section className="py-20 bg-gradient-to-br from-green-50 to-blue-50 rounded-3xl mb-20">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl lg:text-4xl font-bold text-foreground mb-6">
+        <section className="py-16 sm:py-20 bg-gradient-to-br from-green-50 to-blue-50 rounded-3xl mb-16 sm:mb-20">
+          <div className="text-center mb-12 sm:mb-16 px-4 sm:px-0">
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-foreground mb-4 sm:mb-6">
               Jak mogę Ci pomóc?
             </h2>
-            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+            <p className="text-lg sm:text-xl text-muted-foreground max-w-3xl mx-auto">
               8 lat doświadczenia, setki błędów popełnionych za Ciebie i sprawdzona metodologia
             </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid md:grid-cols-3 gap-6 sm:gap-8 px-4 sm:px-0">
             {benefits.map((benefit, index) => (
               <div key={index} className="text-center">
-                <div className="w-20 h-20 mx-auto mb-6 rounded-2xl bg-gradient-to-br from-green-500 to-blue-500 shadow-lg flex items-center justify-center">
-                  <benefit.icon className="h-10 w-10 text-white" />
+                <div className="w-16 h-16 sm:w-20 sm:h-20 mx-auto mb-4 sm:mb-6 rounded-2xl bg-gradient-to-br from-green-500 to-blue-500 shadow-lg flex items-center justify-center">
+                  <benefit.icon className="h-8 w-8 sm:h-10 sm:w-10 text-white" />
                 </div>
-                <h3 className="text-xl font-semibold text-foreground mb-4">{benefit.title}</h3>
-                <p className="text-muted-foreground">{benefit.description}</p>
+                <h3 className="text-lg sm:text-xl font-semibold text-foreground mb-3 sm:mb-4">{benefit.title}</h3>
+                <p className="text-sm sm:text-base text-muted-foreground">{benefit.description}</p>
               </div>
             ))}
           </div>
         </section>
 
         {/* Pricing Section with Drag & Drop */}
-        <section id="cennik" className="py-20">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl lg:text-4xl font-bold text-foreground mb-6">
+        <section id="cennik" className="py-16 sm:py-20">
+          <div className="text-center mb-12 sm:mb-16">
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-foreground mb-4 sm:mb-6">
               Wybierz pakiet dla siebie
             </h2>
-            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+            <p className="text-lg sm:text-xl text-muted-foreground max-w-3xl mx-auto">
               Każdy pakiet został zaprojektowany tak, aby dostarczyć maksymalną wartość na różnych etapach Twojej inwestycyjnej podróży
             </p>
             {user && (
-              <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-xl max-w-2xl mx-auto">
-                <p className="text-sm text-blue-800">
+              <div className="mt-4 sm:mt-6 p-3 sm:p-4 bg-blue-50 border border-blue-200 rounded-xl max-w-2xl mx-auto">
+                <p className="text-xs sm:text-sm text-blue-800">
                   🔧 <strong>Tryb edycji:</strong> Przeciągnij za uchwyt <GripVertical className="inline h-4 w-4" /> aby zmienić kolejność. 
                   Kliknij na tekst aby edytować inline.
                 </p>
@@ -729,34 +729,34 @@ export default function CooperationPage() {
         </section>
 
         {/* Risk Reversal Section */}
-        <section className="py-16 bg-gradient-to-r from-green-600 to-green-700 text-white rounded-3xl mb-20">
-          <div className="text-center">
-            <div className="w-20 h-20 mx-auto mb-6 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
-              <Shield className="h-10 w-10 text-white" />
+        <section className="py-12 sm:py-16 bg-gradient-to-r from-green-600 to-green-700 text-white rounded-3xl mb-16 sm:mb-20">
+          <div className="text-center px-4 sm:px-0">
+            <div className="w-16 h-16 sm:w-20 sm:h-20 mx-auto mb-4 sm:mb-6 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
+              <Shield className="h-8 w-8 sm:h-10 sm:w-10 text-white" />
             </div>
-            <h2 className="text-3xl font-bold mb-4">Gwarancja satysfakcji 100%</h2>
-            <p className="text-xl opacity-90 mb-6 max-w-3xl mx-auto">
+            <h2 className="text-2xl sm:text-3xl font-bold mb-3 sm:mb-4">Gwarancja satysfakcji 100%</h2>
+            <p className="text-lg sm:text-xl opacity-90 mb-4 sm:mb-6 max-w-3xl mx-auto">
               Jeśli po konsultacji nie będziesz zadowolony z otrzymanej wiedzy i materiałów, 
               zwrócę Ci <strong>100% wpłaconej kwoty</strong> w ciągu 14 dni. Bez pytań, bez problemów.
             </p>
-            <div className="text-sm opacity-80">
+            <div className="text-xs sm:text-sm opacity-80">
               * Gwarancja obowiązuje dla usługi głównej przez 14 dni od daty konsultacji
             </div>
           </div>
         </section>
 
         {/* Process Section */}
-        <section className="py-20 bg-gradient-to-br from-primary/5 to-accent/5 rounded-3xl mb-20">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl font-bold text-foreground mb-4">
+        <section className="py-16 sm:py-20 bg-gradient-to-br from-primary/5 to-accent/5 rounded-3xl mb-16 sm:mb-20">
+          <div className="text-center mb-12 sm:mb-16 px-4 sm:px-0">
+            <h2 className="text-2xl sm:text-3xl font-bold text-foreground mb-3 sm:mb-4">
               Jak przebiega współpraca?
             </h2>
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+            <p className="text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto">
               Prosty, przejrzysty proces współpracy zapewniający najwyższą jakość usług
             </p>
           </div>
 
-          <div className="grid md:grid-cols-4 gap-8">
+          <div className="grid md:grid-cols-4 gap-6 sm:gap-8 px-4 sm:px-0">
             {[
               {
                 step: "01",
@@ -788,33 +788,33 @@ export default function CooperationPage() {
               }
             ].map((step, index) => (
               <div key={index} className="text-center group">
-                <div className="relative mb-6">
-                  <div className="w-20 h-20 mx-auto rounded-2xl bg-white shadow-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                    <step.icon className={`h-8 w-8 ${step.color}`} />
+                <div className="relative mb-4 sm:mb-6">
+                  <div className="w-16 h-16 sm:w-20 sm:h-20 mx-auto rounded-2xl bg-white shadow-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                    <step.icon className={`h-6 w-6 sm:h-8 sm:w-8 ${step.color}`} />
                   </div>
-                  <div className="absolute -top-2 -right-2 w-8 h-8 bg-primary text-primary-foreground rounded-full flex items-center justify-center text-sm font-bold">
+                  <div className="absolute -top-2 -right-2 w-6 h-6 sm:w-8 sm:h-8 bg-primary text-primary-foreground rounded-full flex items-center justify-center text-xs sm:text-sm font-bold">
                     {step.step}
                   </div>
                 </div>
-                <h3 className="text-lg font-semibold text-foreground mb-3">{step.title}</h3>
-                <p className="text-sm text-muted-foreground">{step.description}</p>
+                <h3 className="text-base sm:text-lg font-semibold text-foreground mb-2 sm:mb-3">{step.title}</h3>
+                <p className="text-xs sm:text-sm text-muted-foreground">{step.description}</p>
               </div>
             ))}
           </div>
         </section>
 
         {/* FAQ Section */}
-        <section className="mb-20">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl font-bold text-foreground mb-4">
+        <section className="mb-16 sm:mb-20">
+          <div className="text-center mb-12 sm:mb-16">
+            <h2 className="text-2xl sm:text-3xl font-bold text-foreground mb-3 sm:mb-4">
               Najczęściej zadawane pytania
             </h2>
-            <p className="text-xl text-muted-foreground">
+            <p className="text-lg sm:text-xl text-muted-foreground">
               Odpowiedzi na pytania, które otrzymuję najczęściej
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-8">
+          <div className="grid md:grid-cols-2 gap-6 sm:gap-8">
             {[
               {
                 question: "Czy to jest porada inwestycyjna?",
@@ -842,12 +842,12 @@ export default function CooperationPage() {
               }
             ].map((faq, index) => (
               <Card key={index} className="border-0 shadow-lg hover:shadow-xl transition-all duration-300">
-                <CardContent className="p-6">
+                <CardContent className="p-4 sm:p-6">
                   <div className="flex items-start space-x-3">
-                    <HelpCircle className="h-5 w-5 text-primary mt-1 flex-shrink-0" />
+                    <HelpCircle className="h-4 w-4 sm:h-5 sm:w-5 text-primary mt-1 flex-shrink-0" />
                     <div>
-                      <h3 className="font-semibold text-foreground mb-3">{faq.question}</h3>
-                      <p className="text-sm text-muted-foreground leading-relaxed">{faq.answer}</p>
+                      <h3 className="font-semibold text-foreground mb-2 sm:mb-3 text-sm sm:text-base">{faq.question}</h3>
+                      <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">{faq.answer}</p>
                     </div>
                   </div>
                 </CardContent>
@@ -857,22 +857,22 @@ export default function CooperationPage() {
         </section>
 
         {/* CTA Section */}
-        <section className="text-center py-20 bg-gradient-to-r from-primary to-accent text-white rounded-3xl">
-          <h2 className="text-4xl font-bold mb-6">
+        <section className="text-center py-16 sm:py-20 bg-gradient-to-r from-primary to-accent text-white rounded-3xl">
+          <h2 className="text-3xl sm:text-4xl font-bold mb-4 sm:mb-6 px-4 sm:px-0">
             Gotowy przestać tracić pieniądze<br/>na błędach innych?
           </h2>
-          <p className="text-xl opacity-90 mb-8 max-w-3xl mx-auto">
+          <p className="text-lg sm:text-xl opacity-90 mb-6 sm:mb-8 max-w-3xl mx-auto px-4 sm:px-0">
             Każdy dzień bez systematycznego podejścia to potencjalnie kolejne straty. 
             Zacznij budować swoje bogactwo <strong>mądrze i metodycznie</strong>.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center px-4 sm:px-0">
             <Link href="/kontakt">
               <Button 
                 size="lg" 
                 variant="secondary"
-                className="bg-white text-primary hover:bg-gray-100 px-10 py-5 rounded-xl text-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+                className="bg-white text-primary hover:bg-gray-100 px-6 sm:px-10 py-4 sm:py-5 rounded-xl text-lg sm:text-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 w-full sm:w-auto"
               >
-                <Zap className="mr-2 h-6 w-6" />
+                <Zap className="mr-2 h-5 w-5 sm:h-6 sm:w-6" />
                 Zarezerwuj konsultację teraz
               </Button>
             </Link>
@@ -880,21 +880,21 @@ export default function CooperationPage() {
               <Button 
                 size="lg" 
                 variant="secondary"
-                className="bg-white text-primary hover:bg-gray-100 px-10 py-5 rounded-xl text-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+                className="bg-white text-primary hover:bg-gray-100 px-6 sm:px-10 py-4 sm:py-5 rounded-xl text-lg sm:text-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 w-full sm:w-auto"
               >
-                <MessageCircle className="mr-2 h-6 w-6" />
+                <MessageCircle className="mr-2 h-5 w-5 sm:h-6 sm:w-6" />
                 Zadaj pytanie
               </Button>
             </Link>
           </div>
           
-          <div className="mt-8 text-sm opacity-80">
+          <div className="mt-6 sm:mt-8 text-xs sm:text-sm opacity-80">
             <p>⏰ <strong>Tylko 4 konsultacje miesięcznie</strong> - aby zapewnić najwyższą jakość</p>
           </div>
         </section>
 
         {/* Legal Notice */}
-        <section className="py-8 border-t border-gray-200 mt-20">
+        <section className="py-6 sm:py-8 border-t border-gray-200 mt-16 sm:mt-20">
           <div className="text-center">
             <p className="text-xs text-muted-foreground">
               <strong>Ważne:</strong> Oferta oraz treści na stronie służą edukacji finansowej i nie stanowią porady inwestycyjnej, 

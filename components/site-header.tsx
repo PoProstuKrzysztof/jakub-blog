@@ -1,26 +1,38 @@
 "use client"
 
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Badge } from "@/components/ui/badge"
-import {
-  Search,
-  Plus,
-  Edit,
-  LogOut,
-  Eye,
-  ArrowLeft,
-  Share2,
+import { useState, useEffect } from 'react'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Badge } from '@/components/ui/badge'
+import { 
+  Search, 
+  User, 
+  LogOut, 
+  Plus, 
+  Edit, 
+  Eye, 
+  Share2, 
   Check,
-  MessageCircle,
   Menu,
   X,
-  Settings,
-} from "lucide-react"
-import Link from "next/link"
-import { useAuth } from "@/hooks/use-auth"
-import { useState } from "react"
-import type { User } from "@supabase/supabase-js"
+  Home,
+  BookOpen,
+  MessageCircle,
+  Phone,
+  BarChart3
+} from 'lucide-react'
+import Link from 'next/link'
+import { useAuth } from '@/hooks/use-auth'
+import { createClient } from '@/lib/supabase'
+import type { User as SupabaseUser } from '@supabase/supabase-js'
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet"
 
 interface SiteHeaderProps {
   currentPage?: 'home' | 'wpisy' | 'cooperation' | 'contact' | 'admin' | 'post'
@@ -39,7 +51,7 @@ interface SiteHeaderProps {
   showEditButton?: boolean
   isEditing?: boolean
   onEditToggle?: () => void
-  user?: User | null
+  user?: SupabaseUser | null
 }
 
 export function SiteHeader({
@@ -61,342 +73,338 @@ export function SiteHeader({
   onEditToggle,
   user: propUser,
 }: SiteHeaderProps) {
-  const { user: authUser, signOut } = useAuth()
-  const user = propUser || authUser
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const { user } = useAuth()
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [isScrolled, setIsScrolled] = useState(false)
+  const actualUser = propUser || user
+
+  // Handle scroll effect
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 10)
+    }
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
 
   const getNavLinkClass = (page: string) => {
-    const baseClass = "px-4 py-2 rounded-lg font-medium transition-all duration-300 whitespace-nowrap flex items-center justify-center min-h-[40px]"
-    const activeClass = "text-primary bg-primary/10"
-    const inactiveClass = "text-foreground hover:text-primary hover:bg-primary/10"
-    
-    return `${baseClass} ${currentPage === page ? activeClass : inactiveClass}`
+    const baseClass = "relative px-3 py-2 text-sm font-medium transition-all duration-300 rounded-lg hover:bg-primary/10 btn-touch"
+    return currentPage === page 
+      ? `${baseClass} text-primary bg-primary/5` 
+      : `${baseClass} text-foreground hover:text-primary`
   }
 
   const handleSignOut = async () => {
-    await signOut()
-    window.location.reload()
+    const supabase = createClient()
+    await supabase.auth.signOut()
+    window.location.href = '/'
+    setIsMenuOpen(false)
   }
 
+  const navigationItems = [
+    { href: '/', label: 'Strona główna', page: 'home', icon: Home },
+    { href: '/wpisy', label: 'Wpisy', page: 'wpisy', icon: BookOpen },
+    { href: '/wspolpraca', label: 'Współpraca', page: 'cooperation', icon: MessageCircle },
+    { href: '/kontakt', label: 'Kontakt', page: 'contact', icon: Phone },
+  ]
+
+  const MobileNavItem = ({ href, label, page, icon: Icon, onClick }: any) => (
+    <Link 
+      href={href} 
+      onClick={() => {
+        setIsMenuOpen(false)
+        onClick?.()
+      }}
+      className={`flex items-center space-x-3 px-4 py-4 rounded-xl transition-all duration-300 btn-touch ${
+        currentPage === page 
+          ? 'bg-primary/10 text-primary border-l-4 border-primary' 
+          : 'text-foreground hover:bg-primary/5 hover:text-primary'
+      }`}
+    >
+      <Icon className="h-5 w-5 flex-shrink-0" />
+      <span className="font-medium">{label}</span>
+    </Link>
+  )
+
   return (
-    <>
-      {/* Header */}
-      <header className={`shadow-sm py-4 border-b sticky top-0 z-40 ${
-        adminMode ? 'bg-accent border-accent' : 'bg-card border-border'
-      }`}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-3 items-center min-h-[48px]">
-            
-            {/* Left Section - Logo */}
-            <div className="flex items-center space-x-4">
-              <Link href="/" className="flex items-center space-x-2">
-                <div className={`text-2xl font-bold ${
-                  adminMode ? 'text-primary-foreground' : 'text-primary'
-                }`}>
-                  JAKUB INWESTYCJE
-                </div>
-              </Link>
-              {adminTitle && (
-                <Badge className="bg-primary text-primary-foreground rounded-xl">
-                  {adminTitle}
-                </Badge>
-              )}
-            </div>
-
-            {/* Center Section - Navigation Menu (stała pozycja) */}
-            <div className="flex justify-center">
-              {!adminMode && (
-                <nav className="hidden lg:flex items-center space-x-2">
-                  <Link href="/" className={getNavLinkClass('home')}>
-                    Home
-                  </Link>
-                  <Link href="/wpisy" className={getNavLinkClass('wpisy')}>
-                    Wpisy
-                  </Link>
-                  <Link href="/wspolpraca" className={getNavLinkClass('cooperation')}>
-                    Współpraca
-                  </Link>
-                  <Link href="/kontakt" className={getNavLinkClass('contact')}>
-                    Kontakt
-                  </Link>
-                </nav>
-              )}
-              
-              {/* Mobile Menu Button - widoczny na tablet i mobile */}
-              {!adminMode && (
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="lg:hidden"
-                  onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                >
-                  {isMobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-                </Button>
-              )}
-            </div>
-
-            {/* Right Section - Admin/User Buttons (maksymalnie po prawej) */}
-            <div className="flex justify-end">
-              <div className="flex items-center space-x-2">
-                
-                {/* Admin Mode Buttons */}
-                {adminMode && (
-                  <>
-                    {showPreviewToggle && (
-                      <Button
-                        onClick={onPreviewToggle}
-                        variant="outline"
-                        size="sm"
-                        className="border-primary text-primary hover:bg-primary hover:text-primary-foreground transition-all duration-300 rounded-xl"
-                      >
-                        <Eye className="h-4 w-4 mr-2" />
-                        {isPreview ? "Edycja" : "Podgląd"}
-                      </Button>
-                    )}
-                    {showShareButton && (
-                      <Button
-                        onClick={onShare}
-                        size="sm"
-                        className="bg-primary hover:bg-primary/90 text-primary-foreground transition-all duration-300 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105"
-                      >
-                        {shareButtonCopied ? (
-                          <>
-                            <Check className="h-4 w-4 mr-2" />
-                            Skopiowano!
-                          </>
-                        ) : (
-                          <>
-                            <Share2 className="h-4 w-4 mr-2" />
-                            Udostępnij
-                          </>
-                        )}
-                      </Button>
-                    )}
-                    <Link href="/admin">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className="border-border text-muted-foreground hover:bg-muted hover:text-foreground transition-all duration-300 rounded-xl"
-                      >
-                        <ArrowLeft className="h-4 w-4 mr-2" />
-                        Powrót
-                      </Button>
-                    </Link>
-                  </>
-                )}
-
-                {/* Regular Mode Buttons - Responsive visibility */}
-                {!adminMode && (
-                  <div className="hidden lg:flex items-center space-x-1 xl:space-x-2">
-                    {/* Przyciski dla zalogowanych użytkowników */}
-                    {user && (
-                      <>
-                        <Link href="/admin">
-                          <Button 
-                            variant="outline" 
-                            size="sm"
-                            className="border-primary text-primary hover:bg-primary hover:text-primary-foreground transition-all duration-300 rounded-xl text-xs lg:text-sm px-2 lg:px-3"
-                          >
-                            <Settings className="h-3 w-3 lg:h-4 lg:w-4 mr-1 lg:mr-2" />
-                            <span className="hidden xl:inline">Panel Twórcy</span>
-                            <span className="xl:hidden">Panel</span>
-                          </Button>
-                        </Link>
-                        <Link href="/admin/nowy-post">
-                          <Button 
-                            variant="outline" 
-                            size="sm"
-                            className="text-xs lg:text-sm px-2 lg:px-3"
-                          >
-                            <Plus className="h-3 w-3 lg:h-4 lg:w-4 mr-1 lg:mr-2" />
-                            <span className="hidden xl:inline">Nowy post</span>
-                            <span className="xl:hidden">Nowy</span>
-                          </Button>
-                        </Link>
-                        {showEditButton && (
-                          <Button
-                            onClick={onEditToggle}
-                            variant="outline"
-                            size="sm"
-                            className="text-xs lg:text-sm px-2 lg:px-3"
-                          >
-                            <Edit className="h-3 w-3 lg:h-4 lg:w-4 mr-1 lg:mr-2" />
-                            <span className="hidden xl:inline">{isEditing ? "Zakończ edycję" : "Edytuj usługi"}</span>
-                            <span className="xl:hidden">Edytuj</span>
-                          </Button>
-                        )}
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={handleSignOut}
-                          className="text-xs lg:text-sm px-2 lg:px-3"
-                        >
-                          <LogOut className="h-3 w-3 lg:h-4 lg:w-4 mr-1 lg:mr-2" />
-                          <span className="hidden xl:inline">Wyloguj</span>
-                          <span className="xl:hidden">Exit</span>
-                        </Button>
-                      </>
-                    )}
-                    
-                    {/* Panel administratora dla niezalogowanych */}
-                    {!user && (
-                      <Link href="/admin/login">
-                        <Button 
-                          variant="outline" 
-                          size="sm"
-                          className="text-xs lg:text-sm px-2 lg:px-3"
-                        >
-                          Zaloguj
-                        </Button>
-                      </Link>
-                    )}
-                    
-                    {/* Kontekstowe przyciski */}
-                    {currentPage === 'post' && (
-                      <Link href="/">
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          className="border-primary text-primary hover:bg-primary hover:text-primary-foreground transition-all duration-300 rounded-xl text-xs lg:text-sm px-2 lg:px-3"
-                        >
-                          <ArrowLeft className="h-3 w-3 lg:h-4 lg:w-4 mr-1 lg:mr-2" />
-                          <span className="hidden xl:inline">Powrót do strony głównej</span>
-                          <span className="xl:hidden">Powrót</span>
-                        </Button>
-                      </Link>
-                    )}
-                  </div>
-                )}
+    <header 
+      className={`sticky top-0 z-50 w-full transition-all duration-300 safe-top ${
+        isScrolled 
+          ? 'bg-background/95 backdrop-blur-md shadow-lg border-b border-border/50' 
+          : 'bg-background border-b border-border'
+      }`}
+    >
+      <div className="max-w-7xl mx-auto mobile-padding">
+        <div className="flex items-center justify-between h-14 sm:h-16">
+          {/* Logo and Brand */}
+          <div className="flex items-center space-x-2 sm:space-x-3">
+            <Link href="/" className="flex items-center space-x-2 group">
+              <div className="w-8 h-8 sm:w-10 sm:h-10 bg-primary rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300 group-hover:scale-105">
+                <span className="text-primary-foreground font-bold text-sm sm:text-lg">J</span>
               </div>
-            </div>
-          </div>
-        </div>
-      </header>
-
-      {/* Mobile Navigation Menu */}
-      {!adminMode && isMobileMenuOpen && (
-        <div className="lg:hidden bg-card border-b border-border shadow-lg">
-          <nav className="max-w-7xl mx-auto px-4 py-4 space-y-1">
-            <Link 
-              href="/" 
-              className={`block w-full ${getNavLinkClass('home')}`}
-              onClick={() => setIsMobileMenuOpen(false)}
-            >
-              Home
-            </Link>
-            <Link 
-              href="/wpisy" 
-              className={`block w-full ${getNavLinkClass('wpisy')}`}
-              onClick={() => setIsMobileMenuOpen(false)}
-            >
-              Wpisy
-            </Link>
-            <Link 
-              href="/wspolpraca" 
-              className={`block w-full ${getNavLinkClass('cooperation')}`}
-              onClick={() => setIsMobileMenuOpen(false)}
-            >
-              Współpraca
-            </Link>
-            <Link 
-              href="/kontakt" 
-              className={`block w-full ${getNavLinkClass('contact')}`}
-              onClick={() => setIsMobileMenuOpen(false)}
-            >
-              Kontakt
+              <div className="hidden xs:block">
+                <h1 className="text-base sm:text-lg font-bold text-foreground group-hover:text-primary transition-colors duration-300">
+                  {adminMode && adminTitle ? adminTitle : 'Jakub'}
+                </h1>
+                <p className="text-xs text-muted-foreground -mt-1 hidden sm:block">Inwestycje</p>
+              </div>
             </Link>
             
-            {/* Mobile Action Buttons */}
-            <div className="pt-4 space-y-2">
-              {user ? (
-                <>
-                  <Link href="/admin" onClick={() => setIsMobileMenuOpen(false)}>
-                    <Button 
-                      variant="outline" 
-                      size="sm" 
-                      className="w-full justify-start border-primary text-primary hover:bg-primary hover:text-primary-foreground"
-                    >
-                      <Settings className="h-4 w-4 mr-2" />
-                      Panel Twórcy
-                    </Button>
-                  </Link>
-                  <Link href="/admin/nowy-post" onClick={() => setIsMobileMenuOpen(false)}>
-                    <Button variant="outline" size="sm" className="w-full justify-start">
-                      <Plus className="h-4 w-4 mr-2" />
-                      Nowy post
-                    </Button>
-                  </Link>
-                  {showEditButton && (
-                    <Button
-                      onClick={() => {
-                        onEditToggle?.()
-                        setIsMobileMenuOpen(false)
-                      }}
-                      variant="outline"
-                      size="sm"
-                      className="w-full justify-start"
-                    >
-                      <Edit className="h-4 w-4 mr-2" />
-                      {isEditing ? "Zakończ edycję" : "Edytuj usługi"}
-                    </Button>
-                  )}
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => {
-                      handleSignOut()
-                      setIsMobileMenuOpen(false)
-                    }}
-                    className="w-full justify-start"
-                  >
-                    <LogOut className="h-4 w-4 mr-2" />
-                    Wyloguj
-                  </Button>
-                </>
-              ) : (
-                <Link href="/admin/login" onClick={() => setIsMobileMenuOpen(false)}>
-                  <Button variant="outline" size="sm" className="w-full justify-start">
-                    Zaloguj
-                  </Button>
-                </Link>
-              )}
-            </div>
-          </nav>
-        </div>
-      )}
+            {adminMode && (
+              <Badge className="bg-primary/10 text-primary border-primary/20 text-xs px-2 py-1 hidden xs:inline-flex">
+                Admin
+              </Badge>
+            )}
+          </div>
 
-      {/* Search Section */}
-      {showSearch && (
-        <section className="bg-card py-6 border-b border-border">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex justify-center">
-              <div className="relative w-full max-w-md">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
+          {/* Desktop Navigation - Hidden on mobile */}
+          <nav className="hidden lg:flex items-center space-x-1">
+            {navigationItems.map((item) => (
+              <Link key={item.page} href={item.href} className={getNavLinkClass(item.page)}>
+                {item.label}
+              </Link>
+            ))}
+          </nav>
+
+          {/* Search Bar - Hidden on small screens, visible on medium+ */}
+          {showSearch && (
+            <div className="hidden md:flex flex-1 max-w-md mx-4">
+              <div className="relative w-full">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input
                   placeholder={searchPlaceholder}
                   value={searchValue}
                   onChange={(e) => onSearchChange?.(e.target.value)}
-                  className="pl-10 w-full bg-background text-foreground border border-border rounded-xl shadow-sm focus:border-primary focus:ring-1 focus:ring-primary"
+                  className="pl-10 bg-background border-border rounded-xl focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-300 btn-touch"
                 />
               </div>
             </div>
-          </div>
-        </section>
-      )}
+          )}
 
-      {/* Floating Action Button for Contact */}
-      {(currentPage === 'cooperation' || currentPage === 'contact') && (
-        <div className="fixed bottom-6 right-6 z-50 flex flex-col gap-3">
-          <Link href="/kontakt">
-            <Button
-              size="lg"
-              className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-full shadow-xl hover:shadow-2xl transition-all duration-500 transform hover:scale-110"
-            >
-              <MessageCircle className="h-5 w-5 transition-transform duration-300 group-hover:rotate-12" />
-            </Button>
-          </Link>
+          {/* Action Buttons */}
+          <div className="flex items-center space-x-1 sm:space-x-2">
+            {/* Share Button - Hidden on mobile */}
+            {showShareButton && (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={onShare}
+                className="hidden sm:flex text-muted-foreground hover:text-primary transition-colors duration-300 btn-touch"
+              >
+                {shareButtonCopied ? <Check className="h-4 w-4" /> : <Share2 className="h-4 w-4" />}
+                <span className="ml-2 hidden md:inline">
+                  {shareButtonCopied ? 'Skopiowano!' : 'Udostępnij'}
+                </span>
+              </Button>
+            )}
+
+            {/* Edit Button - Hidden on mobile */}
+            {showEditButton && (
+              <Button
+                variant={isEditing ? "default" : "ghost"}
+                size="sm"
+                onClick={onEditToggle}
+                className="hidden sm:flex transition-all duration-300 btn-touch"
+              >
+                <Edit className="h-4 w-4" />
+                <span className="ml-2 hidden md:inline">
+                  {isEditing ? 'Zapisz' : 'Edytuj'}
+                </span>
+              </Button>
+            )}
+
+            {/* Preview Toggle - Hidden on mobile */}
+            {showPreviewToggle && (
+              <Button
+                variant={isPreview ? "default" : "ghost"}
+                size="sm"
+                onClick={onPreviewToggle}
+                className="hidden sm:flex transition-all duration-300 btn-touch"
+              >
+                <Eye className="h-4 w-4" />
+                <span className="ml-2 hidden md:inline">
+                  {isPreview ? 'Edycja' : 'Podgląd'}
+                </span>
+              </Button>
+            )}
+
+            {/* User Menu - Desktop only */}
+            {actualUser && (
+              <div className="hidden sm:flex items-center space-x-2">
+                {adminMode && (
+                  <Link href="/admin/nowy-post">
+                    <Button size="sm" className="bg-primary hover:bg-primary/90 text-primary-foreground btn-touch">
+                      <Plus className="h-4 w-4" />
+                      <span className="ml-2 hidden lg:inline">Nowy post</span>
+                    </Button>
+                  </Link>
+                )}
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={handleSignOut}
+                  className="text-muted-foreground hover:text-destructive transition-colors duration-300 btn-touch"
+                >
+                  <LogOut className="h-4 w-4" />
+                  <span className="ml-2 hidden lg:inline">Wyloguj</span>
+                </Button>
+              </div>
+            )}
+
+            {/* Mobile Menu Trigger */}
+            <Sheet open={isMenuOpen} onOpenChange={setIsMenuOpen}>
+              <SheetTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="lg:hidden p-2 btn-touch"
+                >
+                  <Menu className="h-5 w-5" />
+                  <span className="sr-only">Otwórz menu</span>
+                </Button>
+              </SheetTrigger>
+              
+              <SheetContent side="right" className="w-3/4 sm:max-w-sm p-0 safe-right">
+                <SheetHeader className="p-4 sm:p-6 border-b border-border">
+                  <SheetTitle className="text-left flex items-center space-x-3">
+                    <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center">
+                      <span className="text-primary-foreground font-bold">J</span>
+                    </div>
+                    <div>
+                      <span className="text-lg font-bold">Jakub Inwestycje</span>
+                      {adminMode && (
+                        <Badge className="ml-2 bg-primary/10 text-primary text-xs">Admin</Badge>
+                      )}
+                    </div>
+                  </SheetTitle>
+                </SheetHeader>
+
+                <div className="flex flex-col h-full">
+                  {/* Search in Mobile Menu */}
+                  {showSearch && (
+                    <div className="p-4 border-b border-border">
+                      <div className="relative">
+                        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                        <Input
+                          placeholder={searchPlaceholder}
+                          value={searchValue}
+                          onChange={(e) => onSearchChange?.(e.target.value)}
+                          className="pl-10 bg-background border-border rounded-xl btn-touch"
+                        />
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Navigation Items */}
+                  <nav className="flex-1 p-4 space-y-1">
+                    {navigationItems.map((item) => (
+                      <MobileNavItem
+                        key={item.page}
+                        href={item.href}
+                        label={item.label}
+                        page={item.page}
+                        icon={item.icon}
+                      />
+                    ))}
+
+                    {/* Admin Navigation */}
+                    {actualUser && adminMode && (
+                      <>
+                        <div className="border-t border-border my-4 pt-4">
+                          <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider px-4 mb-3">
+                            Panel administracyjny
+                          </p>
+                          <MobileNavItem
+                            href="/admin"
+                            label="Dashboard"
+                            page="admin"
+                            icon={BarChart3}
+                          />
+                          <MobileNavItem
+                            href="/admin/nowy-post"
+                            label="Nowy post"
+                            page="new-post"
+                            icon={Plus}
+                          />
+                        </div>
+                      </>
+                    )}
+                  </nav>
+
+                  {/* Mobile Action Buttons */}
+                  <div className="p-4 border-t border-border space-y-2 safe-bottom">
+                    {/* Mobile Share Button */}
+                    {showShareButton && (
+                      <Button
+                        variant="ghost"
+                        onClick={() => {
+                          onShare?.()
+                          setIsMenuOpen(false)
+                        }}
+                        className="w-full justify-start btn-touch"
+                      >
+                        {shareButtonCopied ? <Check className="h-4 w-4 mr-3" /> : <Share2 className="h-4 w-4 mr-3" />}
+                        {shareButtonCopied ? 'Skopiowano!' : 'Udostępnij'}
+                      </Button>
+                    )}
+
+                    {/* Mobile Edit Button */}
+                    {showEditButton && (
+                      <Button
+                        variant={isEditing ? "default" : "ghost"}
+                        onClick={() => {
+                          onEditToggle?.()
+                          setIsMenuOpen(false)
+                        }}
+                        className="w-full justify-start btn-touch"
+                      >
+                        <Edit className="h-4 w-4 mr-3" />
+                        {isEditing ? 'Zapisz' : 'Edytuj'}
+                      </Button>
+                    )}
+
+                    {/* Mobile Preview Toggle */}
+                    {showPreviewToggle && (
+                      <Button
+                        variant={isPreview ? "default" : "ghost"}
+                        onClick={() => {
+                          onPreviewToggle?.()
+                          setIsMenuOpen(false)
+                        }}
+                        className="w-full justify-start btn-touch"
+                      >
+                        <Eye className="h-4 w-4 mr-3" />
+                        {isPreview ? 'Edycja' : 'Podgląd'}
+                      </Button>
+                    )}
+
+                    {/* User Actions */}
+                    {actualUser && (
+                      <Button
+                        variant="ghost"
+                        onClick={handleSignOut}
+                        className="w-full justify-start text-destructive hover:text-destructive hover:bg-destructive/10 btn-touch"
+                      >
+                        <LogOut className="h-4 w-4 mr-3" />
+                        Wyloguj się
+                      </Button>
+                    )}
+
+                    {!actualUser && (
+                      <Link href="/admin/login" onClick={() => setIsMenuOpen(false)}>
+                        <Button variant="ghost" className="w-full justify-start btn-touch">
+                          <User className="h-4 w-4 mr-3" />
+                          Zaloguj się
+                        </Button>
+                      </Link>
+                    )}
+                  </div>
+                </div>
+              </SheetContent>
+            </Sheet>
+          </div>
         </div>
-      )}
-    </>
+      </div>
+    </header>
   )
 } 

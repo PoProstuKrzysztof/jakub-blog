@@ -1,6 +1,29 @@
 "use client"
 
 import Link from "next/link"
+import { Button } from '@/components/ui/button'
+import { Badge } from '@/components/ui/badge'
+import { Card, CardContent } from '@/components/ui/card'
+import { 
+  Mail, 
+  Phone, 
+  MapPin, 
+  Clock, 
+  ArrowRight, 
+  Facebook, 
+  Twitter, 
+  Instagram, 
+  Linkedin,
+  Youtube,
+  TrendingUp,
+  BookOpen,
+  MessageCircle,
+  Heart,
+  ExternalLink,
+  ChevronUp,
+  Users,
+} from 'lucide-react'
+import Image from 'next/image'
 
 interface SiteFooterProps {
   /** Optional list of categories to render */
@@ -21,140 +44,249 @@ export function SiteFooter({ categories, onCategoryClick }: SiteFooterProps) {
 
   const currentYear = new Date().getFullYear()
 
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+
   return (
-    <footer className="bg-card border-t border-border py-12 mt-20">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid md:grid-cols-4 gap-8">
-          {/* Column – About */}
-          <div>
-            <h4 className="text-lg font-semibold mb-4 text-foreground">Jakub Inwestycje</h4>
-            <p className="text-muted-foreground mb-4">
-              Profesjonalne analizy finansowe i doradztwo inwestycyjne.
+    <footer className="bg-gradient-to-br from-muted/50 via-background to-card/50 border-t border-border">
+      {/* Main Footer Content - Mobile Optimized */}
+      <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-8 sm:py-12 lg:py-16">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 lg:gap-12">
+          
+          {/* Brand Section - Mobile Optimized */}
+          <div className="sm:col-span-2 lg:col-span-1">
+            <div className="flex items-center mb-3 sm:mb-4">
+              <div className="w-8 h-8 sm:w-10 sm:h-10 bg-primary rounded-lg flex items-center justify-center mr-2 sm:mr-3">
+                <BookOpen className="h-4 w-4 sm:h-5 sm:w-5 text-primary-foreground" />
+              </div>
+              <h3 className="text-base sm:text-lg font-bold text-foreground">Jakub Wpisy</h3>
+            </div>
+            <p className="text-xs sm:text-sm text-muted-foreground mb-4 sm:mb-6 leading-relaxed">
+              Profesjonalne analizy finansowe i edukacja inwestycyjna. 
+              Pomagam budować świadome portfele inwestycyjne oparte na fundamentalnej analizie spółek.
             </p>
-            <div className="flex space-x-4">
-              <a
-                href="#"
-                className="text-muted-foreground hover:text-primary transition-colors"
-                aria-label="Twitter"
-              >
-                <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z" />
-                </svg>
-              </a>
-              <a
-                href="#"
-                className="text-muted-foreground hover:text-primary transition-colors"
-                aria-label="LinkedIn"
-              >
-                <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
-                </svg>
-              </a>
+            <div className="flex items-center mb-4 sm:mb-6">
+              <div className="flex items-center text-xs sm:text-sm text-muted-foreground mr-4 sm:mr-6">
+                <TrendingUp className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
+                <span>15.2% średnia stopa zwrotu</span>
+              </div>
+              <div className="flex items-center text-xs sm:text-sm text-muted-foreground">
+                <Users className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
+                <span>100+ zadowolonych klientów</span>
+              </div>
+            </div>
+            
+            {/* Social Media - Mobile Optimized */}
+            <div className="flex items-center gap-2 sm:gap-3">
+              <span className="text-xs sm:text-sm text-muted-foreground mr-1 sm:mr-2">Obserwuj:</span>
+              <div className="flex gap-1 sm:gap-2">
+                <Button size="sm" variant="ghost" className="h-8 w-8 sm:h-9 sm:w-9 p-0 touch-manipulation tap-highlight-none">
+                  <Facebook className="h-3 w-3 sm:h-4 sm:w-4" />
+                </Button>
+                <Button size="sm" variant="ghost" className="h-8 w-8 sm:h-9 sm:w-9 p-0 touch-manipulation tap-highlight-none">
+                  <Twitter className="h-3 w-3 sm:h-4 sm:w-4" />
+                </Button>
+                <Button size="sm" variant="ghost" className="h-8 w-8 sm:h-9 sm:w-9 p-0 touch-manipulation tap-highlight-none">
+                  <Instagram className="h-3 w-3 sm:h-4 sm:w-4" />
+                </Button>
+                <Button size="sm" variant="ghost" className="h-8 w-8 sm:h-9 sm:w-9 p-0 touch-manipulation tap-highlight-none">
+                  <Linkedin className="h-3 w-3 sm:h-4 sm:w-4" />
+                </Button>
+                <Button size="sm" variant="ghost" className="h-8 w-8 sm:h-9 sm:w-9 p-0 touch-manipulation tap-highlight-none">
+                  <Youtube className="h-3 w-3 sm:h-4 sm:w-4" />
+                </Button>
+              </div>
             </div>
           </div>
 
-          {/* Column – Services */}
+          {/* Quick Links - Mobile Optimized */}
           <div>
-            <h4 className="text-lg font-semibold mb-4 text-foreground">Usługi</h4>
-            <ul className="space-y-2">
-              <li>
-                <Link
-                  href="/wpisy"
-                  className="text-muted-foreground hover:text-primary transition-colors"
-                >
-                  Analizy spółek
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/wspolpraca"
-                  className="text-muted-foreground hover:text-primary transition-colors"
-                >
-                  Konsultacje
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/wpisy"
-                  className="text-muted-foreground hover:text-primary transition-colors"
-                >
-                  Edukacja
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/kontakt"
-                  className="text-muted-foreground hover:text-primary transition-colors"
-                >
-                  Newsletter
-                </Link>
-              </li>
-            </ul>
+            <h4 className="text-sm sm:text-base font-semibold text-foreground mb-3 sm:mb-4">
+              Wpisy
+            </h4>
+            <nav className="space-y-2 sm:space-y-3">
+              <Link 
+                href="/" 
+                className="block text-xs sm:text-sm text-muted-foreground hover:text-primary transition-colors touch-manipulation tap-highlight-none"
+              >
+                Strona główna
+              </Link>
+              <Link 
+                href="/wpisy" 
+                className="block text-xs sm:text-sm text-muted-foreground hover:text-primary transition-colors touch-manipulation tap-highlight-none"
+              >
+                Wszystkie wpisy
+              </Link>
+              <Link 
+                href="/wspolpraca" 
+                className="block text-xs sm:text-sm text-muted-foreground hover:text-primary transition-colors touch-manipulation tap-highlight-none"
+              >
+                Współpraca
+              </Link>
+              <Link 
+                href="/kontakt" 
+                className="block text-xs sm:text-sm text-muted-foreground hover:text-primary transition-colors touch-manipulation tap-highlight-none"
+              >
+                Kontakt
+              </Link>
+            </nav>
           </div>
 
-          {/* Column – Categories */}
+          {/* Categories - Mobile Optimized */}
           <div>
-            <h4 className="text-lg font-semibold mb-4 text-foreground">Kategorie</h4>
-            <ul className="space-y-2">
-              {categoryList.map((category) => (
-                <li key={category}>
-                  {onCategoryClick ? (
-                    <button
-                      onClick={() => onCategoryClick(category)}
-                      className="text-muted-foreground hover:text-primary transition-colors text-left"
-                    >
-                      {category}
-                    </button>
-                  ) : (
-                    <Link
-                      href="/wpisy"
-                      className="text-muted-foreground hover:text-primary transition-colors"
-                    >
-                      {category}
-                    </Link>
-                  )}
-                </li>
-              ))}
-            </ul>
+            <h4 className="text-sm sm:text-base font-semibold text-foreground mb-3 sm:mb-4">
+              Kategorie
+            </h4>
+            <nav className="space-y-2 sm:space-y-3">
+              <Link 
+                href="/wpisy?category=analiza-spolek" 
+                className="block text-xs sm:text-sm text-muted-foreground hover:text-primary transition-colors touch-manipulation tap-highlight-none"
+              >
+                Analiza spółek
+              </Link>
+              <Link 
+                href="/wpisy?category=kryptowaluty" 
+                className="block text-xs sm:text-sm text-muted-foreground hover:text-primary transition-colors touch-manipulation tap-highlight-none"
+              >
+                Kryptowaluty
+              </Link>
+              <Link 
+                href="/wpisy?category=edukacja" 
+                className="block text-xs sm:text-sm text-muted-foreground hover:text-primary transition-colors touch-manipulation tap-highlight-none"
+              >
+                Edukacja finansowa
+              </Link>
+              <Link 
+                href="/wpisy?category=strategie" 
+                className="block text-xs sm:text-sm text-muted-foreground hover:text-primary transition-colors touch-manipulation tap-highlight-none"
+              >
+                Strategie inwestycyjne
+              </Link>
+              <Link 
+                href="/wpisy?category=trendy" 
+                className="block text-xs sm:text-sm text-muted-foreground hover:text-primary transition-colors touch-manipulation tap-highlight-none"
+              >
+                Trendy rynkowe
+              </Link>
+            </nav>
           </div>
 
-          {/* Column – Contact */}
+          {/* Contact Info - Mobile Optimized */}
           <div>
-            <h4 className="text-lg font-semibold mb-4 text-foreground">Kontakt</h4>
-            <ul className="space-y-2">
-              <li>
-                <Link
-                  href="/kontakt"
-                  className="text-muted-foreground hover:text-primary transition-colors"
+            <h4 className="text-sm sm:text-base font-semibold text-foreground mb-3 sm:mb-4">
+              Kontakt
+            </h4>
+            <div className="space-y-2 sm:space-y-3">
+              <div className="flex items-center text-xs sm:text-sm text-muted-foreground">
+                <Mail className="h-3 w-3 sm:h-4 sm:w-4 mr-2 flex-shrink-0" />
+                <a 
+                  href="mailto:kontakt@jakubblog.pl" 
+                  className="hover:text-primary transition-colors touch-manipulation tap-highlight-none"
                 >
-                  Formularz kontaktowy
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/wspolpraca"
-                  className="text-muted-foreground hover:text-primary transition-colors"
-                >
-                  Współpraca
-                </Link>
-              </li>
-              <li>
-                <a
-                  href="https://t.me/kryptodegeneraci"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-muted-foreground hover:text-primary transition-colors"
-                >
-                  Telegram
+                  kontakt@jakubblog.pl
                 </a>
-              </li>
-            </ul>
+              </div>
+              <div className="flex items-center text-xs sm:text-sm text-muted-foreground">
+                <Phone className="h-3 w-3 sm:h-4 sm:w-4 mr-2 flex-shrink-0" />
+                <a 
+                  href="tel:+48123456789" 
+                  className="hover:text-primary transition-colors touch-manipulation tap-highlight-none"
+                >
+                  +48 123 456 789
+                </a>
+              </div>
+              <div className="flex items-start text-xs sm:text-sm text-muted-foreground">
+                <MapPin className="h-3 w-3 sm:h-4 sm:w-4 mr-2 flex-shrink-0 mt-0.5" />
+                <span>Warszawa, Polska</span>
+              </div>
+              <div className="flex items-center text-xs sm:text-sm text-muted-foreground">
+                <Clock className="h-3 w-3 sm:h-4 sm:w-4 mr-2 flex-shrink-0" />
+                <span>Pn-Pt: 9:00-18:00</span>
+              </div>
+            </div>
           </div>
         </div>
+      </div>
 
-        <div className="border-t border-border mt-8 pt-8 text-center text-muted-foreground">
-          <p>&copy; {currentYear} Jakub Inwestycje. Wszystkie prawa zastrzeżone.</p>
+      {/* Stats Section - Mobile Optimized */}
+      <div className="border-y border-border bg-muted/30">
+        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-6 sm:py-8">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6">
+            <div className="text-center p-3 sm:p-4 bg-card/50 rounded-lg border border-border">
+              <div className="text-lg sm:text-xl lg:text-2xl font-bold text-foreground">150+</div>
+              <div className="text-xs sm:text-sm text-muted-foreground">Publikacji</div>
+            </div>
+            <div className="text-center p-3 sm:p-4 bg-card/50 rounded-lg border border-border">
+              <div className="text-lg sm:text-xl lg:text-2xl font-bold text-foreground">50k+</div>
+              <div className="text-xs sm:text-sm text-muted-foreground">Czytelników</div>
+            </div>
+            <div className="text-center p-3 sm:p-4 bg-card/50 rounded-lg border border-border">
+              <div className="text-lg sm:text-xl lg:text-2xl font-bold text-foreground">8</div>
+              <div className="text-xs sm:text-sm text-muted-foreground">Lat doświadczenia</div>
+            </div>
+            <div className="text-center p-3 sm:p-4 bg-card/50 rounded-lg border border-border">
+              <div className="text-lg sm:text-xl lg:text-2xl font-bold text-foreground">95%</div>
+              <div className="text-xs sm:text-sm text-muted-foreground">Zadowolonych</div>
+            </div>
+          </div>
         </div>
+      </div>
+
+      {/* Bottom Bar - Mobile Optimized */}
+      <div className="bg-card/80 border-t border-border">
+        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-6">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-4 text-xs sm:text-sm text-muted-foreground">
+              <div className="flex items-center">
+                <Heart className="h-3 w-3 sm:h-4 sm:w-4 mr-1 text-red-500" />
+                <span>© {currentYear} Jakub Wpisy. Wszystkie prawa zastrzeżone.</span>
+              </div>
+              <div className="flex items-center gap-3 sm:gap-4">
+                <Link 
+                  href="/polityka-prywatnosci" 
+                  className="hover:text-primary transition-colors touch-manipulation tap-highlight-none"
+                >
+                  Polityka prywatności
+                </Link>
+                <Link 
+                  href="/regulamin" 
+                  className="hover:text-primary transition-colors touch-manipulation tap-highlight-none"
+                >
+                  Regulamin
+                </Link>
+                <Link 
+                  href="/cookies" 
+                  className="hover:text-primary transition-colors touch-manipulation tap-highlight-none"
+                >
+                  Cookies
+                </Link>
+              </div>
+            </div>
+
+            {/* Back to Top - Mobile Optimized */}
+            <Button 
+              variant="outline" 
+              size="sm"
+              onClick={scrollToTop}
+              className="touch-manipulation tap-highlight-none"
+            >
+              <ChevronUp className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
+              <span className="text-xs sm:text-sm">Na górę</span>
+            </Button>
+          </div>
+        </div>
+      </div>
+
+      {/* Floating Action Button for Mobile */}
+      <div className="fixed bottom-4 right-4 sm:hidden z-50">
+        <Button 
+          size="sm"
+          onClick={scrollToTop}
+          className="rounded-full w-12 h-12 p-0 shadow-lg touch-manipulation tap-highlight-none"
+        >
+          <ChevronUp className="h-5 w-5" />
+        </Button>
       </div>
     </footer>
   )
