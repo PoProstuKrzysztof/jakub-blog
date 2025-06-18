@@ -514,7 +514,16 @@ export default function AdminDashboard() {
                 color: "from-purple-500 to-purple-600",
                 bgColor: "bg-purple-50",
                 iconColor: "text-purple-600"
-              }
+              },
+              {
+                icon: Star,
+                title: "Portfel autora",
+                description: "Zarządzaj portfelem i publikuj analizy",
+                href: "/admin/portfel",
+                color: "from-yellow-500 to-yellow-600",
+                bgColor: "bg-yellow-50",
+                iconColor: "text-yellow-600"
+              },
             ].map((action, index) => (
               <Link key={index} href={action.href}>
                 <Card className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 group cursor-pointer">

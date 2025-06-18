@@ -156,34 +156,51 @@ export async function middleware(request: NextRequest) {
 
   // Auth check for protected routes (excluding login page)
   const protectedPaths = ['/admin']
+  const customerPath = request.nextUrl.pathname.startsWith('/portfel-autora')
+
   const isProtectedPath = protectedPaths.some(path => 
     request.nextUrl.pathname.startsWith(path) && 
     !request.nextUrl.pathname.startsWith('/admin/login')
   )
 
+  // Ochrona trasy portfela autora
+  if (customerPath) {
+    const { data: { user } } = await supabase.auth.getUser()
+
+    if (!user) {
+      const loginUrl = request.nextUrl.clone()
+      loginUrl.pathname = '/admin/login'
+      return NextResponse.redirect(loginUrl)
+    }
+
+    const { data: hasAccess } = await supabase.rpc('has_product', { p_slug: 'portfolio-access' })
+    if (!hasAccess) {
+      const redirectUrl = request.nextUrl.clone()
+      redirectUrl.pathname = '/wpisy'
+      return NextResponse.redirect(redirectUrl)
+    }
+  }
+
+  // Ochrona tras administratorskich (jak wcześniej)
   if (isProtectedPath) {
     const { data: { user }, error } = await supabase.auth.getUser()
-    
+
     if (error || !user) {
       const url = request.nextUrl.clone()
       url.pathname = '/admin/login'
       return NextResponse.redirect(url)
     }
-    
-    // Check user role for admin routes
-    if (request.nextUrl.pathname.startsWith('/admin') && 
-        !request.nextUrl.pathname.startsWith('/admin/login')) {
-      const { data: profile } = await supabase
-        .from('profiles')
-        .select('role, is_active')
-        .eq('id', user.id)
-        .single()
-      
-      if (!profile || !profile.is_active || profile.role !== 'admin') {
-        const url = request.nextUrl.clone()
-        url.pathname = '/admin/login'
-        return NextResponse.redirect(url)
-      }
+
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('role, is_active')
+      .eq('id', user.id)
+      .single()
+
+    if (!profile || !profile.is_active || profile.role !== 'admin') {
+      const url = request.nextUrl.clone()
+      url.pathname = '/admin/login'
+      return NextResponse.redirect(url)
     }
   }
 

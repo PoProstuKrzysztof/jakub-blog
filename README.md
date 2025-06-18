@@ -47,6 +47,14 @@
 - 📈 **Dashboard analityczny** - Statystyki odwiedzin i engagement
 - 🔒 **Bezpieczne uwierzytelnianie** - Supabase Auth z RLS
 - 📌 **System przypinania postów** - Wyróżnianie ważnych treści
+- 💼 **Portfel autora** - Publikowanie składu portfela i analiz inwestycyjnych
+
+### 💰 Portfel Autora (Premium Feature)
+- 📊 **Wizualizacja portfela** - Interaktywne wykresy składu inwestycyjnego
+- 📝 **Analizy inwestycyjne** - Publikowanie ekspertyz i raportów
+- 🔐 **Dostęp płatny** - System zakupów przez Stripe
+- 🔔 **Powiadomienia real-time** - Supabase Realtime dla nowych analiz
+- 🎯 **Zarządzanie subskrypcjami** - Automatyczne zarządzanie dostępem
 
 ## 🛠️ Stack Technologiczny
 
@@ -101,7 +109,12 @@ yarn install
 
 3. **Konfiguracja zmiennych środowiskowych**
 
-Utwórz plik `.env.local` w głównym katalogu projektu:
+Skopiuj plik przykładowy i dostosuj wartości:
+```bash
+cp env.example .env.local
+```
+
+Lub utwórz plik `.env.local` w głównym katalogu projektu:
 
 ```env
 # Supabase Configuration
@@ -461,6 +474,14 @@ const RichTextEditorCore = dynamic(() =>
 - Utworzono automatyczny trigger `handle_new_user()`
 - Zapewniono spójność między `auth.users` a `profiles`
 
+#### Problem: TypeError: Cannot convert undefined or null to object
+**Błąd:** `TypeError: Cannot convert undefined or null to object at Function.keys`
+
+**Rozwiązanie:** ✅ ROZWIĄZANE
+- Dodano sprawdzenie typu w `PortfolioChart` przed użyciem `Object.keys()`
+- Dodano mock data w trybie development gdy brak konfiguracji Supabase
+- Poprawiono obsługę błędów w `getActivePortfolio`
+
 #### Problem: next/headers w komponentach klienckich
 **Błąd:** `You're importing a component that needs "next/headers"`
 
@@ -518,6 +539,18 @@ npx webpack-bundle-analyzer .next/static/chunks
 ### Analityka (`/admin/analytics`)
 - Dashboard z metrykami odwiedzin
 - Wykresy i statystyki
+
+### Portfel Autora (`/admin/portfel`)
+- Panel zarządzania portfelem inwestycyjnym
+- Publikowanie nowych składów portfela
+- Dodawanie analiz inwestycyjnych
+- Wizualizacja danych Chart.js
+
+### Portfel Autora dla Użytkowników (`/portfel-autora`)
+- Dostęp po zakupie produktu
+- Podgląd aktualnego portfela
+- Lista analiz inwestycyjnych
+- Real-time powiadomienia o nowych treściach
 
 ### Strona O Autorze (`/o-autorze`)
 - Nowoczesny landing page
