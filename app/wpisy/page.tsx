@@ -1,7 +1,7 @@
 import { Suspense } from "react"
 import { BlogPageClient } from "@/components/blog-page/blog-page-client"
 import { PostsLoading } from "@/components/post-page/posts-loading"
-import { createClient } from "@/lib/supabase"
+import { createClient } from "@/lib/supabase/supabase"
 import { PostFull } from "@/lib/models/post"
 
 export const metadata = {

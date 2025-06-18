@@ -189,7 +189,7 @@ export default function CooperationPage() {
       ctaText: "Rozpocznij przygodę",
       badge: "NAJLEPSZA OFERTA",
       features: [
-        "Indywidualna konsultacja finansowa (wartość 999 zł) - analiza ryzyka i portfele modelowe",
+        "Indywidualna konsultacja finansowa (wartość 899 zł) - analiza ryzyka i portfele modelowe",
         "Roczny dostęp do mojego portfela inwestycyjnego (wartość 1400 zł) - uczenie na prawdziwych przykładach",
         "Roczne wsparcie strategiczne (wartość 900 zł) - comiesięczny mentoring i opieka nad strategią",
         "Prenumerata raportów kwartalnych na rok (wartość 150 zł) - analizy i wnioski rynkowe",

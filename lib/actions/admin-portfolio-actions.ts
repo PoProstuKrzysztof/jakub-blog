@@ -1,7 +1,7 @@
 'use server'
 
 import { z } from 'zod'
-import { supabaseAdmin } from '@/lib/supabase-admin'
+import { supabaseAdmin } from '@/lib/supabase/supabase-admin'
 import { getCache } from '@/lib/redis/cache'
 import { revalidatePath } from 'next/cache'
 

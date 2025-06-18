@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from 'react'
-import { createClient } from '@/lib/supabase'
+import { createClient } from '@/lib/supabase/supabase'
 import type { AnalysisDto } from '@/lib/actions/portfolio-actions'
 import { AnalysisCard } from './analysis-card'
 import { Badge } from '../ui/badge'

@@ -1,4 +1,4 @@
-import { Database, Tables, TablesInsert, TablesUpdate } from '../database.types'
+import { Database, Tables, TablesInsert, TablesUpdate } from '../supabase/database.types'
 
 // Podstawowe typy z bazy danych
 export type Post = Tables<'posts'>

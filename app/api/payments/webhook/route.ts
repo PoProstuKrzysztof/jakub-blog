@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 // Tymczasowo wyłączone - instalowanie Stripe ma problemy na Windows
 // import Stripe from 'stripe'
 import { getStripeClient } from '@/lib/services/stripe'
-import { supabaseAdmin } from '@/lib/supabase-admin'
+import { supabaseAdmin } from '@/lib/supabase/supabase-admin'
 
 export const dynamic = 'force-dynamic'
 

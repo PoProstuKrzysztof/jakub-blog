@@ -1,6 +1,6 @@
 import { z } from 'zod'
 import { getStripeClient } from '@/lib/services/stripe'
-import { supabaseAdmin } from '@/lib/supabase-admin'
+import { supabaseAdmin } from '@/lib/supabase/supabase-admin'
 
 const CreateCheckoutSessionSchema = z.object({
   productSlug: z.string(),

@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { SiteHeader } from "@/components/common/site-header"
-import { ShareButton } from "@/components/share-button"
+import { ShareButton } from "@/components/common/share-button"
 import { PinButton } from "@/components/common/pin-button"
 import {
   CalendarDays,

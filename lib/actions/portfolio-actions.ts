@@ -1,4 +1,4 @@
-import { supabaseAdmin } from '@/lib/supabase-admin'
+import { supabaseAdmin } from '@/lib/supabase/supabase-admin'
 import { getCache } from '@/lib/redis/cache'
 
 export interface PortfolioDto {
