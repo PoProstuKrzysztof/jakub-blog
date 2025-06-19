@@ -1,7 +1,65 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/supabase-server'
+import { supabaseAdmin } from '@/lib/supabase/supabase-admin'
 
-export async function GET(request: NextRequest) {
+/**
+ * GET /api/admin/test-auth - Test endpoint to verify admin API configuration
+ */
+export async function GET() {
+  try {
+    console.log('Testing admin auth...')
+    
+    // Test 1: Check if service key is available
+    const hasServiceKey = !!process.env.SUPABASE_SERVICE_ROLE_KEY
+    console.log('Has service key:', hasServiceKey)
+    
+    if (!hasServiceKey) {
+      return NextResponse.json({
+        error: 'SERVICE_ROLE_KEY not found in environment variables',
+        hasServiceKey: false
+      }, { status: 500 })
+    }
+
+    // Test 2: Try to list users with admin API
+    const { data: { users }, error } = await supabaseAdmin.auth.admin.listUsers({
+      page: 1,
+      perPage: 1
+    })
+
+    if (error) {
+      console.error('Admin API error:', error)
+      return NextResponse.json({
+        error: `Admin API Error: ${error.message}`,
+        hasServiceKey: true,
+        adminApiWorking: false,
+        details: error
+      }, { status: 500 })
+    }
+
+    console.log('Admin API working, found', users?.length || 0, 'users')
+
+    return NextResponse.json({
+      success: true,
+      hasServiceKey: true,
+      adminApiWorking: true,
+      userCount: users?.length || 0,
+      sampleUser: users?.[0] ? {
+        id: users[0].id,
+        email: users[0].email,
+        created_at: users[0].created_at
+      } : null
+    })
+
+  } catch (error) {
+    console.error('Test error:', error)
+    return NextResponse.json({
+      error: `Test failed: ${error instanceof Error ? error.message : 'Unknown error'}`,
+      hasServiceKey: !!process.env.SUPABASE_SERVICE_ROLE_KEY
+    }, { status: 500 })
+  }
+}
+
+export async function GET_old(request: NextRequest) {
   try {
     const supabase = await createClient()
     

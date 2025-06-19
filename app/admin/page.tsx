@@ -24,6 +24,7 @@ import {
   MessageCircle,
   Loader2,
   AlertCircle,
+  UserCheck,
 } from "lucide-react"
 import Link from "next/link"
 import Image from "next/image"
@@ -595,6 +596,15 @@ export default function AdminDashboard() {
                 color: "from-yellow-500 to-yellow-600",
                 bgColor: "bg-yellow-50",
                 iconColor: "text-yellow-600"
+              },
+              {
+                icon: UserCheck,
+                title: "Zarządzanie dostępami",
+                description: "Przypisuj dostęp do portfela użytkownikom",
+                href: "/admin/dostepy",
+                color: "from-indigo-500 to-indigo-600",
+                bgColor: "bg-indigo-50",
+                iconColor: "text-indigo-600"
               },
             ].map((action, index) => (
               <Link key={index} href={action.href}>

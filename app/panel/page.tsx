@@ -272,8 +272,8 @@ export default function UserPanelPage() {
                     <p className="text-sm text-muted-foreground mb-4">
                       Odkryj nasze produkty i zacznij swoją przygodę inwestycyjną
                     </p>
-                    <Link href="/portfel-autora">
-                      <Button>Przeglądaj produkty</Button>
+                    <Link href="/wspolpraca">
+                      <Button>Zobacz produkty</Button>
                     </Link>
                   </div>
                 ) : (

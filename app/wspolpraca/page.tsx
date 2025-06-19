@@ -60,10 +60,10 @@ interface Service {
 function ServiceItem({ service }: { service: Service }) {
   return (
     <Card
-      className={`border-0 shadow-2xl hover:shadow-3xl transition-all duration-500 transform hover:scale-[1.02] group relative overflow-hidden ${
-        service.popular ? 'ring-4 ring-primary ring-opacity-50 scale-105' : ''
+      className={`border-0 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.01] group relative overflow-hidden h-full ${
+        service.popular ? 'ring-2 ring-primary ring-opacity-50' : ''
       } ${
-        service.featured ? 'ring-8 ring-gradient-to-r ring-yellow-400 ring-opacity-70 shadow-yellow-200/50 shadow-2xl' : ''
+        service.featured ? 'ring-4 ring-gradient-to-r ring-yellow-400 ring-opacity-70 shadow-yellow-200/50 shadow-xl' : ''
       }`}
     >
       {service.badge && (
@@ -88,26 +88,26 @@ function ServiceItem({ service }: { service: Service }) {
         <div className="absolute inset-0 bg-gradient-to-br from-yellow-100/30 to-orange-100/30 pointer-events-none"></div>
       )}
       
-      <CardContent className="p-8 relative z-10 pt-12 flex flex-col h-full">
-        <div className="text-center mb-8">
-          <div className={`w-20 h-20 mx-auto mb-6 rounded-2xl bg-gradient-to-br ${service.color} shadow-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}>
-            {service.icon === "Target" && <Target className="h-10 w-10 text-white" />}
-            {service.icon === "BarChart3" && <BarChart3 className="h-10 w-10 text-white" />}
-            {service.icon === "BookOpen" && <BookOpen className="h-10 w-10 text-white" />}
-            {service.icon === "Layers" && <Layers className="h-10 w-10 text-white" />}
-            {service.icon === "GraduationCap" && <GraduationCap className="h-10 w-10 text-white" />}
+      <CardContent className="p-4 sm:p-6 relative z-10 pt-8 sm:pt-10 flex flex-col h-full">
+        <div className="text-center mb-4 sm:mb-6">
+          <div className={`w-14 h-14 sm:w-16 sm:h-16 mx-auto mb-3 sm:mb-4 rounded-xl bg-gradient-to-br ${service.color} shadow-lg flex items-center justify-center group-hover:scale-105 transition-transform duration-300`}>
+            {service.icon === "Target" && <Target className="h-6 w-6 sm:h-8 sm:w-8 text-white" />}
+            {service.icon === "BarChart3" && <BarChart3 className="h-6 w-6 sm:h-8 sm:w-8 text-white" />}
+            {service.icon === "BookOpen" && <BookOpen className="h-6 w-6 sm:h-8 sm:w-8 text-white" />}
+            {service.icon === "Layers" && <Layers className="h-6 w-6 sm:h-8 sm:w-8 text-white" />}
+            {service.icon === "GraduationCap" && <GraduationCap className="h-6 w-6 sm:h-8 sm:w-8 text-white" />}
           </div>
           
-          <h3 className="text-2xl font-bold text-foreground mb-4">
+          <h3 className="text-lg sm:text-xl font-bold text-foreground mb-2 sm:mb-3">
             {service.title}
           </h3>
           
-          <p className="text-muted-foreground leading-relaxed text-sm">
+          <p className="text-muted-foreground leading-relaxed text-xs sm:text-sm">
             {service.description}
           </p>
         </div>
 
-        <div className="space-y-3 mb-8 flex-grow">
+        <div className="space-y-2 mb-4 sm:mb-6 flex-grow">
           {service.features.map((feature, idx) => (
             <div key={idx} className="flex items-start text-sm text-muted-foreground">
               <CheckCircle2 className="h-4 w-4 text-green-500 mr-3 flex-shrink-0 mt-0.5" />
@@ -117,8 +117,8 @@ function ServiceItem({ service }: { service: Service }) {
         </div>
 
         <div className="mt-auto">
-          <div className="text-center mb-8">
-            <div className="text-4xl font-bold text-foreground mb-1">
+                      <div className="text-center mb-4 sm:mb-6">
+            <div className="text-2xl sm:text-3xl font-bold text-foreground mb-1">
               {service.price}
               {service.originalPrice && (
                 <span className="text-lg text-gray-400 line-through ml-2">
@@ -472,14 +472,14 @@ export default function CooperationPage() {
                }}
              >
                {/* Górny rząd - główne oferty (featured) */}
-               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-6xl mx-auto mb-12">
+               <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 max-w-5xl mx-auto mb-8 sm:mb-10 auto-rows-fr">
                  {jednorazoweServices.filter(service => service.featured).map((service) => (
                    <ServiceItem key={service.id} service={service} />
                  ))}
                </div>
                
                {/* Dolny rząd - pozostałe oferty */}
-               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 auto-rows-fr">
                  {jednorazoweServices.filter(service => !service.featured).map((service) => (
                    <ServiceItem key={service.id} service={service} />
                  ))}
@@ -497,7 +497,7 @@ export default function CooperationPage() {
                  pointerEvents: showSubscriptions ? 'auto' : 'none'
                }}
              >
-               <div className="w-full max-w-md">
+               <div className="w-full max-w-md min-h-[600px] flex">
                  {subskrypcyjneServices.map((service) => (
                    <ServiceItem key={service.id} service={service} />
                  ))}
