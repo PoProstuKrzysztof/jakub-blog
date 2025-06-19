@@ -8,14 +8,14 @@ interface AuthContextType {
   user: User | null
   session: Session | null
   loading: boolean
-  signIn: (email: string, password: string) => Promise<{ error?: string }>
-  signUp: (email: string, password: string, metadata?: any) => Promise<{ error?: string }>
+  signIn: (email: string, password: string) => Promise<{ user?: User | null; session?: Session | null; error?: string }>
+  signUp: (email: string, password: string, metadata?: any) => Promise<{ user?: User | null; session?: Session | null; error?: string }>
   signOut: () => Promise<void>
   signInWithOAuth: (provider: 'google' | 'github') => Promise<{ error?: string }>
   refreshSession: () => Promise<void>
 }
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined)
+export const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
 export function useAuth() {
   const context = useContext(AuthContext)
@@ -30,6 +30,16 @@ function isRefreshTokenError(error: AuthError | Error): boolean {
   return error.message?.includes('refresh_token_not_found') ||
          error.message?.includes('Invalid Refresh Token') ||
          error.message?.includes('Refresh Token Not Found')
+}
+
+// Helper function to check if error is a normal auth session missing error
+function isAuthSessionMissingError(error: any): boolean {
+  return error?.message?.includes('Auth session missing') ||
+         error?.message?.includes('AuthSessionMissingError') ||
+         error?.message?.includes('session is required') ||
+         error?.code === 'PGRST301' ||
+         error?.status === 400 ||
+         error?.name === 'AuthSessionMissingError'
 }
 
 export function useAuthProvider(): AuthContextType {
@@ -84,7 +94,10 @@ export function useAuthProvider(): AuthContextType {
         if (!mounted) return
         
         if (error) {
-          console.error('Error getting initial session:', error)
+          // Only log non-normal auth errors
+          if (!isAuthSessionMissingError(error)) {
+            console.error('Error getting initial session:', error)
+          }
           if (isRefreshTokenError(error)) {
             await handleSignOut()
           }
@@ -95,7 +108,10 @@ export function useAuthProvider(): AuthContextType {
       } catch (error) {
         if (!mounted) return
         
-        console.error('Error in getInitialSession:', error)
+        // Only log non-normal auth errors
+        if (!isAuthSessionMissingError(error)) {
+          console.error('Error in getInitialSession:', error)
+        }
         if (error instanceof Error && isRefreshTokenError(error)) {
           await handleSignOut()
         }
@@ -161,6 +177,7 @@ export function useAuthProvider(): AuthContextType {
   const signIn = async (email: string, password: string) => {
     try {
       setLoading(true)
+
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
@@ -170,7 +187,11 @@ export function useAuthProvider(): AuthContextType {
         return { error: error.message }
       }
 
-      return { error: undefined }
+      // Ustawiamy stan lokalny natychmiast, aby uniknąć opóźnienia do zdarzenia onAuthStateChange
+      setSession(data.session ?? null)
+      setUser(data.user ?? null)
+
+      return { user: data.user ?? null, session: data.session ?? null, error: undefined }
     } catch (error) {
       return { error: 'Wystąpił nieoczekiwany błąd' }
     } finally {
@@ -181,6 +202,7 @@ export function useAuthProvider(): AuthContextType {
   const signUp = async (email: string, password: string, metadata?: any) => {
     try {
       setLoading(true)
+
       const { data, error } = await supabase.auth.signUp({
         email,
         password,
@@ -193,7 +215,11 @@ export function useAuthProvider(): AuthContextType {
         return { error: error.message }
       }
 
-      return { error: undefined }
+      // Po udanej rejestracji ustaw sesję (może być null zależnie od polityki potwierdzania maila)
+      setSession(data.session ?? null)
+      setUser(data.user ?? null)
+
+      return { user: data.user ?? null, session: data.session ?? null, error: undefined }
     } catch (error) {
       return { error: 'Wystąpił nieoczekiwany błąd' }
     } finally {
@@ -244,6 +270,4 @@ export function useAuthProvider(): AuthContextType {
     signInWithOAuth,
     refreshSession,
   }
-}
-
-export { AuthContext } 
+} 

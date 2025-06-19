@@ -526,8 +526,19 @@ npx webpack-bundle-analyzer .next/static/chunks
 - Przypinane posty w specjalnej sekcji
 - Sortowanie według daty i popularności
 
+### Logowanie (`/login`)
+- Uniwersalna strona logowania dla wszystkich użytkowników
+- Obsługa logowania i rejestracji
+- Automatyczne przekierowanie na odpowiedni panel na podstawie roli
+
 ### Panel Administratora (`/admin`)
 - Dashboard z metrykami i zarządzaniem postami
+- Wymagane uwierzytelnienie i rola admin/author
+
+### Panel Użytkownika (`/panel`)
+- Historia transakcji i zakupów
+- Dostępne produkty i ich status
+- Zarządzanie dostępami
 - Wymagane uwierzytelnienie
 
 ### Tworzenie Postów (`/admin/nowy-post`)
@@ -638,8 +649,9 @@ Miesięczna subskrypcja (49 zł) zapewniająca:
 
 ### 🛡️ System uprawnień
 - **Goście** - dostęp do darmowych artykułów
+- **Użytkownicy** - panel użytkownika, historia zakupów
 - **Subskrybenci** - płatny dostęp do portfela autora
-- **Admin/Autor** - zarządzanie treścią i portfelem
+- **Admin/Autor** - zarządzanie treścią i portfelem, panel administratora
 
 ## 🚀 Jak użytkownik uzyskuje dostęp do portfela?
 

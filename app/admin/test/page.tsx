@@ -7,6 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge'
 import { CheckCircle, XCircle, AlertCircle, User, Shield, Clock } from 'lucide-react'
 import { SiteHeader } from '@/components/common/site-header'
+import { toast } from '@/components/ui/use-toast'
 
 interface AuthTestResult {
   status: 'success' | 'error' | 'warning'
@@ -23,6 +24,7 @@ export default function AuthTestPage() {
   const runAuthTests = async () => {
     setIsRunning(true)
     const results: AuthTestResult[] = []
+    const supabase = createClient()
     
     try {
       // Test 1: Check basic auth state
@@ -65,7 +67,6 @@ export default function AuthTestPage() {
 
       // Test 3: Check user profile and role
       if (user) {
-        const supabase = createClient()
         const { data: profile, error } = await supabase
           .from('profiles')
           .select('role, is_active, created_at')
@@ -109,9 +110,66 @@ export default function AuthTestPage() {
         }
       }
 
-      // Test 5: Check auth error handling
+      // Test 5: Check user profile exists
+      if (user) {
+        try {
+          const { data: profile, error: profileError } = await supabase
+            .from('profiles')
+            .select('*')
+            .eq('id', user.id)
+            .single()
+
+          if (profileError) {
+            if (profileError.code === 'PGRST116') {
+              results.push({
+                status: 'error',
+                title: 'Profil użytkownika',
+                description: `❌ PROFIL NIE ISTNIEJE dla użytkownika ${user.id}. Trigger handle_new_user() prawdopodobnie nie działa!`,
+                data: { 
+                  error: profileError,
+                  userId: user.id,
+                  userEmail: user.email
+                }
+              })
+            } else {
+              results.push({
+                status: 'error',
+                title: 'Profil użytkownika',
+                description: `Błąd pobierania profilu: ${profileError.message}`,
+                data: { profileError }
+              })
+            }
+          } else if (profile) {
+            results.push({
+              status: 'success',
+              title: 'Profil użytkownika',
+              description: `✅ Profil istnieje z rolą: ${profile.role}`,
+              data: { 
+                profile,
+                userId: user.id,
+                userEmail: user.email
+              }
+            })
+          } else {
+            results.push({
+              status: 'error',
+              title: 'Profil użytkownika',
+              description: '❌ Profil nie zwrócony (null)',
+              data: { userId: user.id }
+            })
+          }
+        } catch (profileError: any) {
+          results.push({
+            status: 'error',
+            title: 'Profil użytkownika',
+            description: `❌ Błąd sprawdzania profilu: ${profileError.message}`,
+            data: { profileError }
+          })
+        }
+      }
+
+      // Test 6: Check auth error handling
       try {
-        const supabase = createClient()
         const { data: { user: currentUser }, error } = await supabase.auth.getUser()
         
         if (error) {
@@ -135,6 +193,69 @@ export default function AuthTestPage() {
         })
       }
 
+      // Test 4: Test database access
+      try {
+        const { count: postsCount, error: postsError } = await supabase
+          .from('posts')
+          .select('*', { count: 'exact', head: true })
+
+        if (postsError) {
+          results.push({
+            status: 'error',
+            title: 'Dostęp do bazy danych',
+            description: `Błąd bazy danych: ${postsError.message}`
+          })
+        } else {
+          results.push({
+            status: 'success',
+            title: 'Dostęp do bazy danych',
+            description: 'Baza danych dostępna',
+            data: { postsCount }
+          })
+        }
+      } catch (dbError: any) {
+        results.push({
+          status: 'error',
+          title: 'Dostęp do bazy danych',
+          description: `Błąd bazy danych: ${dbError.message}`
+        })
+      }
+
+      // Test 5: Check if user profile trigger exists
+      try {
+        const { data: triggerData, error: triggerError } = await supabase
+          .from('information_schema.triggers')
+          .select('trigger_name, event_manipulation, event_object_table')
+          .eq('trigger_name', 'on_auth_user_created')
+
+        if (triggerError) {
+          results.push({
+            status: 'warning',
+            title: 'Trigger user profile',
+            description: `Nie można sprawdzić triggera: ${triggerError.message}`
+          })
+        } else if (triggerData && triggerData.length > 0) {
+          results.push({
+            status: 'success',
+            title: 'Trigger user profile',
+            description: 'Trigger on_auth_user_created istnieje - profile będą tworzone automatycznie',
+            data: triggerData[0]
+          })
+        } else {
+          results.push({
+            status: 'error',
+            title: 'Trigger user profile',
+            description: 'Trigger on_auth_user_created NIE ISTNIEJE! Nowi użytkownicy nie będą mieli profili. Zobacz TRIGGER_SETUP.md'
+          })
+        }
+      } catch (triggerError: any) {
+        results.push({
+          status: 'warning',
+          title: 'Trigger user profile',
+          description: `Błąd sprawdzania triggera: ${triggerError.message}`
+        })
+      }
+
     } catch (error: any) {
       results.push({
         status: 'error',
@@ -145,6 +266,53 @@ export default function AuthTestPage() {
 
     setTestResults(results)
     setIsRunning(false)
+  }
+
+  const createAdminProfile = async () => {
+    if (!user) {
+      toast({
+        title: "Błąd",
+        description: "Musisz być zalogowany",
+        variant: "destructive",
+      })
+      return
+    }
+
+    try {
+      const supabase = createClient()
+      const { data, error } = await supabase
+        .from('profiles')
+        .insert({
+          id: user.id,
+          username: user.email?.split('@')[0] || 'admin',
+          full_name: user.user_metadata?.full_name || '',
+          role: 'admin',
+          is_active: true,
+          metadata: {}
+        })
+        .select()
+
+      if (error) {
+        toast({
+          title: "Błąd tworzenia profilu",
+          description: error.message,
+          variant: "destructive",
+        })
+      } else {
+        toast({
+          title: "✅ Profil utworzony!",
+          description: "Profil administratora został utworzony",
+        })
+        // Odśwież testy
+        await runAuthTests()
+      }
+    } catch (error: any) {
+      toast({
+        title: "Błąd",
+        description: error.message,
+        variant: "destructive",
+      })
+    }
   }
 
   useEffect(() => {
@@ -319,6 +487,16 @@ export default function AuthTestPage() {
             className="px-6 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 disabled:opacity-50"
           >
             {isRunning ? 'Testowanie...' : 'Odśwież testy'}
+          </button>
+        </div>
+
+        {/* Create Admin Profile Button */}
+        <div className="text-center">
+          <button
+            onClick={createAdminProfile}
+            className="px-6 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 disabled:opacity-50"
+          >
+            Utwórz profil administratora
           </button>
         </div>
       </div>

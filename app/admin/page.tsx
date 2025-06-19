@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -39,7 +39,10 @@ import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { useAdminPosts } from "@/hooks/use-admin-posts"
+import { useAuth } from "@/hooks/use-auth"
 import { PostFull } from "@/lib/models/post"
+import { useRouter } from "next/navigation"
+import { createClient } from "@/lib/supabase/supabase"
 
 // Helper functions
 const formatNumber = (num: number): string => {
@@ -79,6 +82,10 @@ const getMainImage = (post: PostFull): string => {
 }
 
 export default function AdminDashboard() {
+  const router = useRouter()
+  const { user, loading: authLoading } = useAuth()
+  const supabase = createClient()
+  
   const [searchTerm, setSearchTerm] = useState("")
   const [deleteModalOpen, setDeleteModalOpen] = useState(false)
   const [editModalOpen, setEditModalOpen] = useState(false)
@@ -88,7 +95,52 @@ export default function AdminDashboard() {
   const [isDeleting, setIsDeleting] = useState(false)
   const [isUpdating, setIsUpdating] = useState(false)
 
-  // Use custom hook for data management
+  // Check authorization before loading data
+  useEffect(() => {
+    if (!authLoading) {
+      if (!user) {
+        console.log('No user found, redirecting to login')
+        router.push('/login?redirectTo=/admin')
+        return
+      }
+      
+      // Check if user is admin or author by checking profile in database
+      checkUserRole()
+    }
+  }, [user, authLoading, router])
+
+  const checkUserRole = async () => {
+    if (!user) return
+    
+    try {
+      const { data: profile, error } = await supabase
+        .from('profiles')
+        .select('role')
+        .eq('id', user.id)
+        .single()
+      
+      if (error) {
+        console.error('Error fetching user profile:', error)
+        router.push('/')
+        return
+      }
+      
+      console.log('User profile role:', profile?.role)
+      
+      if (profile?.role !== 'admin' && profile?.role !== 'author') {
+        console.log('User not authorized for admin panel')
+        router.push('/')
+        return
+      }
+      
+      console.log('User authorized for admin panel')
+    } catch (error) {
+      console.error('Error checking user role:', error)
+      router.push('/')
+    }
+  }
+
+  // Use custom hook for data management only if authorized
   const {
     posts,
     stats: adminStats,
@@ -98,6 +150,26 @@ export default function AdminDashboard() {
     updatePost,
     refreshPosts
   } = useAdminPosts()
+
+  // Show loading state while checking auth
+  if (authLoading) {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <SiteHeader />
+        <div className="flex items-center justify-center min-h-[50vh]">
+          <div className="flex items-center space-x-2">
+            <Loader2 className="h-6 w-6 animate-spin" />
+            <span>Sprawdzanie uprawnień...</span>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  // Don't render content if not authorized
+  if (!user) {
+    return null
+  }
 
   // Create stats array from adminStats
   const stats = adminStats ? [

@@ -47,7 +47,7 @@ export function useAuthErrorHandler(config: AuthErrorHandlerConfig = {}) {
         if (redirectToLogin) {
           localStorage.removeItem('supabase.auth.token')
           setTimeout(() => {
-            router.push('/admin/login')
+            router.push('/login')
           }, 1000)
         }
       }
@@ -63,7 +63,7 @@ export function useAuthErrorHandler(config: AuthErrorHandlerConfig = {}) {
         }
         
         if (redirectToLogin) {
-          router.push('/admin/login')
+          router.push('/login')
         }
       }
     }

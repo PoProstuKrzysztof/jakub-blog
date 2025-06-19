@@ -1,6 +1,8 @@
 'use server'
 
 import { supabaseAdmin } from '@/lib/supabase/supabase-admin'
+import { createServerClient } from '@supabase/ssr'
+import { cookies } from 'next/headers'
 import { getCache } from '@/lib/redis/cache'
 
 export interface PortfolioDto {
@@ -10,14 +12,72 @@ export interface PortfolioDto {
   createdAt: string
 }
 
+async function createServerSupabaseClient() {
+  const cookieStore = await cookies()
+  
+  return createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        getAll() {
+          return cookieStore.getAll()
+        },
+        setAll(cookiesToSet) {
+          cookiesToSet.forEach(({ name, value, options }) => {
+            cookieStore.set(name, value, options)
+          })
+        },
+      },
+    }
+  )
+}
+
 export async function getActivePortfolio(): Promise<PortfolioDto | null> {
   try {
-    if (process.env.NODE_ENV === 'development') {
-      console.log('[ Server ] Fetching active portfolio...')
-      console.log('[ Server ] Supabase URL:', process.env.NEXT_PUBLIC_SUPABASE_URL)
-      console.log('[ Server ] Service key exists:', !!process.env.SUPABASE_SERVICE_ROLE_KEY)
-      console.log('[ Server ] Anon key exists:', !!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY)
+    // Utwórz klienta Supabase dla serwera z uwzględnieniem sesji użytkownika
+    const supabase = await createServerSupabaseClient()
+    
+    // Sprawdź czy użytkownik jest zalogowany
+    const { data: { user }, error: authError } = await supabase.auth.getUser()
+    
+    if (authError || !user) {
+      console.log('[ Server ] No authenticated user found')
+      return null
     }
+
+    // Sprawdź czy użytkownik ma dostęp do portfela poprzez zakup produktu lub jest adminem/autorem
+    const { data: hasAccess, error: accessError } = await supabase.rpc('has_product', { 
+      p_slug: 'portfolio-access' 
+    })
+
+    if (accessError) {
+      console.error('[ Server ] Error checking portfolio access:', accessError)
+      return null
+    }
+
+    // Jeśli nie ma dostępu przez zakup, sprawdź czy to admin/autor
+    if (!hasAccess) {
+      const { data: profile, error: profileError } = await supabase
+        .from('profiles')
+        .select('role')
+        .eq('id', user.id)
+        .single()
+
+      if (profileError) {
+        console.error('[ Server ] Error fetching user profile:', profileError)
+        return null
+      }
+
+      const isAuthorized = profile?.role === 'admin' || profile?.role === 'author'
+      
+      if (!isAuthorized) {
+        console.log('[ Server ] User does not have access to portfolio')
+        return null
+      }
+    }
+
+    console.log('[ Server ] User authorized, fetching portfolio data...')
     
     // Sprawdzenie czy mamy poprawną konfigurację Supabase
     if (!process.env.NEXT_PUBLIC_SUPABASE_URL) {
@@ -40,22 +100,6 @@ export async function getActivePortfolio(): Promise<PortfolioDto | null> {
 
     if (error) {
       console.error('[ Server ] getActivePortfolio database error:', error)
-      // Zwróć przykładowe dane w przypadku błędu dla celów testowych
-      if (process.env.NODE_ENV === 'development') {
-        console.log('[ Server ] Returning mock data for development')
-        return {
-          id: 'mock-id',
-          description: 'Przykładowy portfel (mock data)',
-          jsonData: {
-            "AAPL": 0.25,
-            "GOOGL": 0.15,
-            "MSFT": 0.20,
-            "TSLA": 0.10,
-            "CASH": 0.30
-          },
-          createdAt: new Date().toISOString()
-        }
-      }
       return null
     }
 
@@ -84,22 +128,6 @@ export async function getActivePortfolio(): Promise<PortfolioDto | null> {
     }
   } catch (error) {
     console.error('[ Server ] getActivePortfolio error:', error)
-    // Zwróć przykładowe dane w przypadku błędu dla celów testowych
-    if (process.env.NODE_ENV === 'development') {
-      console.log('[ Server ] Returning mock data for development due to error')
-      return {
-        id: 'mock-id',
-        description: 'Przykładowy portfel (mock data - error fallback)',
-        jsonData: {
-          "AAPL": 0.25,
-          "GOOGL": 0.15,
-          "MSFT": 0.20,
-          "TSLA": 0.10,
-          "CASH": 0.30
-        },
-        createdAt: new Date().toISOString()
-      }
-    }
     return null
   }
 }
@@ -113,29 +141,75 @@ export interface AnalysisDto {
 }
 
 export async function listAnalyses(page = 1, limit = 10): Promise<AnalysisDto[]> {
-  const offset = (page - 1) * limit
-  const cache = getCache()
-  const key = `analyses:page:${page}:limit:${limit}`
-
-  return cache.getOrSet(key, async () => {
-    const { data, error } = await supabaseAdmin
-      .from('author_analyses')
-      .select('id, title, content, attachment_url, created_at')
-      .eq('is_published', true)
-      .order('created_at', { ascending: false })
-      .range(offset, offset + limit - 1)
-
-    if (error) {
-      console.error('listAnalyses error', error)
+  try {
+    // Sprawdź autoryzację użytkownika
+    const supabase = await createServerSupabaseClient()
+    
+    const { data: { user }, error: authError } = await supabase.auth.getUser()
+    
+    if (authError || !user) {
+      console.log('[ Server ] No authenticated user found for analyses')
       return []
     }
 
-    return (data ?? []).map(a => ({
-      id: a.id,
-      title: a.title,
-      content: a.content,
-      attachmentUrl: a.attachment_url,
-      createdAt: a.created_at as string
-    }))
-  }, { ttl: 60, tags: ['analyses'] })
+    // Sprawdź czy użytkownik ma dostęp
+    const { data: hasAccess, error: accessError } = await supabase.rpc('has_product', { 
+      p_slug: 'portfolio-access' 
+    })
+
+    if (accessError) {
+      console.error('[ Server ] Error checking analyses access:', accessError)
+      return []
+    }
+
+    // Jeśli nie ma dostępu przez zakup, sprawdź czy to admin/autor
+    if (!hasAccess) {
+      const { data: profile, error: profileError } = await supabase
+        .from('profiles')
+        .select('role')
+        .eq('id', user.id)
+        .single()
+
+      if (profileError) {
+        console.error('[ Server ] Error fetching user profile for analyses:', profileError)
+        return []
+      }
+
+      const isAuthorized = profile?.role === 'admin' || profile?.role === 'author'
+      
+      if (!isAuthorized) {
+        console.log('[ Server ] User does not have access to analyses')
+        return []
+      }
+    }
+
+    const offset = (page - 1) * limit
+    const cache = getCache()
+    const key = `analyses:page:${page}:limit:${limit}:user:${user.id}`
+
+    return cache.getOrSet(key, async () => {
+      const { data, error } = await supabaseAdmin
+        .from('author_analyses')
+        .select('id, title, content, attachment_url, created_at')
+        .eq('is_published', true)
+        .order('created_at', { ascending: false })
+        .range(offset, offset + limit - 1)
+
+      if (error) {
+        console.error('listAnalyses error', error)
+        return []
+      }
+
+      return (data ?? []).map(a => ({
+        id: a.id,
+        title: a.title,
+        content: a.content,
+        attachmentUrl: a.attachment_url,
+        createdAt: a.created_at as string
+      }))
+    }, { ttl: 60, tags: ['analyses'] })
+  } catch (error) {
+    console.error('[ Server ] listAnalyses error:', error)
+    return []
+  }
 } 
