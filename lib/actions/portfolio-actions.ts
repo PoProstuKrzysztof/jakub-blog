@@ -1,3 +1,5 @@
+'use server'
+
 import { supabaseAdmin } from '@/lib/supabase/supabase-admin'
 import { getCache } from '@/lib/redis/cache'
 

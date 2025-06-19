@@ -616,3 +616,121 @@ Ten projekt jest licencjonowany na licencji MIT - zobacz plik [LICENSE](LICENSE)
 **Projekt stworzony z ❤️ dla społeczności inwestorów**
 
 *Dokumentacja aktualizowana na bieżąco wraz z rozwojem projektu.*
+
+# Jakub Blog - Portfolio Autora
+
+Blog inwestycyjny z funkcjonalnością płatnego dostępu do portfela autora.
+
+## 🎯 Główne funkcjonalności
+
+### 📝 Blog inwestycyjny
+- Analizy spółek i rynków finansowych
+- Poradniki edukacyjne
+- System kategorii i tagów
+- Wyszukiwarka treści
+
+### 💼 Portfel autora (Premium)
+Miesięczna subskrypcja (49 zł) zapewniająca:
+- **Dostęp do aktualnego portfela** - widok składu i alokacji
+- **Regularne analizy** - szczegółowe omówienia zmian
+- **Powiadomienia real-time** - info o aktualizacjach portfela
+- **Miesięczne raporty** - podsumowania wyników
+
+### 🛡️ System uprawnień
+- **Goście** - dostęp do darmowych artykułów
+- **Subskrybenci** - płatny dostęp do portfela autora
+- **Admin/Autor** - zarządzanie treścią i portfelem
+
+## 🚀 Jak użytkownik uzyskuje dostęp do portfela?
+
+### 1. **Zakup dostępu**
+```
+Użytkownik → /portfel-autora → Formularz z emailem → Stripe Checkout → Płatność 49 zł
+```
+
+### 2. **Automatyczne utworzenie konta**
+Po udanej płatności webhook Stripe:
+- Sprawdza czy użytkownik istnieje w bazie
+- Tworzy nowe konto (jeśli nie istnieje)
+- Zapisuje zamówienie w tabeli `orders`
+- Generuje magic-link do logowania
+
+### 3. **Dostęp do portfela**
+Użytkownik:
+- Otrzymuje email z linkiem logowania
+- Klika link → automatyczne logowanie
+- Uzyskuje dostęp do `/portfel-autora`
+
+## 🔧 Technologie
+
+- **Frontend**: Next.js 14 App Router, React, TypeScript
+- **UI**: Tailwind CSS, Shadcn UI, Radix UI
+- **Backend**: Supabase (Auth + Database + Edge Functions)
+- **Płatności**: Stripe + webhooks
+- **Cache**: Redis
+- **Real-time**: Supabase Realtime
+
+## 📊 Architektura bazy danych
+
+### Główne tabele:
+- `products` - katalog produktów (portfolio-access)
+- `orders` - zamówienia użytkowników
+- `author_portfolio` - składy portfela (tylko jeden aktywny)
+- `author_analyses` - analizy i raporty
+- `notifications` - powiadomienia użytkowników
+
+### Row Level Security (RLS):
+- Funkcja `has_product()` sprawdza czy użytkownik kupił dostęp
+- Polityki ograniczają dostęp do portfela tylko dla płacących
+- Administratorzy mają pełny dostęp do zarządzania
+
+## 🛠️ Rozwój lokalny
+
+```bash
+# Instalacja zależności
+npm install
+
+# Konfiguracja środowiska
+cp .env.example .env.local
+# Uzupełnij zmienne środowiskowe
+
+# Uruchomienie
+npm run dev
+```
+
+### Wymagane zmienne środowiskowe:
+```env
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key
+SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
+STRIPE_SECRET_KEY=your_stripe_secret
+STRIPE_WEBHOOK_SECRET=your_webhook_secret
+NEXT_PUBLIC_SITE_URL=http://localhost:3000
+```
+
+## 🔐 Bezpieczeństwo
+
+- **Middleware** chroni trasy `/portfel-autora` i `/admin`
+- **Rate limiting** na żądania API
+- **CSP headers** dla bezpieczeństwa treści
+- **Walidacja schematów** (Zod) dla wszystkich akcji
+- **Row Level Security** w Supabase
+
+## 📈 Deployment
+
+Projekt jest przygotowany na deployment na **Vercel** z:
+- Automatycznym buildowaniem
+- Edge Functions przez Supabase
+- Webhooks Stripe
+- Redis cache
+
+## 🎨 UI/UX
+
+- **Responsive design** - mobile-first approach
+- **Loading states** - skeleton loaders
+- **Error handling** - przyjazne komunikaty
+- **Real-time updates** - powiadomienia o nowych analizach
+
+---
+
+> 💡 **Tip**: Funkcjonalność portfela autora działa w pełni w środowisku development - możesz testować flow zakupu używając Stripe test mode.

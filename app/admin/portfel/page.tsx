@@ -1,7 +1,8 @@
 "use client"
 
-import { publishPortfolioAction, createAnalysisAction } from '@/lib/actions/admin-portfolio-actions'
-import { getActivePortfolio, type PortfolioDto } from '@/lib/actions/portfolio-actions'
+import { publishPortfolio, createAnalysis } from '@/lib/actions/admin-portfolio-actions'
+import { fetchActivePortfolio } from '@/lib/actions/portfolio-server-actions'
+import { type PortfolioDto } from '@/lib/actions/portfolio-actions'
 import { PortfolioChart } from '@/components/portfolio/portfolio-chart'
 import { Textarea } from '@/components/ui/textarea'
 import { Input } from '@/components/ui/input'
@@ -14,19 +15,25 @@ import { AlertCircle, TrendingUp, FileText, Plus, Loader2 } from 'lucide-react'
 import { useActionState } from 'react'
 import { useEffect, useState } from 'react'
 
+// Define types to match what the actions actually return
+type ActionState = { success: true } | { error: string }
+
+// Define initial state for the actions
+const initialState: ActionState = { error: '' }
+
 export default function AdminPortfolioPage() {
   const [portfolio, setPortfolio] = useState<PortfolioDto | null>(null)
   const [loading, setLoading] = useState(true)
 
-  // State dla formularzy
-  const [portfolioState, portfolioAction, portfolioPending] = useActionState(publishPortfolioAction, null)
-  const [analysisState, analysisAction, analysisPending] = useActionState(createAnalysisAction, null)
+  // State dla formularzy - używamy prawidłowych akcji z prevState
+  const [portfolioState, portfolioAction, portfolioPending] = useActionState(publishPortfolio, initialState)
+  const [analysisState, analysisAction, analysisPending] = useActionState(createAnalysis, initialState)
 
   // Pobierz dane portfela
   useEffect(() => {
     async function fetchPortfolio() {
       try {
-        const data = await getActivePortfolio()
+        const data = await fetchActivePortfolio()
         setPortfolio(data)
       } catch (error) {
         console.error('Error fetching portfolio:', error)
@@ -36,7 +43,8 @@ export default function AdminPortfolioPage() {
     }
     
     fetchPortfolio()
-  }, [portfolioState?.success, analysisState?.success]) // Odśwież po successful akcjach
+  }, [portfolioState && 'success' in portfolioState && portfolioState.success, 
+      analysisState && 'success' in analysisState && analysisState.success]) // Odśwież po successful akcjach
 
   if (loading) {
     return (
@@ -101,8 +109,10 @@ export default function AdminPortfolioPage() {
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            <FormError error={portfolioState?.error} />
-            <FormSuccess message={portfolioState?.message} />
+            <FormError error={'error' in portfolioState ? portfolioState.error : undefined} />
+            {'success' in portfolioState && portfolioState.success && (
+              <FormSuccess message="Portfel został pomyślnie opublikowany!" />
+            )}
             
             <form action={portfolioAction} className="space-y-4">
               <div className="space-y-2">
@@ -164,8 +174,10 @@ export default function AdminPortfolioPage() {
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            <FormError error={analysisState?.error} />
-            <FormSuccess message={analysisState?.message} />
+            <FormError error={'error' in analysisState ? analysisState.error : undefined} />
+            {'success' in analysisState && analysisState.success && (
+              <FormSuccess message="Analiza została pomyślnie opublikowana!" />
+            )}
             
             <form action={analysisAction} className="space-y-4">
               <div className="space-y-2">

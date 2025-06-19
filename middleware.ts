@@ -181,23 +181,53 @@ export async function middleware(request: NextRequest) {
     }
   }
 
-  // Ochrona tras administratorskich (jak wcześniej)
+  // Ochrona tras administratorskich z poprawioną obsługą błędów refresh token
   if (isProtectedPath) {
-    const { data: { user }, error } = await supabase.auth.getUser()
+    try {
+      const { data: { user }, error } = await supabase.auth.getUser()
 
-    if (error || !user) {
-      const url = request.nextUrl.clone()
-      url.pathname = '/admin/login'
-      return NextResponse.redirect(url)
-    }
+      // Handle refresh token errors specifically
+      if (error) {
+        console.error('Auth error in middleware:', error)
+        
+        // Check if it's a refresh token error
+        if (
+          error.message?.includes('refresh_token_not_found') ||
+          error.message?.includes('Invalid Refresh Token') ||
+          error.message?.includes('Refresh Token Not Found')
+        ) {
+          // Clear auth cookies and redirect to login
+          const response = NextResponse.redirect(new URL('/admin/login', request.url))
+          response.cookies.delete('sb-access-token')
+          response.cookies.delete('sb-refresh-token')
+          return response
+        }
+        
+        // For other auth errors, also redirect to login
+        const url = request.nextUrl.clone()
+        url.pathname = '/admin/login'
+        return NextResponse.redirect(url)
+      }
 
-    const { data: profile } = await supabase
-      .from('profiles')
-      .select('role, is_active')
-      .eq('id', user.id)
-      .single()
+      if (!user) {
+        const url = request.nextUrl.clone()
+        url.pathname = '/admin/login'
+        return NextResponse.redirect(url)
+      }
 
-    if (!profile || !profile.is_active || profile.role !== 'admin') {
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('role, is_active')
+        .eq('id', user.id)
+        .single()
+
+      if (!profile || !profile.is_active || profile.role !== 'admin') {
+        const url = request.nextUrl.clone()
+        url.pathname = '/admin/login'
+        return NextResponse.redirect(url)
+      }
+    } catch (authError) {
+      console.error('Unexpected auth error in middleware:', authError)
       const url = request.nextUrl.clone()
       url.pathname = '/admin/login'
       return NextResponse.redirect(url)

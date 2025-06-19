@@ -2,7 +2,7 @@
 
 import { useState, useEffect, createContext, useContext } from 'react'
 import { createClient } from '@/lib/supabase/supabase'
-import type { User, Session } from '@supabase/supabase-js'
+import type { User, Session, AuthError } from '@supabase/supabase-js'
 
 interface AuthContextType {
   user: User | null
@@ -12,6 +12,7 @@ interface AuthContextType {
   signUp: (email: string, password: string, metadata?: any) => Promise<{ error?: string }>
   signOut: () => Promise<void>
   signInWithOAuth: (provider: 'google' | 'github') => Promise<{ error?: string }>
+  refreshSession: () => Promise<void>
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
@@ -24,27 +25,84 @@ export function useAuth() {
   return context
 }
 
+// Helper function to check if error is a refresh token error
+function isRefreshTokenError(error: AuthError | Error): boolean {
+  return error.message?.includes('refresh_token_not_found') ||
+         error.message?.includes('Invalid Refresh Token') ||
+         error.message?.includes('Refresh Token Not Found')
+}
+
 export function useAuthProvider(): AuthContextType {
   const [user, setUser] = useState<User | null>(null)
   const [session, setSession] = useState<Session | null>(null)
   const [loading, setLoading] = useState(true)
   const supabase = createClient()
 
+  // Function to handle session refresh
+  const refreshSession = async () => {
+    try {
+      const { data: { session }, error } = await supabase.auth.refreshSession()
+      if (error) {
+        if (isRefreshTokenError(error)) {
+          console.warn('Refresh token expired, signing out user')
+          await handleSignOut()
+        } else {
+          console.error('Session refresh failed:', error)
+        }
+      } else {
+        setSession(session)
+        setUser(session?.user ?? null)
+      }
+    } catch (error) {
+      console.error('Session refresh error:', error)
+      await handleSignOut()
+    }
+  }
+
+  // Helper function to handle sign out
+  const handleSignOut = async () => {
+    try {
+      await supabase.auth.signOut()
+      setSession(null)
+      setUser(null)
+    } catch (error) {
+      console.error('Error during sign out:', error)
+      // Force local state cleanup even if server call fails
+      setSession(null)
+      setUser(null)
+    }
+  }
+
   useEffect(() => {
+    let mounted = true
+
     // Get initial session
     const getInitialSession = async () => {
       try {
         const { data: { session }, error } = await supabase.auth.getSession()
+        
+        if (!mounted) return
+        
         if (error) {
-          console.error('Error getting session:', error)
+          console.error('Error getting initial session:', error)
+          if (isRefreshTokenError(error)) {
+            await handleSignOut()
+          }
         } else {
           setSession(session)
           setUser(session?.user ?? null)
         }
       } catch (error) {
+        if (!mounted) return
+        
         console.error('Error in getInitialSession:', error)
+        if (error instanceof Error && isRefreshTokenError(error)) {
+          await handleSignOut()
+        }
       } finally {
-        setLoading(false)
+        if (mounted) {
+          setLoading(false)
+        }
       }
     }
 
@@ -53,14 +111,49 @@ export function useAuthProvider(): AuthContextType {
     // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
+        if (!mounted) return
+        
         console.log('Auth state changed:', event, session?.user?.id)
-        setSession(session)
-        setUser(session?.user ?? null)
-        setLoading(false)
+        
+        try {
+          // Handle different auth events
+          switch (event) {
+            case 'SIGNED_IN':
+            case 'TOKEN_REFRESHED':
+              setSession(session)
+              setUser(session?.user ?? null)
+              break
+              
+            case 'SIGNED_OUT':
+              setSession(null)
+              setUser(null)
+              break
+              
+            case 'USER_UPDATED':
+              if (session) {
+                setSession(session)
+                setUser(session.user)
+              }
+              break
+              
+            default:
+              // For other events, update if we have a session
+              setSession(session)
+              setUser(session?.user ?? null)
+          }
+        } catch (error) {
+          console.error('Error handling auth state change:', error)
+          if (error instanceof Error && isRefreshTokenError(error)) {
+            await handleSignOut()
+          }
+        } finally {
+          setLoading(false)
+        }
       }
     )
 
     return () => {
+      mounted = false
       subscription.unsubscribe()
     }
   }, [supabase.auth])
@@ -111,10 +204,7 @@ export function useAuthProvider(): AuthContextType {
   const signOut = async () => {
     try {
       setLoading(true)
-      const { error } = await supabase.auth.signOut()
-      if (error) {
-        console.error('Error signing out:', error)
-      }
+      await handleSignOut()
     } catch (error) {
       console.error('Error in signOut:', error)
     } finally {
@@ -152,6 +242,7 @@ export function useAuthProvider(): AuthContextType {
     signUp,
     signOut,
     signInWithOAuth,
+    refreshSession,
   }
 }
 

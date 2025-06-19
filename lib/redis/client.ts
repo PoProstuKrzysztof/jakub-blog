@@ -7,6 +7,9 @@ import { Redis as UpstashRedis } from '@upstash/redis'
 import Redis from 'ioredis'
 import { redisConfig, healthCheck } from './config'
 
+// Sprawdź czy kod jest wykonywany po stronie serwera
+const isServer = typeof window === 'undefined'
+
 export interface RedisClientInterface {
   get(key: string): Promise<string | null>
   set(key: string, value: string, ttl?: number): Promise<string | null>
@@ -426,6 +429,44 @@ class TraditionalRedisClient implements RedisClientInterface {
 let redisClient: RedisClientInterface | null = null
 
 export function getRedisClient(): RedisClientInterface {
+  // Jeśli kod jest wykonywany po stronie klienta, zwróć mock
+  if (!isServer) {
+    return {
+      get: () => Promise.resolve(null),
+      set: () => Promise.resolve(null),
+      del: () => Promise.resolve(0),
+      exists: () => Promise.resolve(0),
+      expire: () => Promise.resolve(0),
+      ttl: () => Promise.resolve(-1),
+      incr: () => Promise.resolve(0),
+      decr: () => Promise.resolve(0),
+      hget: () => Promise.resolve(null),
+      hset: () => Promise.resolve(0),
+      hgetall: () => Promise.resolve({}),
+      hdel: () => Promise.resolve(0),
+      lpush: () => Promise.resolve(0),
+      rpush: () => Promise.resolve(0),
+      lpop: () => Promise.resolve(null),
+      rpop: () => Promise.resolve(null),
+      lrange: () => Promise.resolve([]),
+      llen: () => Promise.resolve(0),
+      sadd: () => Promise.resolve(0),
+      srem: () => Promise.resolve(0),
+      smembers: () => Promise.resolve([]),
+      sismember: () => Promise.resolve(0),
+      zadd: () => Promise.resolve(0),
+      zrem: () => Promise.resolve(0),
+      zrange: () => Promise.resolve([]),
+      zrevrange: () => Promise.resolve([]),
+      zrank: () => Promise.resolve(null),
+      zscore: () => Promise.resolve(null),
+      ping: () => Promise.resolve('PONG'),
+      flushdb: () => Promise.resolve('OK'),
+      keys: () => Promise.resolve([]),
+      disconnect: () => Promise.resolve()
+    }
+  }
+
   if (!redisClient) {
     if (redisConfig.provider === 'upstash') {
       redisClient = new UpstashRedisClient()

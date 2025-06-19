@@ -1,6 +1,7 @@
 import { getActivePortfolio, listAnalyses } from '@/lib/actions/portfolio-actions'
 import { PortfolioChart } from '@/components/portfolio/portfolio-chart'
 import { AnalysesFeed } from '@/components/portfolio/analyses-feed'
+import { PurchaseAccess } from '@/components/portfolio/purchase-access'
 
 export const revalidate = 60
 
@@ -8,13 +9,9 @@ export default async function AuthorPortfolioPage() {
   const portfolio = await getActivePortfolio()
   const analyses = await listAnalyses(1, 20)
 
+  // Jeśli nie ma portfela, pokaż stronę zakupu dostępu
   if (!portfolio) {
-    return (
-      <div className="mx-auto max-w-2xl py-20 text-center">
-        <h1 className="text-2xl font-semibold">Portfel autora</h1>
-        <p className="mt-4 text-muted-foreground">Brak opublikowanego portfela</p>
-      </div>
-    )
+    return <PurchaseAccess />
   }
 
   return (
