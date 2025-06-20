@@ -8,26 +8,32 @@ import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Loader2, LogIn, UserPlus, CheckCircle, Mail, AlertCircle } from 'lucide-react'
+import { Loader2, LogIn, UserPlus, CheckCircle, Mail, AlertCircle, RefreshCw } from 'lucide-react'
 import { useAuth } from '@/hooks/use-auth'
 import { useAuthForm } from '@/hooks/use-auth-form'
 import { useToast } from '@/hooks/use-toast'
 import { getUserRole, getUserPanelPath } from '@/lib/utils/user-role'
+import { createClient } from '@/lib/supabase/supabase'
 
 export default function LoginPage() {
   const [activeTab, setActiveTab] = useState('login')
   const [isRedirecting, setIsRedirecting] = useState(false)
   const [successMessage, setSuccessMessage] = useState('')
   const [hasTriggeredRedirect, setHasTriggeredRedirect] = useState(false)
+  const [showResendEmail, setShowResendEmail] = useState(false)
+  const [emailForResend, setEmailForResend] = useState('')
+  const [isResending, setIsResending] = useState(false)
   const router = useRouter()
   const searchParams = useSearchParams()
   const { user, loading: authLoading } = useAuth()
   const { toast } = useToast()
+  const supabase = createClient()
 
   // Hook dla logowania
   const loginForm = useAuthForm({
     preserveFormOnError: true,
     onSuccess: async (result) => {
+      setShowResendEmail(false)
       setHasTriggeredRedirect(true)
       setSuccessMessage('Logowanie pomyślne! Przekierowywanie...')
       setIsRedirecting(true)
@@ -60,11 +66,27 @@ export default function LoginPage() {
       }, 1500)
     },
     onError: (error) => {
-      toast({
-        title: "Błąd logowania",
-        description: error,
-        variant: "destructive",
-      })
+      // Sprawdź czy to błąd niezweryfikowanego emaila
+      const errorLower = error.toLowerCase()
+      const isEmailNotConfirmed = 
+        errorLower.includes('email not confirmed') || 
+        errorLower.includes('email not verified') ||
+        errorLower.includes('confirm your email') ||
+        errorLower.includes('invalid login credentials') ||
+        errorLower.includes('user not confirmed') ||
+        errorLower.includes('account not confirmed')
+      
+      if (isEmailNotConfirmed && loginForm.formData.email) {
+        setEmailForResend(loginForm.formData.email)
+        setShowResendEmail(true)
+        // Nie pokazuj błędu - tylko opcję ponownego wysłania emaila
+      } else {
+        toast({
+          title: "Błąd logowania",
+          description: error,
+          variant: "destructive",
+        })
+      }
     }
   })
 
@@ -72,7 +94,8 @@ export default function LoginPage() {
   const signupForm = useAuthForm({
     preserveFormOnError: true,
     onSuccess: () => {
-      setSuccessMessage('Sprawdź swoją skrzynkę e-mail i kliknij link aktywacyjny.')
+      setShowResendEmail(false)
+      setSuccessMessage('Sprawdź swoją skrzynkę e-mail (w tym folder spam) i kliknij link aktywacyjny.')
       toast({
         title: "Rejestracja pomyślna! 📧",
         description: "Sprawdź swoją skrzynkę e-mail.",
@@ -89,6 +112,41 @@ export default function LoginPage() {
       })
     }
   })
+
+  // Funkcja do ponownego wysłania emaila potwierdzającego
+  const handleResendConfirmation = async () => {
+    if (!emailForResend) return
+
+    setIsResending(true)
+    try {
+      const { error } = await supabase.auth.resend({
+        type: 'signup',
+        email: emailForResend,
+        options: {
+          emailRedirectTo: `${window.location.origin}/auth/callback`
+        }
+      })
+
+      if (error) {
+        throw error
+      }
+
+      toast({
+        title: "Email wysłany ponownie! 📧", 
+        description: "Sprawdź swoją skrzynkę email i kliknij link potwierdzający.",
+        duration: 5000,
+      })
+      setShowResendEmail(false)
+    } catch (error) {
+      toast({
+        title: "Błąd wysyłania emaila",
+        description: error instanceof Error ? error.message : 'Wystąpił nieoczekiwany błąd',
+        variant: "destructive",
+      })
+    } finally {
+      setIsResending(false)
+    }
+  }
 
   // Check URL params for initial tab
   useEffect(() => {
@@ -190,6 +248,7 @@ export default function LoginPage() {
 
   const clearMessages = () => {
     setSuccessMessage('')
+    setShowResendEmail(false)
     loginForm.clearErrors()
     signupForm.clearErrors()
   }
@@ -198,10 +257,12 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 to-slate-100 p-4">
-      <Card className="w-full max-w-md">
-        <CardHeader className="space-y-1">
-          <CardTitle className="text-2xl text-center">Witaj!</CardTitle>
-          <CardDescription className="text-center">
+      <Card className="w-full max-w-md shadow-lg">
+        <CardHeader className="space-y-1 text-center">
+          <CardTitle className="text-3xl font-bold bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
+            Witaj!
+          </CardTitle>
+          <CardDescription className="text-base">
             Zaloguj się lub utwórz nowe konto
           </CardDescription>
         </CardHeader>
@@ -209,60 +270,102 @@ export default function LoginPage() {
           <Tabs value={activeTab} onValueChange={(value) => {
             setActiveTab(value)
             clearMessages()
-                      }} className="w-full">
-             <TabsList className="grid w-full grid-cols-2">
-               <TabsTrigger value="login" className="flex items-center gap-2">
-                 <LogIn className="h-4 w-4" />
-                 Logowanie
-               </TabsTrigger>
-               <TabsTrigger value="signup" className="flex items-center gap-2">
-                 <UserPlus className="h-4 w-4" />
-                 Rejestracja
-               </TabsTrigger>
-             </TabsList>
+          }} className="w-full">
+            <TabsList className="grid w-full grid-cols-2 mb-6">
+              <TabsTrigger value="login" className="flex items-center gap-2 font-medium">
+                <LogIn className="h-4 w-4" />
+                Logowanie
+              </TabsTrigger>
+              <TabsTrigger value="signup" className="flex items-center gap-2 font-medium">
+                <UserPlus className="h-4 w-4" />
+                Rejestracja
+              </TabsTrigger>
+            </TabsList>
 
-                         <TabsContent value="login" className="space-y-4 mt-6">
+            <TabsContent value="login" className="space-y-4 mt-6">
               <form onSubmit={handleLogin} className="space-y-4">
                 <div className="space-y-2">
                   <Label htmlFor="login-email">Email</Label>
                   <Input
                     id="login-email"
                     type="email"
-                                        placeholder="twoj@email.com"
-                     value={loginForm.formData.email}
-                     onChange={(e) => loginForm.updateField('email', e.target.value)}
-                     required
-                     disabled={isLoading}
-                   />
+                    placeholder="twoj@email.com"
+                    value={loginForm.formData.email}
+                    onChange={(e) => loginForm.updateField('email', e.target.value)}
+                    required
+                    disabled={isLoading}
+                    className="h-11"
+                  />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="login-password">Hasło</Label>
                   <Input
                     id="login-password"
                     type="password"
-                                         value={loginForm.formData.password}
-                     onChange={(e) => loginForm.updateField('password', e.target.value)}
-                     required
-                     disabled={isLoading}
-                   />
-                 </div>
-                 
-                 {loginForm.errors.general && (
-                   <Alert variant="destructive">
-                     <AlertDescription>{loginForm.errors.general}</AlertDescription>
-                   </Alert>
-                 )}
+                    placeholder="Wprowadź hasło"
+                    value={loginForm.formData.password}
+                    onChange={(e) => loginForm.updateField('password', e.target.value)}
+                    required
+                    disabled={isLoading}
+                    className="h-11"
+                  />
+                </div>
+                
+                {loginForm.errors.general && (
+                  <Alert variant="destructive">
+                    <AlertCircle className="h-4 w-4" />
+                    <AlertDescription>{loginForm.errors.general}</AlertDescription>
+                  </Alert>
+                )}
 
-                 {successMessage && (
-                   <Alert className="border-green-200 bg-green-50 text-green-800">
-                     <CheckCircle className="h-4 w-4 text-green-600" />
-                     <AlertDescription className="text-green-800">
-                       {successMessage}
-                     </AlertDescription>
-                   </Alert>
-                 )}
+                {showResendEmail && (
+                  <Alert className="border-blue-200 bg-blue-50 text-blue-800">
+                    <Mail className="h-4 w-4 text-blue-600" />
+                    <AlertDescription className="text-blue-800">
+                      <div className="space-y-3">
+                        <p className="font-medium">Potwierdź swój adres email</p>
+                        <p className="text-sm">
+                          Wyślij link potwierdzający na adres <strong>{emailForResend}</strong>.
+                          Sprawdź swoją skrzynkę pocztową (w tym folder spam).
+                        </p>
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="sm"
+                          onClick={handleResendConfirmation}
+                          disabled={isResending}
+                          className="bg-blue-100 hover:bg-blue-200 border-blue-300 text-blue-800 font-medium"
+                        >
+                          {isResending ? (
+                            <>
+                              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                              Wysyłanie...
+                            </>
+                          ) : (
+                            <>
+                              <RefreshCw className="mr-2 h-4 w-4" />
+                              Wyślij email potwierdzający
+                            </>
+                          )}
+                        </Button>
+                      </div>
+                    </AlertDescription>
+                  </Alert>
+                )}
 
-                 <Button type="submit" className="w-full" disabled={isLoading}>
+                {successMessage && (
+                  <Alert className="border-green-200 bg-green-50 text-green-800">
+                    <CheckCircle className="h-4 w-4 text-green-600" />
+                    <AlertDescription className="text-green-800">
+                      <div className="space-y-2">
+                        <p className="font-medium">Sukces!</p>
+                        <p className="text-sm">{successMessage}</p>
+                      </div>
+                    </AlertDescription>
+                  </Alert>
+                )}
+
+                <Button type="submit" className="w-full h-11 text-base font-medium" disabled={isLoading}>
                   {isLoading ? (
                     <>
                       <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -278,82 +381,90 @@ export default function LoginPage() {
               </form>
             </TabsContent>
 
-                         <TabsContent value="signup" className="space-y-4 mt-6">
-               <form onSubmit={handleSignUp} className="space-y-4">
-                 <div className="space-y-2">
-                   <Label htmlFor="signup-name">Imię i nazwisko (opcjonalne)</Label>
-                   <Input
-                     id="signup-name"
-                     type="text"
-                     placeholder="Jan Kowalski"
-                     value={signupForm.formData.fullName}
-                     onChange={(e) => signupForm.updateField('fullName', e.target.value)}
-                     disabled={isLoading}
-                   />
+            <TabsContent value="signup" className="space-y-4 mt-6">
+              <form onSubmit={handleSignUp} className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="signup-name">Imię i nazwisko (opcjonalne)</Label>
+                  <Input
+                    id="signup-name"
+                    type="text"
+                    placeholder="Jan Kowalski"
+                    value={signupForm.formData.fullName}
+                    onChange={(e) => signupForm.updateField('fullName', e.target.value)}
+                    disabled={isLoading}
+                    className="h-11"
+                  />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="signup-email">Email</Label>
                   <Input
                     id="signup-email"
                     type="email"
-                                         placeholder="twoj@email.com"
-                     value={signupForm.formData.email}
-                     onChange={(e) => signupForm.updateField('email', e.target.value)}
-                     required
-                     disabled={isLoading}
-                   />
+                    placeholder="twoj@email.com"
+                    value={signupForm.formData.email}
+                    onChange={(e) => signupForm.updateField('email', e.target.value)}
+                    required
+                    disabled={isLoading}
+                    className="h-11"
+                  />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="signup-password">Hasło</Label>
                   <Input
                     id="signup-password"
                     type="password"
-                                         placeholder="Minimum 6 znaków"
-                     value={signupForm.formData.password}
-                     onChange={(e) => signupForm.updateField('password', e.target.value)}
-                     required
-                     disabled={isLoading}
-                     minLength={6}
-                   />
+                    placeholder="Minimum 6 znaków"
+                    value={signupForm.formData.password}
+                    onChange={(e) => signupForm.updateField('password', e.target.value)}
+                    required
+                    disabled={isLoading}
+                    minLength={6}
+                    className="h-11"
+                  />
                 </div>
                 <div className="space-y-2">
-                                     <Label htmlFor="confirm-password">Potwierdź hasło</Label>
-                   <Input
-                     id="confirm-password"
-                     type="password"
-                     placeholder="Powtórz hasło"
-                     value={signupForm.formData.confirmPassword}
-                     onChange={(e) => signupForm.updateField('confirmPassword', e.target.value)}
-                     required
-                     disabled={isLoading}
-                   />
-                 </div>
-                 
-                 {signupForm.errors.general && (
-                   <Alert variant="destructive">
-                     <AlertDescription>{signupForm.errors.general}</AlertDescription>
-                   </Alert>
-                 )}
+                  <Label htmlFor="confirm-password">Potwierdź hasło</Label>
+                  <Input
+                    id="confirm-password"
+                    type="password"
+                    placeholder="Powtórz hasło"
+                    value={signupForm.formData.confirmPassword}
+                    onChange={(e) => signupForm.updateField('confirmPassword', e.target.value)}
+                    required
+                    disabled={isLoading}
+                    className="h-11"
+                  />
+                </div>
+                
+                {signupForm.errors.general && (
+                  <Alert variant="destructive">
+                    <AlertCircle className="h-4 w-4" />
+                    <AlertDescription>{signupForm.errors.general}</AlertDescription>
+                  </Alert>
+                )}
 
-                 {successMessage && (
-                   <Alert className="border-green-200 bg-green-50 text-green-800">
-                     <Mail className="h-4 w-4 text-green-600" />
-                     <AlertDescription className="text-green-800">
-                       {successMessage}
-                     </AlertDescription>
-                   </Alert>
-                 )}
+                {successMessage && (
+                  <Alert className="border-green-200 bg-green-50 text-green-800">
+                    <CheckCircle className="h-4 w-4 text-green-600" />
+                    <AlertDescription className="text-green-800">
+                      <div className="space-y-2">
+                        <p className="font-medium">Sukces!</p>
+                        <p className="text-sm">{successMessage}</p>
+                      </div>
+                    </AlertDescription>
+                  </Alert>
+                )}
 
-                 <Button type="submit" className="w-full" disabled={isLoading}>
+                <Button type="submit" className="w-full h-11 text-base font-medium" disabled={isLoading}>
                   {isLoading ? (
                     <>
                       <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                                             Tworzenie konta...
+                      Tworzenie konta...
                     </>
                   ) : (
                     <>
                       <UserPlus className="mr-2 h-4 w-4" />
-                                             Utwórz konto
+                      Utwórz konto
                     </>
                   )}
                 </Button>

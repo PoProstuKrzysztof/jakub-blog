@@ -20,7 +20,7 @@ export class TagService {
       this.supabase = supabaseClient
     } else {
       // For client-side usage, import createClient dynamically
-      const { createClient } = require('../supabase')
+      const { createClient } = require('../supabase/supabase')
       this.supabase = createClient()
     }
   }

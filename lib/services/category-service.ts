@@ -21,7 +21,7 @@ export class CategoryService {
       this.supabase = supabaseClient
     } else {
       // For client-side usage, import createClient dynamically
-      const { createClient } = require('../supabase')
+      const { createClient } = require('../supabase/supabase')
       this.supabase = createClient()
     }
   }
@@ -265,128 +265,6 @@ export class CategoryService {
     } catch (error) {
       console.error('Error fetching subcategories:', error)
       return []
-    }
-  }
-
-  async getCategories(): Promise<{ data: CategoryWithPostCount[] | null; error: string | null }> {
-    try {
-      const { data, error } = await this.supabase
-        .from('categories')
-        .select(`
-          *,
-          post_count:post_categories(count)
-        `)
-        .order('name')
-
-      if (error) {
-        return { data: null, error: error.message }
-      }
-
-      return { data, error: null }
-    } catch (error) {
-      return { data: null, error: error instanceof Error ? error.message : 'Unknown error' }
-    }
-  }
-
-  async getCategoryById(id: string): Promise<{ data: CategoryWithPostCount | null; error: string | null }> {
-    try {
-      const { data, error } = await this.supabase
-        .from('categories')
-        .select(`
-          *,
-          post_count:post_categories(count)
-        `)
-        .eq('id', id)
-        .single()
-
-      if (error) {
-        return { data: null, error: error.message }
-      }
-
-      return { data, error: null }
-    } catch (error) {
-      return { data: null, error: error instanceof Error ? error.message : 'Unknown error' }
-    }
-  }
-
-  async getCategoryBySlug(slug: string): Promise<{ data: CategoryWithPostCount | null; error: string | null }> {
-    try {
-      const { data, error } = await this.supabase
-        .from('categories')
-        .select(`
-          *,
-          post_count:post_categories(count)
-        `)
-        .eq('slug', slug)
-        .single()
-
-      if (error) {
-        return { data: null, error: error.message }
-      }
-
-      return { data, error: null }
-    } catch (error) {
-      return { data: null, error: error instanceof Error ? error.message : 'Unknown error' }
-    }
-  }
-
-  async createCategory(data: CreateCategoryData): Promise<{ data: CategoryWithPostCount | null; error: string | null }> {
-    try {
-      const { data: category, error } = await this.supabase
-        .from('categories')
-        .insert([data])
-        .select(`
-          *,
-          post_count:post_categories(count)
-        `)
-        .single()
-
-      if (error) {
-        return { data: null, error: error.message }
-      }
-
-      return { data: category, error: null }
-    } catch (error) {
-      return { data: null, error: error instanceof Error ? error.message : 'Unknown error' }
-    }
-  }
-
-  async updateCategory(id: string, data: Partial<CreateCategoryData>): Promise<{ data: CategoryWithPostCount | null; error: string | null }> {
-    try {
-      const { data: category, error } = await this.supabase
-        .from('categories')
-        .update(data)
-        .eq('id', id)
-        .select(`
-          *,
-          post_count:post_categories(count)
-        `)
-        .single()
-
-      if (error) {
-        return { data: null, error: error.message }
-      }
-
-      return { data: category, error: null }
-    } catch (error) {
-      return { data: null, error: error instanceof Error ? error.message : 'Unknown error' }
-    }
-  }
-
-  async deleteCategory(id: string): Promise<{ error: string | null }> {
-    try {
-      const { error } = await this.supabase
-        .from('categories')
-        .delete()
-        .eq('id', id)
-
-      if (error) {
-        return { error: error.message }
-      }
-
-      return { error: null }
-    } catch (error) {
-      return { error: error instanceof Error ? error.message : 'Unknown error' }
     }
   }
 } 
