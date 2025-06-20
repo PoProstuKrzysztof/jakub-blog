@@ -271,14 +271,76 @@ export default function LoginPage() {
             setActiveTab(value)
             clearMessages()
           }} className="w-full">
-            <TabsList className="grid w-full grid-cols-2 mb-6">
-              <TabsTrigger value="login" className="flex items-center gap-2 font-medium">
-                <LogIn className="h-4 w-4" />
-                Logowanie
+            <TabsList className="grid w-full grid-cols-2 mb-6 p-1 bg-transparent rounded-lg gap-1">
+              <TabsTrigger 
+                value="login" 
+                className="
+                  relative flex items-center justify-center gap-2 px-4 py-3 font-medium text-sm
+                  rounded-lg transition-all duration-300 ease-in-out overflow-hidden
+                  text-slate-700 hover:text-slate-900
+                  focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary
+                  
+                  border-2 border-slate-300/80 hover:border-slate-400/90
+                  shadow-[0_2px_8px_rgba(0,0,0,0.06)] hover:shadow-[0_4px_16px_rgba(0,0,0,0.12)]
+                  
+                  data-[state=active]:border-transparent data-[state=active]:text-white
+                  data-[state=active]:bg-gradient-to-r data-[state=active]:from-primary data-[state=active]:to-primary/80
+                  data-[state=active]:shadow-[0_8px_32px_rgba(59,130,246,0.3)]
+                  data-[state=active]:ring-2 data-[state=active]:ring-primary/30
+                  data-[state=active]:hover:shadow-[0_12px_40px_rgba(59,130,246,0.4)]
+                  
+                  hover:bg-gradient-to-r hover:from-slate-50 hover:to-slate-100/50
+                  data-[state=active]:hover:from-primary/90 data-[state=active]:hover:to-primary/70
+                  
+                  motion-safe:transform motion-safe:hover:scale-[1.03] motion-safe:hover:-translate-y-0.5
+                  active:scale-[0.97] active:transition-transform active:duration-100
+                  
+                  before:absolute before:inset-0 before:rounded-lg before:bg-gradient-to-r 
+                  before:from-white/20 before:to-transparent before:opacity-0 
+                  hover:before:opacity-100 before:transition-opacity before:duration-300
+                  
+                  after:absolute after:inset-0 after:rounded-lg after:bg-gradient-to-br 
+                  after:from-primary/10 after:via-transparent after:to-primary/5 after:opacity-0
+                  data-[state=active]:after:opacity-100 after:transition-opacity after:duration-300
+                "
+              >
+                <LogIn className="h-4 w-4 transition-transform duration-300 relative z-10 drop-shadow-sm" />
+                <span className="relative z-10">Logowanie</span>
               </TabsTrigger>
-              <TabsTrigger value="signup" className="flex items-center gap-2 font-medium">
-                <UserPlus className="h-4 w-4" />
-                Rejestracja
+              <TabsTrigger 
+                value="signup" 
+                className="
+                  relative flex items-center justify-center gap-2 px-4 py-3 font-medium text-sm
+                  rounded-lg transition-all duration-300 ease-in-out overflow-hidden
+                  text-slate-700 hover:text-slate-900
+                  focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary
+                  
+                  border-2 border-slate-300/80 hover:border-slate-400/90
+                  shadow-[0_2px_8px_rgba(0,0,0,0.06)] hover:shadow-[0_4px_16px_rgba(0,0,0,0.12)]
+                  
+                  data-[state=active]:border-transparent data-[state=active]:text-white
+                  data-[state=active]:bg-gradient-to-r data-[state=active]:from-primary data-[state=active]:to-primary/80
+                  data-[state=active]:shadow-[0_8px_32px_rgba(59,130,246,0.3)]
+                  data-[state=active]:ring-2 data-[state=active]:ring-primary/30
+                  data-[state=active]:hover:shadow-[0_12px_40px_rgba(59,130,246,0.4)]
+                  
+                  hover:bg-gradient-to-r hover:from-slate-50 hover:to-slate-100/50
+                  data-[state=active]:hover:from-primary/90 data-[state=active]:hover:to-primary/70
+                  
+                  motion-safe:transform motion-safe:hover:scale-[1.03] motion-safe:hover:-translate-y-0.5
+                  active:scale-[0.97] active:transition-transform active:duration-100
+                  
+                  before:absolute before:inset-0 before:rounded-lg before:bg-gradient-to-r 
+                  before:from-white/20 before:to-transparent before:opacity-0 
+                  hover:before:opacity-100 before:transition-opacity before:duration-300
+                  
+                  after:absolute after:inset-0 after:rounded-lg after:bg-gradient-to-br 
+                  after:from-primary/10 after:via-transparent after:to-primary/5 after:opacity-0
+                  data-[state=active]:after:opacity-100 after:transition-opacity after:duration-300
+                "
+              >
+                <UserPlus className="h-4 w-4 transition-transform duration-300 relative z-10 drop-shadow-sm" />
+                <span className="relative z-10">Rejestracja</span>
               </TabsTrigger>
             </TabsList>
 
@@ -334,16 +396,24 @@ export default function LoginPage() {
                           size="sm"
                           onClick={handleResendConfirmation}
                           disabled={isResending}
-                          className="bg-blue-100 hover:bg-blue-200 border-blue-300 text-blue-800 font-medium"
+                          className="
+                            bg-blue-100 hover:bg-blue-200 border-blue-300 text-blue-800 font-medium
+                            transition-all duration-200 ease-in-out
+                            focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500
+                            motion-safe:hover:scale-[1.02] motion-safe:active:scale-[0.98]
+                            disabled:motion-safe:hover:scale-100 disabled:motion-safe:active:scale-100
+                            shadow-sm hover:shadow-md disabled:shadow-sm
+                          "
                         >
                           {isResending ? (
                             <>
-                              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                              <Loader2 className="mr-2 h-4 w-4 animate-spin motion-reduce:hidden" />
+                              <span className="motion-reduce:inline hidden">⏳</span>
                               Wysyłanie...
                             </>
                           ) : (
                             <>
-                              <RefreshCw className="mr-2 h-4 w-4" />
+                              <RefreshCw className="mr-2 h-4 w-4 transition-transform duration-200 hover:rotate-180" />
                               Wyślij email potwierdzający
                             </>
                           )}
@@ -365,16 +435,44 @@ export default function LoginPage() {
                   </Alert>
                 )}
 
-                <Button type="submit" className="w-full h-11 text-base font-medium" disabled={isLoading}>
+                <Button 
+                  type="submit" 
+                  className="
+                    relative w-full h-11 text-base font-medium overflow-hidden
+                    transition-all duration-300 ease-in-out
+                    focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary
+                    
+                    bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary/80
+                    border-2 border-primary/60 hover:border-primary/80
+                    shadow-[0_4px_16px_rgba(59,130,246,0.25)] hover:shadow-[0_8px_32px_rgba(59,130,246,0.4)]
+                    disabled:shadow-[0_2px_8px_rgba(59,130,246,0.15)]
+                    
+                    motion-safe:hover:scale-[1.02] motion-safe:hover:-translate-y-0.5
+                    motion-safe:active:scale-[0.98] motion-safe:active:translate-y-0
+                    disabled:motion-safe:hover:scale-100 disabled:motion-safe:hover:translate-y-0
+                    disabled:motion-safe:active:scale-100 disabled:motion-safe:active:translate-y-0
+                    
+                    before:absolute before:inset-0 before:bg-gradient-to-r 
+                    before:from-white/20 before:via-white/10 before:to-transparent before:opacity-0 
+                    hover:before:opacity-100 before:transition-opacity before:duration-300
+                    disabled:before:opacity-0
+                    
+                    after:absolute after:inset-0 after:bg-gradient-to-br 
+                    after:from-primary/20 after:via-transparent after:to-primary/10 after:opacity-100
+                    after:transition-opacity after:duration-300
+                  " 
+                  disabled={isLoading}
+                >
                   {isLoading ? (
                     <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin motion-reduce:hidden" />
+                      <span className="motion-reduce:inline hidden">⏳</span>
                       Logowanie...
                     </>
                   ) : (
                     <>
-                      <LogIn className="mr-2 h-4 w-4" />
-                      Zaloguj się
+                      <LogIn className="mr-2 h-4 w-4 transition-transform duration-300 group-hover:scale-110 relative z-10 drop-shadow-sm" />
+                      <span className="relative z-10">Zaloguj się</span>
                     </>
                   )}
                 </Button>
@@ -455,16 +553,44 @@ export default function LoginPage() {
                   </Alert>
                 )}
 
-                <Button type="submit" className="w-full h-11 text-base font-medium" disabled={isLoading}>
+                <Button 
+                  type="submit" 
+                  className="
+                    relative w-full h-11 text-base font-medium overflow-hidden
+                    transition-all duration-300 ease-in-out
+                    focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary
+                    
+                    bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary/80
+                    border-2 border-primary/60 hover:border-primary/80
+                    shadow-[0_4px_16px_rgba(59,130,246,0.25)] hover:shadow-[0_8px_32px_rgba(59,130,246,0.4)]
+                    disabled:shadow-[0_2px_8px_rgba(59,130,246,0.15)]
+                    
+                    motion-safe:hover:scale-[1.02] motion-safe:hover:-translate-y-0.5
+                    motion-safe:active:scale-[0.98] motion-safe:active:translate-y-0
+                    disabled:motion-safe:hover:scale-100 disabled:motion-safe:hover:translate-y-0
+                    disabled:motion-safe:active:scale-100 disabled:motion-safe:active:translate-y-0
+                    
+                    before:absolute before:inset-0 before:bg-gradient-to-r 
+                    before:from-white/20 before:via-white/10 before:to-transparent before:opacity-0 
+                    hover:before:opacity-100 before:transition-opacity before:duration-300
+                    disabled:before:opacity-0
+                    
+                    after:absolute after:inset-0 after:bg-gradient-to-br 
+                    after:from-primary/20 after:via-transparent after:to-primary/10 after:opacity-100
+                    after:transition-opacity after:duration-300
+                  " 
+                  disabled={isLoading}
+                >
                   {isLoading ? (
                     <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin motion-reduce:hidden" />
+                      <span className="motion-reduce:inline hidden">⏳</span>
                       Tworzenie konta...
                     </>
                   ) : (
                     <>
-                      <UserPlus className="mr-2 h-4 w-4" />
-                      Utwórz konto
+                      <UserPlus className="mr-2 h-4 w-4 transition-transform duration-300 group-hover:scale-110 relative z-10 drop-shadow-sm" />
+                      <span className="relative z-10">Utwórz konto</span>
                     </>
                   )}
                 </Button>
