@@ -12,7 +12,9 @@ interface Props {
 }
 
 export function AnalysesFeed({ initialAnalyses }: Props) {
-  const [analyses, setAnalyses] = useState<AnalysisDto[]>(initialAnalyses)
+  // Zabezpieczenie na wypadek gdyby initialAnalyses nie było tablicą
+  const safeInitialAnalyses = Array.isArray(initialAnalyses) ? initialAnalyses : []
+  const [analyses, setAnalyses] = useState<AnalysisDto[]>(safeInitialAnalyses)
   const [hasNew, setHasNew] = useState(false)
   const { toast } = useToast()
 
@@ -32,6 +34,15 @@ export function AnalysesFeed({ initialAnalyses }: Props) {
       supabase.removeChannel(channel)
     }
   }, [])
+
+  // Jeśli brak analiz
+  if (!analyses || analyses.length === 0) {
+    return (
+      <div className="text-center py-8">
+        <p className="text-muted-foreground">Brak dostępnych analiz</p>
+      </div>
+    )
+  }
 
   return (
     <div className="space-y-4 w-full">
