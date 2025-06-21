@@ -240,8 +240,8 @@ export default function AdminAccessManagementPage() {
         {userProducts.length > 0 && (
           <div className="space-y-2">
             <div className="flex items-center gap-2 text-sm font-medium text-foreground">
-              <Package className="h-4 w-4 text-primary" />
-              Zakupione produkty ({userProducts.length})
+              <Package className="h-4 w-4 text-primary flex-shrink-0" />
+              <span className="truncate">Zakupione produkty ({userProducts.length})</span>
             </div>
             <div className="grid gap-2">
               {userProducts.map((product) => {
@@ -249,38 +249,40 @@ export default function AdminAccessManagementPage() {
                 return (
                   <div 
                     key={product.id} 
-                    className="flex items-center justify-between p-3 bg-muted/30 rounded-lg border border-border/50"
+                    className="flex flex-col gap-3 p-3 bg-muted/30 rounded-lg border border-border/50 sm:flex-row sm:items-center sm:justify-between"
                   >
                     <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2 mb-1">
+                      <div className="flex flex-col gap-2 mb-2 sm:flex-row sm:items-center sm:gap-2 sm:mb-1">
                         <span className="font-medium text-sm truncate">{product.product_name}</span>
-                        {getStatusBadge(product.status)}
-                        {product.expires_at && isProductExpired(product.expires_at) && (
-                          <Badge variant="outline" className="text-xs">
-                            <Clock className="h-3 w-3 mr-1" />
-                            Wygasł
-                          </Badge>
-                        )}
+                        <div className="flex items-center gap-2 flex-wrap">
+                          {getStatusBadge(product.status)}
+                          {product.expires_at && isProductExpired(product.expires_at) && (
+                            <Badge variant="outline" className="text-xs">
+                              <Clock className="h-3 w-3 mr-1" />
+                              Wygasł
+                            </Badge>
+                          )}
+                        </div>
                       </div>
-                      <div className="flex items-center gap-4 text-xs text-muted-foreground">
-                        <span className="flex items-center gap-1">
+                      <div className="flex flex-col gap-1 text-xs text-muted-foreground sm:flex-row sm:items-center sm:gap-4">
+                        <span className="flex items-center gap-1 flex-shrink-0">
                           <Calendar className="h-3 w-3" />
-                          {formatDate(product.created_at)}
+                          <span className="truncate">{formatDate(product.created_at)}</span>
                         </span>
                         {product.expires_at && (
-                          <span className="flex items-center gap-1">
+                          <span className="flex items-center gap-1 flex-shrink-0">
                             <Clock className="h-3 w-3" />
-                            Wygasa: {formatDate(product.expires_at)}
+                            <span className="truncate">Wygasa: {formatDate(product.expires_at)}</span>
                           </span>
                         )}
-                        <span className="flex items-center gap-1">
+                        <span className="flex items-center gap-1 flex-shrink-0">
                           <Euro className="h-3 w-3" />
                           {formatPrice(product.price_cents, product.currency)}
                         </span>
                       </div>
                     </div>
                     {product.status === 'paid' && !isProductExpired(product.expires_at) && (
-                      <div className="flex items-center gap-2 ml-4">
+                      <div className="flex items-center gap-2 pt-2 border-t border-border/30 sm:pt-0 sm:border-t-0 sm:ml-4">
                         {matchingProduct && (
                           <Button
                             size="sm"
@@ -305,8 +307,8 @@ export default function AdminAccessManagementPage() {
         <div className="space-y-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2 text-sm font-medium text-foreground">
-              <ShoppingBag className="h-4 w-4 text-primary" />
-              Zarządzanie dostępami do produktów
+              <ShoppingBag className="h-4 w-4 text-primary flex-shrink-0" />
+              <span className="truncate">Zarządzanie dostępami do produktów</span>
             </div>
           </div>
           
@@ -334,29 +336,30 @@ export default function AdminAccessManagementPage() {
                 ).map((product) => (
                   <div 
                     key={product.id} 
-                    className="flex items-center justify-between p-3 bg-muted/30 rounded-lg border border-border/50 hover:bg-muted/50 transition-colors duration-200"
+                    className="flex flex-col gap-3 p-3 bg-muted/30 rounded-lg border border-border/50 hover:bg-muted/50 transition-colors duration-200 sm:flex-row sm:items-center sm:justify-between"
                   >
                     <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2 mb-1">
+                      <div className="flex flex-col gap-2 mb-1 sm:flex-row sm:items-center sm:gap-2 sm:mb-1">
                         <span className="font-medium text-sm truncate">{product.name}</span>
-                        <Badge variant="outline" className="text-xs">
+                        <Badge variant="outline" className="text-xs w-fit">
                           {formatPrice(product.price_cents, product.currency)}
                         </Badge>
                       </div>
                       {product.description && (
-                        <p className="text-xs text-muted-foreground truncate">
+                        <p className="text-xs text-muted-foreground line-clamp-2 sm:truncate">
                           {product.description}
                         </p>
                       )}
                     </div>
-                    <div className="flex items-center gap-2 ml-4">
+                    <div className="flex items-center gap-2 pt-2 border-t border-border/30 sm:pt-0 sm:border-t-0 sm:ml-4">
                       <Button
                         size="sm"
                         onClick={() => handleGrantProductAccess(user, product)}
                         className="text-xs px-3 py-1 transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-lg focus:scale-105 focus:shadow-lg active:scale-95"
                       >
                         <UserCheck className="h-3 w-3 mr-1 transition-transform duration-200" />
-                        Przyznaj dostęp
+                        <span className="hidden sm:inline">Przyznaj dostęp</span>
+                        <span className="sm:hidden">Przyznaj</span>
                       </Button>
                     </div>
                   </div>
@@ -374,9 +377,9 @@ export default function AdminAccessManagementPage() {
               !isProductExpired(userProduct.expires_at)
             )
           ).length === 0 && (
-            <div className="text-sm text-muted-foreground italic flex items-center gap-2 p-4 bg-muted/30 rounded-lg border border-border/50">
-              <CheckCircle className="h-4 w-4 text-muted-foreground" />
-              Użytkownik ma dostęp do wszystkich dostępnych produktów i usług
+            <div className="text-sm text-muted-foreground italic flex items-start gap-2 p-4 bg-muted/30 rounded-lg border border-border/50">
+              <CheckCircle className="h-4 w-4 text-muted-foreground flex-shrink-0 mt-0.5" />
+              <span>Użytkownik ma dostęp do wszystkich dostępnych produktów i usług</span>
             </div>
           )}
         </div>
@@ -412,74 +415,75 @@ export default function AdminAccessManagementPage() {
         showSearch={false}
       />
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6 xl:px-8 py-6 sm:py-8">
         {/* Header */}
-        <div className="flex items-center gap-4 mb-8">
+        <div className="flex items-center gap-3 sm:gap-4 mb-6 sm:mb-8">
           <Button variant="outline" size="sm" asChild>
             <Link href="/admin" className="flex items-center gap-2">
               <ArrowLeft className="h-4 w-4" />
-              Powrót do panelu
+              <span className="hidden sm:inline">Powrót do panelu</span>
+              <span className="sm:hidden">Powrót</span>
             </Link>
           </Button>
         </div>
 
         <div className="space-y-6">
-          <div className="space-y-4">
-            <h1 className="text-3xl font-bold tracking-tight flex items-center gap-2">
-              <UserCheck className="h-8 w-8 text-primary" />
-              Zarządzanie dostępami
+          <div className="space-y-3 sm:space-y-4">
+            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight flex items-center gap-2">
+              <UserCheck className="h-6 w-6 sm:h-8 sm:w-8 text-primary flex-shrink-0" />
+              <span className="truncate">Zarządzanie dostępami</span>
             </h1>
-            <p className="text-muted-foreground text-lg">
+            <p className="text-muted-foreground text-base sm:text-lg">
               Przypisuj i zarządzaj dostępem użytkowników do portfela autora oraz przeglądaj ich zakupy
             </p>
           </div>
 
           {/* Statistics Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+          <div className="grid grid-cols-2 gap-3 mb-6 sm:grid-cols-4 sm:gap-6 sm:mb-8">
             <Card>
-              <CardContent className="p-6 flex items-center">
-                <div className="p-2 bg-blue-100 rounded-lg">
-                  <Users className="h-6 w-6 text-blue-600" />
+              <CardContent className="p-4 sm:p-6 flex items-center">
+                <div className="p-2 bg-blue-100 rounded-lg flex-shrink-0">
+                  <Users className="h-4 w-4 sm:h-6 sm:w-6 text-blue-600" />
                 </div>
-                <div className="ml-4">
-                  <p className="text-sm font-medium text-muted-foreground">Wszyscy użytkownicy</p>
-                  <p className="text-2xl font-bold">{stats.totalUsers}</p>
+                <div className="ml-3 sm:ml-4 min-w-0 flex-1">
+                  <p className="text-xs sm:text-sm font-medium text-muted-foreground truncate">Wszyscy</p>
+                  <p className="text-lg sm:text-2xl font-bold">{stats.totalUsers}</p>
                 </div>
               </CardContent>
             </Card>
             
             <Card>
-              <CardContent className="p-6 flex items-center">
-                <div className="p-2 bg-green-100 rounded-lg">
-                  <CheckCircle className="h-6 w-6 text-green-600" />
+              <CardContent className="p-4 sm:p-6 flex items-center">
+                <div className="p-2 bg-green-100 rounded-lg flex-shrink-0">
+                  <CheckCircle className="h-4 w-4 sm:h-6 sm:w-6 text-green-600" />
                 </div>
-                <div className="ml-4">
-                  <p className="text-sm font-medium text-muted-foreground">Z dostępem do portfela</p>
-                  <p className="text-2xl font-bold">{stats.usersWithAccess}</p>
-                </div>
-              </CardContent>
-            </Card>
-            
-            <Card>
-              <CardContent className="p-6 flex items-center">
-                <div className="p-2 bg-orange-100 rounded-lg">
-                  <UserCheck className="h-6 w-6 text-orange-600" />
-                </div>
-                <div className="ml-4">
-                  <p className="text-sm font-medium text-muted-foreground">Aktywni użytkownicy</p>
-                  <p className="text-2xl font-bold">{stats.activeUsers}</p>
+                <div className="ml-3 sm:ml-4 min-w-0 flex-1">
+                  <p className="text-xs sm:text-sm font-medium text-muted-foreground truncate">Z dostępem</p>
+                  <p className="text-lg sm:text-2xl font-bold">{stats.usersWithAccess}</p>
                 </div>
               </CardContent>
             </Card>
             
             <Card>
-              <CardContent className="p-6 flex items-center">
-                <div className="p-2 bg-purple-100 rounded-lg">
-                  <Calendar className="h-6 w-6 text-purple-600" />
+              <CardContent className="p-4 sm:p-6 flex items-center">
+                <div className="p-2 bg-orange-100 rounded-lg flex-shrink-0">
+                  <UserCheck className="h-4 w-4 sm:h-6 sm:w-6 text-orange-600" />
                 </div>
-                <div className="ml-4">
-                  <p className="text-sm font-medium text-muted-foreground">Nowi (30 dni)</p>
-                  <p className="text-2xl font-bold">{stats.recentUsers}</p>
+                <div className="ml-3 sm:ml-4 min-w-0 flex-1">
+                  <p className="text-xs sm:text-sm font-medium text-muted-foreground truncate">Aktywni</p>
+                  <p className="text-lg sm:text-2xl font-bold">{stats.activeUsers}</p>
+                </div>
+              </CardContent>
+            </Card>
+            
+            <Card>
+              <CardContent className="p-4 sm:p-6 flex items-center">
+                <div className="p-2 bg-purple-100 rounded-lg flex-shrink-0">
+                  <Calendar className="h-4 w-4 sm:h-6 sm:w-6 text-purple-600" />
+                </div>
+                <div className="ml-3 sm:ml-4 min-w-0 flex-1">
+                  <p className="text-xs sm:text-sm font-medium text-muted-foreground truncate">Nowi (30 dni)</p>
+                  <p className="text-lg sm:text-2xl font-bold">{stats.recentUsers}</p>
                 </div>
               </CardContent>
             </Card>
@@ -497,23 +501,23 @@ export default function AdminAccessManagementPage() {
 
           {/* Users Management Card */}
           <Card className="border-0 shadow-lg">
-            <CardHeader>
-              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                <div>
-                  <CardTitle className="text-2xl font-bold text-foreground flex items-center gap-2">
-                    <Users className="h-6 w-6 text-primary" />
-                    Użytkownicy systemu
+            <CardHeader className="p-4 sm:p-6">
+              <div className="flex flex-col gap-4 sm:flex-row sm:justify-between sm:items-start lg:items-center">
+                <div className="min-w-0 flex-1">
+                  <CardTitle className="text-lg sm:text-xl lg:text-2xl font-bold text-foreground flex items-center gap-2">
+                    <Users className="h-5 w-5 sm:h-6 sm:w-6 text-primary flex-shrink-0" />
+                    <span className="truncate">Użytkownicy systemu</span>
                   </CardTitle>
-                  <CardDescription className="text-muted-foreground mt-1">
+                  <CardDescription className="text-muted-foreground mt-1 text-sm sm:text-base">
                     Przeglądaj użytkowników, ich zakupy i zarządzaj dostępami do portfela
                   </CardDescription>
                 </div>
               </div>
             </CardHeader>
             
-            <CardContent className="space-y-6">
+            <CardContent className="p-4 sm:p-6 space-y-6">
               {/* Search */}
-              <div className="relative max-w-md">
+              <div className="relative w-full sm:max-w-md">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
                 <Input
                   placeholder="Szukaj użytkowników..."
@@ -526,48 +530,48 @@ export default function AdminAccessManagementPage() {
               {/* Loading State */}
               {loading && (
                 <div className="flex items-center justify-center py-12">
-                  <Loader2 className="h-8 w-8 animate-spin text-primary" />
-                  <span className="ml-2 text-muted-foreground">Ładowanie użytkowników...</span>
+                  <Loader2 className="h-6 w-6 sm:h-8 sm:w-8 animate-spin text-primary" />
+                  <span className="ml-2 text-sm sm:text-base text-muted-foreground">Ładowanie użytkowników...</span>
                 </div>
               )}
 
               {/* Users List */}
               {!loading && (
-                <div className="space-y-6">
+                <div className="space-y-4 sm:space-y-6">
                   {filteredUsers.map((user) => (
                     <div
                       key={user.id}
-                      className="p-6 bg-card/50 hover:bg-card/80 rounded-xl border border-border/50 hover:border-border transition-all duration-300"
+                      className="p-4 sm:p-6 bg-card/50 hover:bg-card/80 rounded-xl border border-border/50 hover:border-border transition-all duration-300"
                     >
                       {/* User Header */}
-                      <div className="flex items-start justify-between mb-4">
+                      <div className="flex flex-col gap-3 mb-4 sm:flex-row sm:items-start sm:justify-between">
                         <div className="flex-1 min-w-0">
-                          <div className="flex items-center gap-3 mb-2">
-                            <h3 className="font-semibold text-foreground text-lg">
+                          <div className="flex flex-col gap-2 mb-2 sm:flex-row sm:items-center sm:gap-3">
+                            <h3 className="font-semibold text-foreground text-base sm:text-lg truncate">
                               {user.full_name || user.username || 'Bez nazwy'}
                             </h3>
                             {getRoleBadge(user.role)}
                           </div>
                           
-                          <div className="flex items-center space-x-4 text-sm text-muted-foreground mb-3">
-                            <span className="flex items-center">
-                              <Mail className="h-4 w-4 mr-1" />
-                              {user.email}
-                            </span>
-                            <span className="flex items-center">
-                              <Calendar className="h-4 w-4 mr-1" />
-                              Zarejestrowany: {formatDate(user.created_at)}
-                            </span>
-                            {user.last_sign_in_at && (
+                          <div className="space-y-2 sm:space-y-1">
+                            <div className="flex items-center text-xs sm:text-sm text-muted-foreground">
+                              <Mail className="h-3 w-3 sm:h-4 sm:w-4 mr-2 flex-shrink-0" />
+                              <span className="truncate">{user.email}</span>
+                            </div>
+                            <div className="flex flex-col gap-1 text-xs sm:text-sm text-muted-foreground sm:flex-row sm:items-center sm:gap-4">
                               <span className="flex items-center">
-                                <Calendar className="h-4 w-4 mr-1" />
-                                Ostatnie logowanie: {formatDate(user.last_sign_in_at)}
+                                <Calendar className="h-3 w-3 sm:h-4 sm:w-4 mr-2 flex-shrink-0" />
+                                <span className="truncate">Zarejestrowany: {formatDate(user.created_at)}</span>
                               </span>
-                            )}
+                              {user.last_sign_in_at && (
+                                <span className="flex items-center">
+                                  <Calendar className="h-3 w-3 sm:h-4 sm:w-4 mr-2 flex-shrink-0" />
+                                  <span className="truncate">Ostatnie: {formatDate(user.last_sign_in_at)}</span>
+                                </span>
+                              )}
+                            </div>
                           </div>
                         </div>
-
-                        
                       </div>
 
                       {/* Collapsible Products Section */}
@@ -578,26 +582,26 @@ export default function AdminAccessManagementPage() {
                         >
                           <div className="flex items-center gap-3">
                             {expandedUsers.has(user.id) ? (
-                              <ChevronDown className="h-4 w-4 text-muted-foreground group-hover:text-foreground transition-colors" />
+                              <ChevronDown className="h-4 w-4 text-muted-foreground group-hover:text-foreground transition-colors flex-shrink-0" />
                             ) : (
-                              <ChevronRight className="h-4 w-4 text-muted-foreground group-hover:text-foreground transition-colors" />
+                              <ChevronRight className="h-4 w-4 text-muted-foreground group-hover:text-foreground transition-colors flex-shrink-0" />
                             )}
                             <div className="flex items-center gap-2">
-                              <Package className="h-4 w-4 text-primary" />
-                              <span className="font-medium text-foreground">
+                              <Package className="h-4 w-4 text-primary flex-shrink-0" />
+                              <span className="font-medium text-foreground text-sm sm:text-base">
                                 Produkty i dostępy
                               </span>
                             </div>
                           </div>
                           <div className="flex items-center gap-2">
-                            <Badge variant="secondary">
+                            <Badge variant="secondary" className="text-xs">
                               {user.purchasedProducts.length} zakupionych
                             </Badge>
                           </div>
                         </button>
                         
                         {expandedUsers.has(user.id) && (
-                          <div className="mt-4 pl-4 border-l-2 border-primary/20">
+                          <div className="mt-4 pl-2 sm:pl-4 border-l-2 border-primary/20">
                             {renderUserProducts(user.purchasedProducts, user)}
                           </div>
                         )}
@@ -609,9 +613,9 @@ export default function AdminAccessManagementPage() {
 
               {!loading && filteredUsers.length === 0 && (
                 <div className="text-center py-12">
-                  <Users className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
-                  <h3 className="text-lg font-semibold text-foreground mb-2">Brak użytkowników</h3>
-                  <p className="text-muted-foreground">
+                  <Users className="h-12 w-12 sm:h-16 sm:w-16 text-muted-foreground mx-auto mb-4" />
+                  <h3 className="text-base sm:text-lg font-semibold text-foreground mb-2">Brak użytkowników</h3>
+                  <p className="text-sm sm:text-base text-muted-foreground px-4">
                     {searchTerm ? "Nie znaleziono użytkowników spełniających kryteria wyszukiwania" : "Nie ma jeszcze żadnych zarejestrowanych użytkowników"}
                   </p>
                 </div>
@@ -623,32 +627,32 @@ export default function AdminAccessManagementPage() {
 
       {/* Grant Product Access Modal */}
       <Dialog open={productAccessModalOpen} onOpenChange={setProductAccessModalOpen}>
-        <DialogContent className="rounded-xl">
+        <DialogContent className="rounded-xl w-[95vw] max-w-lg mx-auto">
           <DialogHeader>
-            <DialogTitle>Przyznaj dostęp do produktu</DialogTitle>
-            <DialogDescription>
-              Przyznaj użytkownikowi <strong>{selectedUser?.email}</strong> dostęp do produktu <strong>{selectedProduct?.name}</strong>
+            <DialogTitle className="text-base sm:text-lg">Przyznaj dostęp do produktu</DialogTitle>
+            <DialogDescription className="text-sm sm:text-base">
+              Przyznaj użytkownikowi <strong className="break-all">{selectedUser?.email}</strong> dostęp do produktu <strong>{selectedProduct?.name}</strong>
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4">
             {selectedProduct && (
-              <div className="p-4 bg-muted/50 rounded-lg">
-                <h4 className="font-medium text-sm mb-2">{selectedProduct.name}</h4>
+              <div className="p-3 sm:p-4 bg-muted/50 rounded-lg">
+                <h4 className="font-medium text-sm mb-2 truncate">{selectedProduct.name}</h4>
                 {selectedProduct.description && (
-                  <p className="text-sm text-muted-foreground mb-2">{selectedProduct.description}</p>
+                  <p className="text-xs sm:text-sm text-muted-foreground mb-2 line-clamp-2">{selectedProduct.description}</p>
                 )}
-                <div className="flex items-center gap-2">
-                  <Badge variant="secondary">
+                <div className="flex flex-wrap items-center gap-2">
+                  <Badge variant="secondary" className="text-xs">
                     {formatPrice(selectedProduct.price_cents, selectedProduct.currency)}
                   </Badge>
-                  <Badge variant="outline">{selectedProduct.slug}</Badge>
+                  <Badge variant="outline" className="text-xs truncate max-w-[120px]">{selectedProduct.slug}</Badge>
                 </div>
               </div>
             )}
             <div>
-              <Label htmlFor="productDuration">Czas dostępu (dni)</Label>
+              <Label htmlFor="productDuration" className="text-sm font-medium">Czas dostępu (dni)</Label>
               <Select value={productAccessDuration} onValueChange={setProductAccessDuration}>
-                <SelectTrigger className="rounded-xl">
+                <SelectTrigger className="rounded-xl mt-1">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -660,22 +664,23 @@ export default function AdminAccessManagementPage() {
               </Select>
             </div>
           </div>
-          <DialogFooter>
+          <DialogFooter className="flex flex-col gap-2 sm:flex-row sm:gap-0">
             <Button 
               variant="outline" 
               onClick={() => setProductAccessModalOpen(false)} 
-              className="rounded-xl"
+              className="rounded-xl w-full sm:w-auto order-2 sm:order-1"
               disabled={isGrantingProductAccess}
             >
               Anuluj
             </Button>
             <Button 
               onClick={confirmGrantProductAccess} 
-              className="rounded-xl"
+              className="rounded-xl w-full sm:w-auto order-1 sm:order-2"
               disabled={isGrantingProductAccess}
             >
               {isGrantingProductAccess && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              Przyznaj dostęp
+              <span className="hidden sm:inline">Przyznaj dostęp</span>
+              <span className="sm:hidden">Przyznaj</span>
             </Button>
           </DialogFooter>
         </DialogContent>
