@@ -143,7 +143,7 @@ export default function UserPanelPage() {
     switch (status) {
       case 'paid':
         return (
-          <Badge variant="default" className="bg-green-100 text-green-800 hover:bg-green-100">
+          <Badge variant="default" className="bg-primary/10 text-primary hover:bg-primary/20">
             <CheckCircle className="h-3 w-3 mr-1" />
             Opłacone
           </Badge>
@@ -292,7 +292,7 @@ export default function UserPanelPage() {
                           </div>
                           <div className="text-right space-y-2">
                             {product.is_active ? (
-                              <Badge variant="default" className="bg-green-100 text-green-800">
+                              <Badge variant="default" className="bg-primary/10 text-primary">
                                 <CheckCircle className="h-3 w-3 mr-1" />
                                 Aktywny
                               </Badge>

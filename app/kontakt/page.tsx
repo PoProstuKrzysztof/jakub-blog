@@ -315,31 +315,31 @@ export default function ContactPage() {
                 <div className="grid grid-cols-2 gap-3 sm:gap-4">
                   <a 
                     href="#" 
-                    className="flex items-center p-3 bg-blue-50 hover:bg-blue-100 rounded-xl transition-colors touch-manipulation tap-highlight-none"
+                    className="flex items-center p-3 bg-muted hover:bg-muted/80 rounded-xl transition-colors touch-manipulation tap-highlight-none"
                   >
-                    <Facebook className="h-4 w-4 sm:h-5 sm:w-5 text-blue-600 mr-2 sm:mr-3" />
-                    <span className="text-xs sm:text-sm font-medium text-blue-600">Facebook</span>
+                    <Facebook className="h-4 w-4 sm:h-5 sm:w-5 text-primary mr-2 sm:mr-3" />
+                    <span className="text-xs sm:text-sm font-medium text-primary">Facebook</span>
                   </a>
                   <a 
                     href="#" 
-                    className="flex items-center p-3 bg-sky-50 hover:bg-sky-100 rounded-xl transition-colors touch-manipulation tap-highlight-none"
+                    className="flex items-center p-3 bg-muted hover:bg-muted/80 rounded-xl transition-colors touch-manipulation tap-highlight-none"
                   >
-                    <Twitter className="h-4 w-4 sm:h-5 sm:w-5 text-sky-600 mr-2 sm:mr-3" />
-                    <span className="text-xs sm:text-sm font-medium text-sky-600">Twitter</span>
+                    <Twitter className="h-4 w-4 sm:h-5 sm:w-5 text-muted-foreground mr-2 sm:mr-3" />
+                    <span className="text-xs sm:text-sm font-medium text-muted-foreground">Twitter</span>
                   </a>
                   <a 
                     href="#" 
-                    className="flex items-center p-3 bg-blue-50 hover:bg-blue-100 rounded-xl transition-colors touch-manipulation tap-highlight-none"
+                    className="flex items-center p-3 bg-muted hover:bg-muted/80 rounded-xl transition-colors touch-manipulation tap-highlight-none"
                   >
-                    <Linkedin className="h-4 w-4 sm:h-5 sm:w-5 text-blue-600 mr-2 sm:mr-3" />
-                    <span className="text-xs sm:text-sm font-medium text-blue-600">LinkedIn</span>
+                    <Linkedin className="h-4 w-4 sm:h-5 sm:w-5 text-muted-foreground mr-2 sm:mr-3" />
+                    <span className="text-xs sm:text-sm font-medium text-muted-foreground">LinkedIn</span>
                   </a>
                   <a 
                     href="#" 
-                    className="flex items-center p-3 bg-red-50 hover:bg-red-100 rounded-xl transition-colors touch-manipulation tap-highlight-none"
+                    className="flex items-center p-3 bg-primary/10 hover:bg-primary/20 rounded-xl transition-colors touch-manipulation tap-highlight-none"
                   >
-                    <Youtube className="h-4 w-4 sm:h-5 sm:w-5 text-red-600 mr-2 sm:mr-3" />
-                    <span className="text-xs sm:text-sm font-medium text-red-600">YouTube</span>
+                    <Youtube className="h-4 w-4 sm:h-5 sm:w-5 text-primary mr-2 sm:mr-3" />
+                    <span className="text-xs sm:text-sm font-medium text-primary">YouTube</span>
                   </a>
                 </div>
               </CardContent>
@@ -354,23 +354,23 @@ export default function ContactPage() {
               </CardHeader>
               <CardContent className="p-4 sm:p-6 pt-0 space-y-3 sm:space-y-4">
                 <div className="flex items-center space-x-3">
-                  <CheckCircle className="h-4 w-4 sm:h-5 sm:w-5 text-green-600 flex-shrink-0" />
+                  <CheckCircle className="h-4 w-4 sm:h-5 sm:w-5 text-primary flex-shrink-0" />
                   <span className="text-xs sm:text-sm text-foreground">Konsultacje inwestycyjne</span>
                 </div>
                 <div className="flex items-center space-x-3">
-                  <CheckCircle className="h-4 w-4 sm:h-5 sm:w-5 text-green-600 flex-shrink-0" />
+                  <CheckCircle className="h-4 w-4 sm:h-5 sm:w-5 text-primary flex-shrink-0" />
                   <span className="text-xs sm:text-sm text-foreground">Analiza portfela</span>
                 </div>
                 <div className="flex items-center space-x-3">
-                  <CheckCircle className="h-4 w-4 sm:h-5 sm:w-5 text-green-600 flex-shrink-0" />
+                  <CheckCircle className="h-4 w-4 sm:h-5 sm:w-5 text-primary flex-shrink-0" />
                   <span className="text-xs sm:text-sm text-foreground">Edukacja finansowa</span>
                 </div>
                 <div className="flex items-center space-x-3">
-                  <CheckCircle className="h-4 w-4 sm:h-5 sm:w-5 text-green-600 flex-shrink-0" />
+                  <CheckCircle className="h-4 w-4 sm:h-5 sm:w-5 text-primary flex-shrink-0" />
                   <span className="text-xs sm:text-sm text-foreground">Analizy spółek</span>
                 </div>
                 <div className="flex items-center space-x-3">
-                  <CheckCircle className="h-4 w-4 sm:h-5 sm:w-5 text-green-600 flex-shrink-0" />
+                  <CheckCircle className="h-4 w-4 sm:h-5 sm:w-5 text-primary flex-shrink-0" />
                   <span className="text-xs sm:text-sm text-foreground">Strategie inwestycyjne</span>
                 </div>
                 
@@ -429,7 +429,7 @@ export default function ContactPage() {
                   <div className="flex items-center mb-3 sm:mb-4">
                     <div className="flex space-x-1 mr-3">
                       {Array.from({ length: testimonial.rating }).map((_, i) => (
-                        <Star key={i} className="h-3 w-3 sm:h-4 sm:w-4 fill-yellow-400 text-yellow-400" />
+                        <Star key={i} className="h-3 w-3 sm:h-4 sm:w-4 fill-primary text-primary" />
                       ))}
                     </div>
                     <Quote className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />

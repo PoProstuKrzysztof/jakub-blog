@@ -143,11 +143,11 @@ export default function UserPanelTestPage() {
   const getStatusIcon = (status: string) => {
     switch (status) {
       case 'success':
-        return <CheckCircle className="h-5 w-5 text-green-600" />
+        return <CheckCircle className="h-5 w-5 text-primary" />
       case 'warning':
-        return <Clock className="h-5 w-5 text-yellow-600" />
+        return <Clock className="h-5 w-5 text-muted-foreground" />
       case 'error':
-        return <XCircle className="h-5 w-5 text-red-600" />
+        return <XCircle className="h-5 w-5 text-destructive" />
       default:
         return null
     }
@@ -156,11 +156,11 @@ export default function UserPanelTestPage() {
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'success':
-        return 'border-green-200 bg-green-50'
+        return 'border-primary/20 bg-primary/5'
       case 'warning':
-        return 'border-yellow-200 bg-yellow-50'
+        return 'border-muted bg-muted/50'
       case 'error':
-        return 'border-red-200 bg-red-50'
+        return 'border-destructive/20 bg-destructive/5'
       default:
         return 'border-gray-200 bg-gray-50'
     }
@@ -187,9 +187,9 @@ export default function UserPanelTestPage() {
       <div className="min-h-screen bg-background">
         <SiteHeader currentPage="panel" />
         <div className="container mx-auto p-6">
-          <Card className="border-red-200 bg-red-50">
+          <Card className="border-destructive/20 bg-destructive/5">
             <CardContent className="pt-6">
-              <p className="text-red-800">Musisz być zalogowany aby korzystać z testów</p>
+              <p className="text-destructive">Musisz być zalogowany aby korzystać z testów</p>
             </CardContent>
           </Card>
         </div>
@@ -231,7 +231,7 @@ export default function UserPanelTestPage() {
               <div>
                 <p className="text-sm font-medium text-muted-foreground">Rola</p>
                 <div className="flex items-center space-x-2">
-                  {isAdmin ? <Shield className="h-4 w-4 text-blue-600" /> : <User className="h-4 w-4 text-gray-600" />}
+                  {isAdmin ? <Shield className="h-4 w-4 text-primary" /> : <User className="h-4 w-4 text-muted-foreground" />}
                   <Badge variant={isAdmin ? "default" : "secondary"}>
                     {role || 'Nieznana'}
                   </Badge>

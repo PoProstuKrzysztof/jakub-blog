@@ -59,66 +59,48 @@ interface Service {
 // Service Item Component
 function ServiceItem({ service }: { service: Service }) {
   return (
-    <Card
-      className={`border-0 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.01] group relative overflow-hidden h-full ${
-        service.popular ? 'ring-2 ring-primary ring-opacity-50' : ''
-      } ${
-        service.featured ? 'ring-4 ring-gradient-to-r ring-yellow-400 ring-opacity-70 shadow-yellow-200/50 shadow-xl' : ''
-      }`}
-    >
+    <Card className="border-0 shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:scale-105 group relative overflow-hidden h-full flex flex-col touch-manipulation">
       {service.badge && (
         <div className="absolute top-0 left-1/2 transform -translate-x-1/2 z-20">
-          <Badge className={`${service.featured ? 'bg-gradient-to-r from-yellow-500 to-orange-500 text-white animate-pulse' : service.popular ? 'bg-primary text-primary-foreground' : 'bg-purple-600 text-white'} px-4 py-1 text-xs font-semibold rounded-b-lg text-center whitespace-nowrap shadow-lg`}>
+          <Badge className={`${service.popular ? 'bg-primary text-primary-foreground' : 'bg-muted-foreground text-background'} px-4 py-1 text-xs font-semibold rounded-b-lg text-center whitespace-nowrap shadow-lg`}>
             {service.badge}
           </Badge>
         </div>
       )}
 
-      {service.featured && (
-        <div className="absolute top-4 right-4 z-20">
-          <div className="bg-gradient-to-r from-yellow-400 to-orange-400 text-white px-3 py-1 rounded-full text-xs font-bold animate-bounce shadow-lg">
-            ⭐ POLECANE
-          </div>
-        </div>
-      )}
-
-      <div className={`absolute inset-0 ${service.featured ? 'bg-gradient-to-br from-yellow-50 to-orange-50' : 'bg-gradient-to-br from-primary/5 to-accent/5'} opacity-0 group-hover:opacity-100 transition-opacity duration-500`}></div>
+      <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-accent/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
       
-      {service.featured && (
-        <div className="absolute inset-0 bg-gradient-to-br from-yellow-100/30 to-orange-100/30 pointer-events-none"></div>
-      )}
-      
-      <CardContent className="p-4 sm:p-6 relative z-10 pt-8 sm:pt-10 flex flex-col h-full">
-        <div className="text-center mb-4 sm:mb-6">
-          <div className={`w-14 h-14 sm:w-16 sm:h-16 mx-auto mb-3 sm:mb-4 rounded-xl bg-gradient-to-br ${service.color} shadow-lg flex items-center justify-center group-hover:scale-105 transition-transform duration-300`}>
-            {service.icon === "Target" && <Target className="h-6 w-6 sm:h-8 sm:w-8 text-white" />}
-            {service.icon === "BarChart3" && <BarChart3 className="h-6 w-6 sm:h-8 sm:w-8 text-white" />}
-            {service.icon === "BookOpen" && <BookOpen className="h-6 w-6 sm:h-8 sm:w-8 text-white" />}
-            {service.icon === "Layers" && <Layers className="h-6 w-6 sm:h-8 sm:w-8 text-white" />}
-            {service.icon === "GraduationCap" && <GraduationCap className="h-6 w-6 sm:h-8 sm:w-8 text-white" />}
-          </div>
-          
-          <h3 className="text-lg sm:text-xl font-bold text-foreground mb-2 sm:mb-3">
-            {service.title}
-          </h3>
-          
-          <p className="text-muted-foreground leading-relaxed text-xs sm:text-sm">
-            {service.description}
-          </p>
+      {/* Główna treść karty */}
+      <div className="p-6 lg:p-8 relative z-10 flex flex-col h-full pt-8 sm:pt-10">
+        {/* Ikona */}
+        <div className="w-16 h-16 mx-auto mb-6 rounded-2xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors duration-300">
+          {service.icon === "Target" && <Target className="h-8 w-8 text-primary" />}
+          {service.icon === "BarChart3" && <BarChart3 className="h-8 w-8 text-primary" />}
+          {service.icon === "BookOpen" && <BookOpen className="h-8 w-8 text-primary" />}
+          {service.icon === "Layers" && <Layers className="h-8 w-8 text-primary" />}
+          {service.icon === "GraduationCap" && <GraduationCap className="h-8 w-8 text-primary" />}
         </div>
-
-        <div className="space-y-2 mb-4 sm:mb-6 flex-grow">
+        
+        {/* Tytuł */}
+        <h3 className="text-xl font-semibold text-foreground mb-4 text-center">{service.title}</h3>
+        
+        {/* Opis */}
+        <p className="text-sm text-muted-foreground mb-6 text-center leading-relaxed">{service.description}</p>
+        
+        {/* Features - rozciągną się aby wypełnić przestrzeń */}
+        <div className="space-y-3 flex-1 mb-8">
           {service.features.map((feature, idx) => (
             <div key={idx} className="flex items-start text-sm text-muted-foreground">
-              <CheckCircle2 className="h-4 w-4 text-green-500 mr-3 flex-shrink-0 mt-0.5" />
+              <CheckCircle className="h-4 w-4 text-green-500 mr-3 flex-shrink-0 mt-0.5" />
               <span>{feature}</span>
             </div>
           ))}
         </div>
 
-        <div className="mt-auto">
-                      <div className="text-center mb-4 sm:mb-6">
-            <div className="text-2xl sm:text-3xl font-bold text-foreground mb-1">
+        {/* Cena i przycisk - zawsze na dole */}
+        <div className="space-y-6">
+          <div className="text-center">
+            <div className="text-3xl font-bold text-foreground mb-2">
               {service.price}
               {service.originalPrice && (
                 <span className="text-lg text-gray-400 line-through ml-2">
@@ -126,26 +108,22 @@ function ServiceItem({ service }: { service: Service }) {
                 </span>
               )}
             </div>
-            
             <div className="text-sm text-muted-foreground mb-2">{service.priceNote}</div>
             {service.type === 'subskrypcja' && (
-              <div className="text-xs text-purple-600 font-medium">
+              <div className="text-xs text-muted-foreground font-medium">
                 • Można anulować w każdej chwili
               </div>
             )}
           </div>
 
           <Link href="/kontakt" className="block">
-            <Button
-              className={`w-full bg-gradient-to-r ${service.color} hover:opacity-90 text-white transition-all duration-500 rounded-xl px-8 py-4 font-semibold shadow-xl hover:shadow-2xl transform hover:scale-105 text-lg`}
-            >
-              {service.popular && <Sparkles className="mr-2 h-4 w-4" />}
+            <Button className="w-full bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl font-semibold group-hover:shadow-lg transition-all duration-300 py-3 touch-manipulation tap-highlight-none">
               {service.ctaText}
               <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform duration-300" />
             </Button>
           </Link>
         </div>
-      </CardContent>
+      </div>
     </Card>
   )
 }
@@ -172,10 +150,9 @@ export default function CooperationPage() {
         "Materiały edukacyjne: e-booki, prezentacje, poradniki wideo",
         "Instrukcje dotyczące prowizji i platform inwestycyjnych",
       ],
-      color: "from-blue-600 to-blue-700",
+      color: "primary",
       icon: "Target",
       popular: true,
-      featured: true,
     },
     {
       id: 5,
@@ -186,7 +163,7 @@ export default function CooperationPage() {
       originalPrice: "3500 zł",
       priceNote: "jednorazowo - oszczędzasz 30%", 
       type: "jednorazowa",
-      ctaText: "Rozpocznij przygodę",
+      ctaText: "Kup pakiet",
       badge: "NAJLEPSZA OFERTA",
       features: [
         "Indywidualna konsultacja finansowa (wartość 899 zł) - analiza ryzyka i portfele modelowe",
@@ -195,10 +172,9 @@ export default function CooperationPage() {
         "Prenumerata raportów kwartalnych na rok (wartość 150 zł) - analizy i wnioski rynkowe",
         "Pakiet edukacyjny na start (wartość 100 zł) - solidne podstawy teoretyczne i praktyczne",
       ],
-      color: "from-emerald-600 to-teal-600", 
+      color: "primary", 
       icon: "GraduationCap",
       popular: true,
-      featured: true,
     },
     {
       id: 3,
@@ -216,7 +192,7 @@ export default function CooperationPage() {
         "Kalkulator ryzyka inwestycyjnego",
         "Dostęp do webinarium grupowego (2h)",
       ],
-      color: "from-green-600 to-green-700", 
+      color: "primary", 
       icon: "BookOpen",
     },
     {
@@ -227,7 +203,7 @@ export default function CooperationPage() {
       price: "300 zł",
       priceNote: "jednorazowo", 
       type: "jednorazowa",
-      ctaText: "Zakup modele",
+      ctaText: "Zakup dostęp",
       features: [
         "Zestaw modeli portfeli - różne podejścia inwestycyjne (pasywny, defensywny, dynamiczny)",
         "Gotowe struktury alokacji aktywów - podział między akcje, obligacje, ETF-y",
@@ -235,7 +211,7 @@ export default function CooperationPage() {
         "Materiały w formie plików do analizy we własnym tempie",
         "Uniwersalne modele edukacyjne jako punkt wyjścia do nauki",
       ],
-      color: "from-orange-600 to-orange-700", 
+      color: "primary", 
       icon: "Layers",
     },
   ]
@@ -259,7 +235,7 @@ export default function CooperationPage() {
         "Priorytetowy kontakt mailowy/telefoniczny",
         "Dostęp do ekskluzywnych materiałów edukacyjnych",
       ],
-      color: "from-purple-600 to-purple-700",
+      color: "primary",
       icon: "BarChart3",
       popular: true,
     },
@@ -317,11 +293,11 @@ export default function CooperationPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="text-center space-y-10">
             <div className="space-y-8">
-              <Badge className="bg-red-100 text-red-800 border-red-200 px-4 py-2 rounded-full text-sm sm:text-base font-medium">
+              <Badge className="bg-muted text-foreground border-border px-4 py-2 rounded-full text-sm sm:text-base font-medium">
                 ⚠️ 87% początkujących inwestorów traci pieniądze w pierwszym roku
               </Badge>
               <h1 className="text-3xl sm:text-4xl lg:text-6xl font-bold text-foreground leading-tight">
-                Przestań <span className="text-red-600">tracić pieniądze</span><br/>
+                Przestań <span className="text-destructive">tracić pieniądze</span><br/>
                 na inwestycjach
               </h1>
               <p className="text-lg sm:text-xl text-muted-foreground leading-relaxed max-w-4xl mx-auto">
@@ -383,12 +359,12 @@ export default function CooperationPage() {
 
           <div className="grid md:grid-cols-3 gap-6 sm:gap-8">
             {problemPoints.map((problem, index) => (
-              <Card key={index} className="border-l-4 border-l-red-500 shadow-lg">
-                <CardContent className="p-4 sm:p-6">
-                  <div className="flex items-start space-x-3 sm:space-x-4">
-                    <div className="p-2 bg-red-100 rounded-lg flex-shrink-0">
-                      <problem.icon className="h-5 w-5 sm:h-6 sm:w-6 text-red-600" />
-                    </div>
+                              <Card key={index} className="border-l-4 border-l-destructive shadow-lg">
+                  <CardContent className="p-4 sm:p-6">
+                    <div className="flex items-start space-x-3 sm:space-x-4">
+                                              <div className="p-2 bg-muted rounded-lg flex-shrink-0">
+                        <problem.icon className="h-5 w-5 sm:h-6 sm:w-6 text-destructive" />
+                      </div>
                     <div>
                       <h3 className="font-semibold text-foreground mb-2 text-sm sm:text-base">{problem.title}</h3>
                       <p className="text-xs sm:text-sm text-muted-foreground">{problem.description}</p>
@@ -400,8 +376,8 @@ export default function CooperationPage() {
           </div>
 
           <div className="text-center mt-8 sm:mt-12">
-            <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-4 sm:p-6 max-w-4xl mx-auto">
-              <p className="text-base sm:text-lg text-gray-800">
+            <div className="bg-muted border border-border rounded-xl p-4 sm:p-6 max-w-4xl mx-auto">
+                              <p className="text-base sm:text-lg text-foreground">
                 <strong>Jeśli chociaż jeden punkt Cię dotyczy</strong>, to znaczy, że potrzebujesz systematycznego podejścia do inwestowania. 
                 Nie kolejnych tipów czy "hot stocków" - ale solidnych fundamentów.
               </p>
@@ -410,7 +386,7 @@ export default function CooperationPage() {
         </section>
 
         {/* Solution/Benefits Section */}
-        <section className="py-16 sm:py-20 bg-gradient-to-br from-green-50 to-blue-50 rounded-3xl mb-16 sm:mb-20">
+        <section className="py-16 sm:py-20 bg-muted/50 rounded-3xl mb-16 sm:mb-20">
           <div className="text-center mb-12 sm:mb-16 px-4 sm:px-0">
             <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-foreground mb-4 sm:mb-6">
               Jak mogę Ci pomóc?
@@ -423,7 +399,7 @@ export default function CooperationPage() {
           <div className="grid md:grid-cols-3 gap-6 sm:gap-8 px-4 sm:px-0">
             {benefits.map((benefit, index) => (
               <div key={index} className="text-center">
-                <div className="w-16 h-16 sm:w-20 sm:h-20 mx-auto mb-4 sm:mb-6 rounded-2xl bg-gradient-to-br from-green-500 to-blue-500 shadow-lg flex items-center justify-center">
+                <div className="w-16 h-16 sm:w-20 sm:h-20 mx-auto mb-4 sm:mb-6 rounded-2xl bg-primary shadow-lg flex items-center justify-center">
                   <benefit.icon className="h-8 w-8 sm:h-10 sm:w-10 text-white" />
                 </div>
                 <h3 className="text-lg sm:text-xl font-semibold text-foreground mb-3 sm:mb-4">{benefit.title}</h3>
@@ -451,7 +427,7 @@ export default function CooperationPage() {
               <Switch
                 checked={showSubscriptions}
                 onCheckedChange={setShowSubscriptions}
-                className="data-[state=checked]:bg-purple-600"
+                className="data-[state=checked]:bg-primary"
               />
               <span className={`text-lg font-medium transition-colors duration-300 ${showSubscriptions ? 'text-primary' : 'text-muted-foreground'}`}>
                 Subskrypcje
@@ -459,55 +435,41 @@ export default function CooperationPage() {
             </div>
           </div>
 
-                                {/* Services Grid with Animation */}
-           <div className="relative min-h-[600px]">
-             <div 
-               className={`transition-all duration-700 ease-in-out ${
-                 showSubscriptions ? 'opacity-0 translate-y-8' : 'opacity-100 translate-y-0'
-               }`}
-               style={{ 
-                 position: showSubscriptions ? 'absolute' : 'relative',
-                 width: '100%',
-                 pointerEvents: showSubscriptions ? 'none' : 'auto'
-               }}
-             >
-               {/* Górny rząd - główne oferty (featured) */}
-               <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 max-w-5xl mx-auto mb-8 sm:mb-10 auto-rows-fr">
-                 {jednorazoweServices.filter(service => service.featured).map((service) => (
-                   <ServiceItem key={service.id} service={service} />
-                 ))}
-               </div>
-               
-               {/* Dolny rząd - pozostałe oferty */}
-               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 auto-rows-fr">
-                 {jednorazoweServices.filter(service => !service.featured).map((service) => (
-                   <ServiceItem key={service.id} service={service} />
-                 ))}
-               </div>
-             </div>
+          {/* Płatności jednorazowe */}
+          {!showSubscriptions && (
+            <div className="space-y-8">
+              {/* Górny rząd - Konsultacja Majątkowa (wyróżniona) */}
+              <div className="flex justify-center">
+                <div className="w-full max-w-md">
+                  <ServiceItem service={jednorazoweServices.find(s => s.title === "Konsultacja Majątkowa-Edukacyjna")!} />
+                </div>
+              </div>
+              
+              {/* Dolny rząd - pozostałe 3 pakiety */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
+                {jednorazoweServices
+                  .filter(service => service.title !== "Konsultacja Majątkowa-Edukacyjna")
+                  .map((service) => (
+                    <div key={service.id} className="min-h-[600px]">
+                      <ServiceItem service={service} />
+                    </div>
+                  ))}
+              </div>
+            </div>
+          )}
 
-                                      <div 
-               className={`flex justify-center transition-all duration-700 ease-in-out ${
-                 showSubscriptions ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-               }`}
-               style={{ 
-                 position: showSubscriptions ? 'relative' : 'absolute',
-                 width: '100%',
-                 top: showSubscriptions ? 0 : '0',
-                 pointerEvents: showSubscriptions ? 'auto' : 'none'
-               }}
-             >
-               <div className="w-full max-w-md min-h-[600px] flex">
-                 {subskrypcyjneServices.map((service) => (
-                   <ServiceItem key={service.id} service={service} />
-                 ))}
-               </div>
-             </div>
-          </div>
+          {/* Subskrypcje */}
+          {showSubscriptions && (
+            <div className="flex justify-center">
+              <div className="w-full max-w-md min-h-[600px]">
+                <ServiceItem service={subskrypcyjneServices[0]} />
+              </div>
+            </div>
+          )}
         </section>
 
         {/* Risk Reversal Section */}
-        <section className="py-12 sm:py-16 bg-gradient-to-r from-green-600 to-green-700 text-white rounded-3xl mb-16 sm:mb-20">
+        <section className="py-12 sm:py-16 bg-primary text-primary-foreground rounded-3xl mb-16 sm:mb-20">
           <div className="text-center px-4 sm:px-0">
             <div className="w-16 h-16 sm:w-20 sm:h-20 mx-auto mb-4 sm:mb-6 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
               <Shield className="h-8 w-8 sm:h-10 sm:w-10 text-white" />
@@ -524,7 +486,7 @@ export default function CooperationPage() {
         </section>
 
         {/* Process Section */}
-        <section className="py-16 sm:py-20 bg-gradient-to-br from-primary/5 to-accent/5 rounded-3xl mb-16 sm:mb-20">
+        <section className="py-16 sm:py-20 bg-muted/50 rounded-3xl mb-16 sm:mb-20">
           <div className="text-center mb-12 sm:mb-16 px-4 sm:px-0">
             <h2 className="text-2xl sm:text-3xl font-bold text-foreground mb-3 sm:mb-4">
               Jak przebiega współpraca?
@@ -541,28 +503,28 @@ export default function CooperationPage() {
                 title: "Kontakt i omówienie potrzeb",
                 description: "Krótka rozmowa o Twoich celach, doświadczeniu i oczekiwaniach",
                 icon: MessageCircle,
-                color: "text-blue-600"
+                color: "text-primary"
               },
               {
                 step: "02", 
                 title: "Wypełnienie kwestionariusza",
                 description: "Szczegółowy wywiad o Twoim podejściu do ryzyka i sytuacji finansowej",
                 icon: FileText,
-                color: "text-green-600"
+                color: "text-muted-foreground"
               },
               {
                 step: "03",
                 title: "Przygotowanie analizy",
                 description: "Personalizowane portfele i materiały dostosowane do Twojego profilu",
                 icon: Target,
-                color: "text-purple-600"
+                color: "text-primary"
               },
               {
                 step: "04",
                 title: "Konsultacja i materiały",
                 description: "60-90 min konsultacji + komplet materiałów edukacyjnych",
                 icon: Star,
-                color: "text-orange-600"
+                color: "text-muted-foreground"
               }
             ].map((step, index) => (
               <div key={index} className="text-center group">
@@ -639,9 +601,9 @@ export default function CooperationPage() {
         </section>
 
         {/* CTA Section */}
-        <section className="text-center py-16 sm:py-20 bg-gradient-to-r from-primary to-accent text-white rounded-3xl">
+        <section className="text-center py-16 sm:py-20 bg-primary text-primary-foreground rounded-3xl">
           <h2 className="text-3xl sm:text-4xl font-bold mb-4 sm:mb-6 px-4 sm:px-0">
-            Gotowy przestać tracić pieniądze<br/>na błędach innych?
+            Gotowy przestać tracić pieniądze i zacząć inwestować?
           </h2>
           <p className="text-lg sm:text-xl opacity-90 mb-6 sm:mb-8 max-w-3xl mx-auto px-4 sm:px-0">
             Każdy dzień bez systematycznego podejścia to potencjalnie kolejne straty. 
