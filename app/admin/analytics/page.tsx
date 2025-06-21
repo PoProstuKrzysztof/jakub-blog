@@ -34,7 +34,7 @@ import {
   LineChart,
   Line
 } from "recharts"
-import { createClient } from '@/lib/supabase-server'
+import { createClient } from '@/lib/supabase/supabase-server'
 
 // Mock analytics data
 const overviewStats = [

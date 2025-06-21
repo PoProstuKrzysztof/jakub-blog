@@ -19,11 +19,14 @@ import {
   BookOpen,
   MessageCircle,
   Phone,
-  BarChart3
+  BarChart3,
+  UserPlus
 } from 'lucide-react'
 import Link from 'next/link'
 import { useAuth } from '@/hooks/use-auth'
-import { createClient } from '@/lib/supabase'
+import { useUserRole } from '@/hooks/use-user-role'
+import { createClient } from '@/lib/supabase/supabase'
+import { getUserPanelPath, getUserPanelLabel } from '@/lib/utils/user-role'
 import type { User as SupabaseUser } from '@supabase/supabase-js'
 import {
   Sheet,
@@ -35,7 +38,7 @@ import {
 } from "@/components/ui/sheet"
 
 interface SiteHeaderProps {
-  currentPage?: 'home' | 'wpisy' | 'cooperation' | 'contact' | 'admin' | 'post'
+  currentPage?: 'home' | 'wpisy' | 'cooperation' | 'contact' | 'admin' | 'post' | 'panel'
   showSearch?: boolean
   searchPlaceholder?: string
   searchValue?: string
@@ -74,6 +77,7 @@ export function SiteHeader({
   user: propUser,
 }: SiteHeaderProps) {
   const { user } = useAuth()
+  const { role, loading: roleLoading } = useUserRole()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
   const actualUser = propUser || user
@@ -106,7 +110,12 @@ export function SiteHeader({
     { href: '/wpisy', label: 'Wpisy', page: 'wpisy', icon: BookOpen },
     { href: '/wspolpraca', label: 'Współpraca', page: 'cooperation', icon: MessageCircle },
     { href: '/kontakt', label: 'Kontakt', page: 'contact', icon: Phone },
-    ...(actualUser ? [{ href: '/admin', label: 'Panel twórcy', page: 'admin', icon: BarChart3 }] : []),
+    ...(actualUser && !roleLoading ? [{ 
+      href: getUserPanelPath(role), 
+      label: getUserPanelLabel(role), 
+      page: role === 'admin' || role === 'author' ? 'admin' : 'panel', 
+      icon: role === 'admin' || role === 'author' ? BarChart3 : User 
+    }] : []),
   ]
 
   const MobileNavItem = ({ href, label, page, icon: Icon, onClick }: any) => (
@@ -261,24 +270,38 @@ export function SiteHeader({
                 </Button>
               </div>
             ) : (
-              <div className="flex items-center">
-                <Link href="/admin/login">
-                  <Button 
-                    variant="ghost" 
-                    size="sm"
-                    className="text-muted-foreground transition-colors duration-300 btn-touch hidden sm:flex"
-                  >
-                    <User className="h-4 w-4" />
-                    <span className="ml-2 hidden lg:inline">Zaloguj</span>
-                  </Button>
-                </Link>
+              <div className="flex items-center space-x-1">
+                {/* Desktop Login/Signup Buttons */}
+                <div className="hidden sm:flex items-center space-x-1">
+                  <Link href="/login">
+                    <Button 
+                      variant="ghost" 
+                      size="sm"
+                      className="text-muted-foreground  transition-colors duration-300 btn-touch"
+                    >
+                      <User className="h-4 w-4" />
+                      <span className="ml-2 hidden lg:inline">Zaloguj</span>
+                    </Button>
+                  </Link>
+                  <Link href="/login?tab=signup">
+                    <Button 
+                      variant="default" 
+                      size="sm"
+                      className="bg-primary hover:bg-primary/90 text-primary-foreground btn-touch"
+                    >
+                      <UserPlus className="h-4 w-4" />
+                      <span className="ml-2 hidden lg:inline">Utwórz konto</span>
+                    </Button>
+                  </Link>
+                </div>
+                
                 {/* Mobile Login Button - Visible only on mobile */}
-                <Link href="/admin/login">
+                <Link href="/login">
                   <Button 
                     variant="ghost" 
                     size="sm"
-                    className="text-muted-foreground transition-colors duration-300 btn-touch sm:hidden p-2"
-                    title="Zaloguj się"
+                    className="text-muted-foreground hover:text-primary transition-colors duration-300 btn-touch sm:hidden p-2"
+                    title="Zaloguj się / Utwórz konto"
                   >
                     <User className="h-4 w-4" />
                   </Button>
@@ -413,7 +436,7 @@ export function SiteHeader({
                       </Button>
                     )}
 
-                    {/* User Actions - Always show if user is logged in */}
+                    {/* User Actions - Show login/signup or logout based on user state */}
                     {actualUser ? (
                       <Button
                         variant="ghost"
@@ -424,12 +447,20 @@ export function SiteHeader({
                         Wyloguj się
                       </Button>
                     ) : (
-                      <Link href="/admin/login" onClick={() => setIsMenuOpen(false)}>
-                        <Button variant="ghost" className="w-full justify-start btn-touch">
-                          <User className="h-4 w-4 mr-3" />
-                          Zaloguj się
-                        </Button>
-                      </Link>
+                      <div className="space-y-2">
+                        <Link href="/login" onClick={() => setIsMenuOpen(false)}>
+                          <Button variant="ghost" className="w-full justify-start btn-touch">
+                            <User className="h-4 w-4 mr-3" />
+                            Zaloguj się
+                          </Button>
+                        </Link>
+                        <Link href="/login?tab=signup" onClick={() => setIsMenuOpen(false)}>
+                          <Button variant="default" className="w-full justify-start btn-touch bg-primary hover:bg-primary/90">
+                            <UserPlus className="h-4 w-4 mr-3" />
+                            Utwórz konto
+                          </Button>
+                        </Link>
+                      </div>
                     )}
                   </div>
                 </div>

@@ -1,7 +1,7 @@
 import { Suspense } from "react"
 import { BlogPageClient } from "@/components/blog-page/blog-page-client"
 import { PostsLoading } from "@/components/post-page/posts-loading"
-import { createClient } from "@/lib/supabase"
+import { createClient } from "@/lib/supabase/supabase-server"
 import { PostFull } from "@/lib/models/post"
 
 export const metadata = {
@@ -10,7 +10,7 @@ export const metadata = {
 }
 
 async function getPosts(): Promise<PostFull[]> {
-  const supabase = createClient()
+  const supabase = await createClient()
   
   const { data: posts, error } = await supabase
     .from('posts')
@@ -36,7 +36,7 @@ async function getPosts(): Promise<PostFull[]> {
 }
 
 async function getUserFromSession() {
-  const supabase = createClient()
+  const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   return user
 }

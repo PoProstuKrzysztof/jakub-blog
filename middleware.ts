@@ -33,17 +33,30 @@ function isRateLimited(key: string, limit: number = 500, windowMs: number = 15 *
 }
 
 function validateRequest(request: NextRequest): boolean {
-  const userAgent = request.headers.get('user-agent')
-  const contentType = request.headers.get('content-type')
+  const userAgent = request.headers.get('user-agent') || ''
+  const contentType = request.headers.get('content-type') || ''
   
-  // Blokuj podejrzane User-Agents
-  if (!userAgent || userAgent.length < 10 || /bot|crawler|spider|scraper/i.test(userAgent)) {
+  // Blokuj podejrzane user agents
+  const suspiciousPatterns = [
+    /^$/,
+    /curl/i,
+    /wget/i,
+    /python/i,
+    /bot/i,
+    /crawler/i,
+    /spider/i
+  ]
+
+  if (suspiciousPatterns.some(pattern => pattern.test(userAgent))) {
     return false
   }
   
-  // Waliduj Content-Type dla POST/PUT/PATCH
+  // Sprawdź Content-Type dla żądań POST/PUT/PATCH
   if (['POST', 'PUT', 'PATCH'].includes(request.method)) {
-    if (!contentType || (!contentType.includes('application/json') && !contentType.includes('multipart/form-data'))) {
+    if (!contentType.includes('application/json') && 
+        !contentType.includes('application/x-www-form-urlencoded') &&
+        !contentType.includes('multipart/form-data') &&
+        !contentType.includes('text/plain')) {
       return false
     }
   }
@@ -52,156 +65,129 @@ function validateRequest(request: NextRequest): boolean {
 }
 
 function addSecurityHeaders(response: NextResponse): NextResponse {
-  // Content Security Policy
-  response.headers.set(
-    'Content-Security-Policy',
-    [
-      "default-src 'self'",
-      "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net",
-      "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
-      "font-src 'self' https://fonts.gstatic.com",
-      "img-src 'self' data: https: blob:",
-      "connect-src 'self' https://*.supabase.co wss://*.supabase.co",
-      "frame-ancestors 'none'",
-      "base-uri 'self'",
-      "form-action 'self'",
-      "upgrade-insecure-requests"
-    ].join('; ')
-  )
-  
+  // Build Content Security Policy dynamically so that we don't force HTTPS locally in development.
+  const cspDirectives: string[] = [
+    "default-src 'self'",
+    "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://js.stripe.com",
+    "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+    // Allow Google fonts and inline data URIs for local development icon fonts
+    "font-src 'self' https://fonts.gstatic.com data:",
+    "img-src 'self' data: https: blob:",
+    "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://api.stripe.com",
+    "frame-src 'self' https://js.stripe.com https://hooks.stripe.com",
+    "frame-ancestors 'none'",
+    "base-uri 'self'",
+    "form-action 'self'"
+  ]
+
+  // Enforce request upgrade only in production where the app is served over HTTPS.
+  if (process.env.NODE_ENV === 'production') {
+    cspDirectives.push('upgrade-insecure-requests')
+  }
+
+  const csp = cspDirectives.join('; ')
+
   // Security headers
-  response.headers.set('X-Frame-Options', 'DENY')
+  response.headers.set('Content-Security-Policy', csp)
   response.headers.set('X-Content-Type-Options', 'nosniff')
+  response.headers.set('X-Frame-Options', 'DENY')
   response.headers.set('X-XSS-Protection', '1; mode=block')
   response.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin')
   response.headers.set('Permissions-Policy', 'camera=(), microphone=(), geolocation=()')
   
   // HSTS (tylko w produkcji)
   if (process.env.NODE_ENV === 'production') {
-    response.headers.set('Strict-Transport-Security', 'max-age=31536000; includeSubDomains; preload')
+    response.headers.set('Strict-Transport-Security', 'max-age=63072000; includeSubDomains; preload')
   }
   
   return response
 }
 
 export async function middleware(request: NextRequest) {
-  // Skip rate limiting for login page and static assets
-  const isLoginPage = request.nextUrl.pathname === '/admin/login'
-  const isStaticAsset = request.nextUrl.pathname.startsWith('/_next') || 
-                       request.nextUrl.pathname.includes('.') ||
-                       request.nextUrl.pathname.startsWith('/favicon')
+  const { pathname } = request.nextUrl
   
-  // Skip rate limiting in development mode
-  const isDevelopment = process.env.NODE_ENV === 'development'
-  
-  if (!isLoginPage && !isStaticAsset && !isDevelopment) {
-    // Rate limiting with more generous limits
-    const rateLimitKey = getRateLimitKey(request)
-    if (isRateLimited(rateLimitKey, 2000, 15 * 60 * 1000)) { // 2000 requests per 15 minutes
-      return new NextResponse('Too Many Requests', { 
-        status: 429,
-        headers: {
-          'Retry-After': '300' // 5 minutes
-        }
-      })
-    }
+  // Pomiń middleware dla zasobów statycznych i API
+  if (pathname.startsWith('/_next/') || 
+      pathname.startsWith('/api/') ||
+      pathname.includes('.') ||
+      pathname === '/favicon.ico' ||
+      pathname === '/login' ||
+      pathname.startsWith('/auth/')) {
+    return addSecurityHeaders(NextResponse.next())
   }
-  
-  // Skip request validation for login and auth routes
-  const isAuthRoute = request.nextUrl.pathname.startsWith('/admin/login') || 
-                     request.nextUrl.pathname.startsWith('/auth')
-  
-  if (!isAuthRoute && !isStaticAsset) {
-    // Request validation
-    if (!validateRequest(request)) {
-      return new NextResponse('Bad Request', { status: 400 })
-    }
+
+  // Rate limiting (bardziej liberalne limity)
+  const rateLimitKey = getRateLimitKey(request)
+  if (isRateLimited(rateLimitKey, 1000, 15 * 60 * 1000)) {
+    return new NextResponse('Too Many Requests', { status: 429 })
   }
-  
+
   let response = NextResponse.next({
     request: {
       headers: request.headers,
     },
   })
 
-  const cookieStore = await cookies()
-  
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        getAll() {
-          return cookieStore.getAll()
-        },
-        setAll(cookiesToSet) {
-          try {
-            cookiesToSet.forEach(({ name, value, options }) =>
-              cookieStore.set(name, value, {
+  try {
+    // Utwórz klienta Supabase dla middleware - tylko do refresh tokenów
+    const supabase = createServerClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+      {
+        cookies: {
+          getAll() {
+            return request.cookies.getAll()
+          },
+          setAll(cookiesToSet) {
+            cookiesToSet.forEach(({ name, value, options }) => {
+              request.cookies.set(name, value)
+              response.cookies.set(name, value, {
                 ...options,
-                httpOnly: true,
+                httpOnly: false, // Pozwól klientowi na dostęp do tokenów
                 secure: process.env.NODE_ENV === 'production',
-                sameSite: 'strict',
+                sameSite: 'lax',
                 path: '/',
-                maxAge: 60 * 60 * 24 * 7 // 7 days
               })
-            )
-          } catch {
-            // Ignore cookie errors in middleware
-          }
+            })
+          },
         },
-      },
-    }
-  )
+      }
+    )
 
-  // Auth check for protected routes (excluding login page)
-  const protectedPaths = ['/admin']
-  const isProtectedPath = protectedPaths.some(path => 
-    request.nextUrl.pathname.startsWith(path) && 
-    !request.nextUrl.pathname.startsWith('/admin/login')
-  )
-
-  if (isProtectedPath) {
-    const { data: { user }, error } = await supabase.auth.getUser()
-    
-    if (error || !user) {
-      const url = request.nextUrl.clone()
-      url.pathname = '/admin/login'
-      return NextResponse.redirect(url)
-    }
-    
-    // Check user role for admin routes
-    if (request.nextUrl.pathname.startsWith('/admin') && 
-        !request.nextUrl.pathname.startsWith('/admin/login')) {
-      const { data: profile } = await supabase
-        .from('profiles')
-        .select('role, is_active')
-        .eq('id', user.id)
-        .single()
+    // Sprawdź tylko czy użytkownik jest zalogowany dla chronionych ścieżek
+    if (pathname.startsWith('/admin') || pathname.startsWith('/panel') || pathname === '/portfel-autora') {
+      // Pozwól stronie /admin sprawdzić autoryzację samodzielnie
+      // Nie przekierowuj w middleware, aby uniknąć pętli przekierowań
+      console.log('🔧 MIDDLEWARE - Allowing access to protected route:', pathname)
       
-      if (!profile || !profile.is_active || profile.role !== 'admin') {
-        const url = request.nextUrl.clone()
-        url.pathname = '/admin/login'
-        return NextResponse.redirect(url)
+      try {
+        const { data: { user }, error } = await supabase.auth.getUser()
+        if (error) {
+          console.warn('🔧 MIDDLEWARE - getUser error:', error.message)
+        }
+        if (user) {
+          console.log('🔧 MIDDLEWARE - User found in middleware:', user.id)
+        } else {
+          console.log('🔧 MIDDLEWARE - No user found in middleware')
+        }
+      } catch (error) {
+        console.warn('🔧 MIDDLEWARE - getUser exception:', error)
       }
     }
+
+  } catch (error) {
+    console.error('Middleware error:', error)
+    // W przypadku błędu, pozwól przejść dalej
   }
 
-  // Add security headers
+
   response = addSecurityHeaders(response)
-  
+
   return response
 }
 
 export const config = {
   matcher: [
-    /*
-     * Match all request paths except for the ones starting with:
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
-     * - public folder
-     */
-    '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
+    '/((?!_next/static|_next/image|favicon.ico|api|auth|login|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
   ],
 } 

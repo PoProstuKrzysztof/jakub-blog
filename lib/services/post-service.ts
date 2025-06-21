@@ -1,5 +1,5 @@
 import { SupabaseClient } from '@supabase/supabase-js'
-import { createClient } from '../supabase'
+import { createClient } from '../supabase/supabase'
 import {
   Post,
   PostFull,

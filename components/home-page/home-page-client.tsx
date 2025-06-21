@@ -371,6 +371,21 @@ export function HomePageClient({ initialPosts }: HomePageClientProps) {
                 cta: "Umów konsultację",
               },
               {
+                icon: TrendingUp,
+                title: "Portfel autora",
+                description:
+                  "Miesięczny dostęp do mojego portfela inwestycyjnego z regularnymi analizami i aktualizacjami",
+                features: [
+                  "Aktualny skład portfela",
+                  "Regularne analizy",
+                  "Powiadomienia o zmianach",
+                  "Pełna transparentność",
+                ],
+                href: "/portfel-autora",
+                cta: "Zobacz portfel",
+                badge: "49 zł/miesięcznie",
+              },
+              {
                 icon: Award,
                 title: "Edukacja finansowa",
                 description:
