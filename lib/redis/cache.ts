@@ -41,7 +41,12 @@ class RedisCache {
   private readonly TAG_PREFIX = `${redisConfig.cache.keyPrefix}tag:`
 
   constructor() {
-    this.loadStats()
+    // Only load stats on server side
+    if (typeof window === 'undefined') {
+      this.loadStats().catch(error => {
+        console.error('Failed to load Redis stats on initialization:', error)
+      })
+    }
   }
 
   /**
@@ -416,11 +421,23 @@ class RedisCache {
    */
   private async saveStats(): Promise<void> {
     try {
-      await redis.hset(this.STATS_KEY, 'hits', String(this.stats.hits))
-      await redis.hset(this.STATS_KEY, 'misses', String(this.stats.misses))
-      await redis.hset(this.STATS_KEY, 'sets', String(this.stats.sets))
-      await redis.hset(this.STATS_KEY, 'deletes', String(this.stats.deletes))
-      await redis.hset(this.STATS_KEY, 'hitRate', String(this.stats.hitRate))
+      // Use a single HSET operation for better performance
+      const statsData = {
+        hits: String(this.stats.hits),
+        misses: String(this.stats.misses),
+        sets: String(this.stats.sets),
+        deletes: String(this.stats.deletes),
+        hitRate: String(this.stats.hitRate)
+      }
+      
+      // Since we use our custom interface, use multiple hset calls
+      await Promise.all([
+        redis.hset(this.STATS_KEY, 'hits', statsData.hits),
+        redis.hset(this.STATS_KEY, 'misses', statsData.misses),
+        redis.hset(this.STATS_KEY, 'sets', statsData.sets),
+        redis.hset(this.STATS_KEY, 'deletes', statsData.deletes),
+        redis.hset(this.STATS_KEY, 'hitRate', statsData.hitRate)
+      ])
     } catch (error) {
       console.error('Save stats error:', error)
     }
@@ -433,7 +450,8 @@ class RedisCache {
     try {
       const stats = await redis.hgetall(this.STATS_KEY)
       
-      if (Object.keys(stats).length > 0) {
+      // Check if stats is not null/undefined and has keys
+      if (stats && typeof stats === 'object' && Object.keys(stats).length > 0) {
         this.stats.hits = parseInt(stats.hits || '0', 10)
         this.stats.misses = parseInt(stats.misses || '0', 10)
         this.stats.sets = parseInt(stats.sets || '0', 10)

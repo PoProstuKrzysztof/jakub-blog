@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from 'react'
-import { createClient } from '@/lib/supabase'
+import { createClient } from '@/lib/supabase/supabase'
 import { PostFull } from '@/lib/models/post'
 
 interface AdminStats {

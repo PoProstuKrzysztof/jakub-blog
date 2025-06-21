@@ -71,12 +71,46 @@ export type Database = {
           },
         ]
       }
+      author_analyses: {
+        Row: {
+          attachment_url: string | null
+          author_id: string
+          content: string | null
+          created_at: string | null
+          id: string
+          is_published: boolean
+          title: string
+        }
+        Insert: {
+          attachment_url?: string | null
+          author_id: string
+          content?: string | null
+          created_at?: string | null
+          id?: string
+          is_published?: boolean
+          title: string
+        }
+        Update: {
+          attachment_url?: string | null
+          author_id?: string
+          content?: string | null
+          created_at?: string | null
+          id?: string
+          is_published?: boolean
+          title?: string
+        }
+        Relationships: []
+      }
       author_content: {
         Row: {
           content: string
+          content_type: string | null
           created_at: string | null
           id: string
+          is_editable: boolean | null
           is_visible: boolean
+          page_slug: string | null
+          section_identifier: string | null
           section_order: number
           section_type: string
           title: string
@@ -84,9 +118,13 @@ export type Database = {
         }
         Insert: {
           content: string
+          content_type?: string | null
           created_at?: string | null
           id?: string
+          is_editable?: boolean | null
           is_visible?: boolean
+          page_slug?: string | null
+          section_identifier?: string | null
           section_order?: number
           section_type: string
           title: string
@@ -94,13 +132,71 @@ export type Database = {
         }
         Update: {
           content?: string
+          content_type?: string | null
           created_at?: string | null
           id?: string
+          is_editable?: boolean | null
           is_visible?: boolean
+          page_slug?: string | null
+          section_identifier?: string | null
           section_order?: number
           section_type?: string
           title?: string
           updated_at?: string | null
+        }
+        Relationships: []
+      }
+      author_portfolio: {
+        Row: {
+          author_id: string
+          created_at: string | null
+          description: string | null
+          id: string
+          is_active: boolean
+          json_data: Json
+        }
+        Insert: {
+          author_id: string
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          json_data: Json
+        }
+        Update: {
+          author_id?: string
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          json_data?: Json
+        }
+        Relationships: []
+      }
+      cache_entries: {
+        Row: {
+          created_at: string | null
+          expires_at: string
+          key: string
+          tags: string[] | null
+          updated_at: string | null
+          value: Json
+        }
+        Insert: {
+          created_at?: string | null
+          expires_at: string
+          key: string
+          tags?: string[] | null
+          updated_at?: string | null
+          value: Json
+        }
+        Update: {
+          created_at?: string | null
+          expires_at?: string
+          key?: string
+          tags?: string[] | null
+          updated_at?: string | null
+          value?: Json
         }
         Relationships: []
       }
@@ -144,6 +240,71 @@ export type Database = {
             columns: ["parent_id"]
             isOneToOne: false
             referencedRelation: "categories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      notifications: {
+        Row: {
+          created_at: string | null
+          id: number
+          message: string
+          read_at: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: never
+          message: string
+          read_at?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: never
+          message?: string
+          read_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      orders: {
+        Row: {
+          created_at: string | null
+          currency: string
+          expires_at: string | null
+          id: string
+          price_cents: number
+          product_id: string
+          status: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          currency?: string
+          expires_at?: string | null
+          id?: string
+          price_cents: number
+          product_id: string
+          status: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          currency?: string
+          expires_at?: string | null
+          id?: string
+          price_cents?: number
+          product_id?: string
+          status?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "orders_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
             referencedColumns: ["id"]
           },
         ]
@@ -421,6 +582,39 @@ export type Database = {
           },
         ]
       }
+      products: {
+        Row: {
+          created_at: string | null
+          currency: string
+          description: string | null
+          id: string
+          is_active: boolean
+          name: string
+          price_cents: number
+          slug: string
+        }
+        Insert: {
+          created_at?: string | null
+          currency?: string
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          name: string
+          price_cents: number
+          slug: string
+        }
+        Update: {
+          created_at?: string | null
+          currency?: string
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          name?: string
+          price_cents?: number
+          slug?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -460,6 +654,66 @@ export type Database = {
         }
         Relationships: []
       }
+      rate_limits: {
+        Row: {
+          count: number | null
+          created_at: string | null
+          endpoint: string
+          identifier: string
+          max_requests: number | null
+          updated_at: string | null
+          window_size_ms: number | null
+          window_start: string | null
+        }
+        Insert: {
+          count?: number | null
+          created_at?: string | null
+          endpoint: string
+          identifier: string
+          max_requests?: number | null
+          updated_at?: string | null
+          window_size_ms?: number | null
+          window_start?: string | null
+        }
+        Update: {
+          count?: number | null
+          created_at?: string | null
+          endpoint?: string
+          identifier?: string
+          max_requests?: number | null
+          updated_at?: string | null
+          window_size_ms?: number | null
+          window_start?: string | null
+        }
+        Relationships: []
+      }
+      system_health: {
+        Row: {
+          created_at: string | null
+          id: string
+          last_check: string | null
+          metrics: Json | null
+          service_name: string
+          status: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          last_check?: string | null
+          metrics?: Json | null
+          service_name: string
+          status: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          last_check?: string | null
+          metrics?: Json | null
+          service_name?: string
+          status?: string
+        }
+        Relationships: []
+      }
       tags: {
         Row: {
           color: string | null
@@ -490,28 +744,88 @@ export type Database = {
         }
         Relationships: []
       }
+      user_sessions: {
+        Row: {
+          created_at: string | null
+          expires_at: string
+          id: string
+          ip_address: unknown | null
+          session_data: Json | null
+          updated_at: string | null
+          user_agent: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          expires_at: string
+          id?: string
+          ip_address?: unknown | null
+          session_data?: Json | null
+          updated_at?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          expires_at?: string
+          id?: string
+          ip_address?: unknown | null
+          session_data?: Json | null
+          updated_at?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
+      can_edit_posts: {
+        Args: Record<PropertyKey, never>
+        Returns: boolean
+      }
+      cleanup_expired_cache: {
+        Args: Record<PropertyKey, never>
+        Returns: number
+      }
+      cleanup_expired_sessions: {
+        Args: Record<PropertyKey, never>
+        Returns: number
+      }
+      cleanup_old_rate_limits: {
+        Args: Record<PropertyKey, never>
+        Returns: number
+      }
       get_published_posts: {
-        Args: { limit_count?: number; offset_count?: number }
+        Args: { limit_param?: number; offset_param?: number }
         Returns: {
-          post_id: string
+          id: string
           title: string
           slug: string
           excerpt: string
           featured_image_url: string
           published_at: string
-          author_name: string
-          author_avatar: string
           view_count: number
+          author_name: string
         }[]
       }
+      has_product: {
+        Args: { p_slug: string }
+        Returns: boolean
+      }
       increment_post_views: {
-        Args: { post_slug: string }
+        Args: { post_id_param: string } | { post_slug: string }
         Returns: undefined
+      }
+      is_admin: {
+        Args: Record<PropertyKey, never>
+        Returns: boolean
+      }
+      toggle_post_featured: {
+        Args: { post_id: string; user_id: string }
+        Returns: Json
       }
     }
     Enums: {

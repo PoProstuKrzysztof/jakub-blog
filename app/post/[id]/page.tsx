@@ -1,4 +1,4 @@
-import { createClient } from '@/lib/supabase-server'
+import { createClient } from '@/lib/supabase/supabase-server'
 import { createServerPostService } from '@/lib/services/post-service-server'
 import { PostPageClient } from '@/components/post-page/post-page-client'
 import { notFound } from 'next/navigation'

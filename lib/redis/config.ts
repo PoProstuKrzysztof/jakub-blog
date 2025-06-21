@@ -3,6 +3,9 @@
  * Centralized Redis settings with support for both Upstash and traditional Redis
  */
 
+// Sprawdź czy kod jest wykonywany po stronie serwera
+const isServer = typeof window === 'undefined'
+
 interface RedisConfig {
   provider: 'upstash' | 'traditional'
   upstash: {
@@ -46,14 +49,24 @@ interface RedisConfig {
 }
 
 function validateEnvVar(name: string, defaultValue?: string): string {
-  const value = process.env[name] || defaultValue
-  if (!value) {
+  // Jeśli kod jest wykonywany po stronie klienta, zwróć wartość domyślną
+  if (!isServer) {
+    return defaultValue || ''
+  }
+  
+  const value = process.env[name] 
+  if (!value && !defaultValue) {
     throw new Error(`Missing required environment variable: ${name}`)
   }
-  return value
+  return value || defaultValue || ''
 }
 
 function validateNumericEnvVar(name: string, defaultValue: number): number {
+  // Jeśli kod jest wykonywany po stronie klienta, zwróć wartość domyślną
+  if (!isServer) {
+    return defaultValue
+  }
+  
   const value = process.env[name]
   if (!value) return defaultValue
   
@@ -65,6 +78,11 @@ function validateNumericEnvVar(name: string, defaultValue: number): number {
 }
 
 function validateBooleanEnvVar(name: string, defaultValue: boolean): boolean {
+  // Jeśli kod jest wykonywany po stronie klienta, zwróć wartość domyślną
+  if (!isServer) {
+    return defaultValue
+  }
+  
   const value = process.env[name]
   if (!value) return defaultValue
   
@@ -73,6 +91,10 @@ function validateBooleanEnvVar(name: string, defaultValue: boolean): boolean {
 
 // Determine Redis provider based on environment variables
 const getRedisProvider = (): 'upstash' | 'traditional' => {
+  if (!isServer) {
+    return 'upstash' // wartość domyślna dla klienta
+  }
+  
   if (process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN) {
     return 'upstash'
   }
@@ -92,8 +114,8 @@ const getRedisProvider = (): 'upstash' | 'traditional' => {
 
 const provider = getRedisProvider()
 
-// Validate required environment variables based on provider
-if (provider === 'upstash') {
+// Validate required environment variables based on provider (tylko po stronie serwera)
+if (isServer && provider === 'upstash') {
   const requiredUpstashVars = ['UPSTASH_REDIS_REST_URL', 'UPSTASH_REDIS_REST_TOKEN']
   requiredUpstashVars.forEach(envVar => {
     if (!process.env[envVar]) {
