@@ -42,6 +42,7 @@ import {
   GraduationCap,
 } from "lucide-react"
 import Link from "next/link"
+import { isValidCooperationProductId } from "@/lib/utils/product-mapping"
 
 interface Service {
   id: number
@@ -289,7 +290,16 @@ export default function CooperationPage() {
 
   const handleOfferClick = (offer: Service) => {
     if (user) {
-      router.push(getUserPanelPath(role))
+      // Sprawdź czy produkt jest poprawny
+      if (!isValidCooperationProductId(offer.id)) {
+        console.error(`Invalid product ID: ${offer.id}`)
+        router.push(getUserPanelPath(role))
+        return
+      }
+      
+      // Przekieruj do panelu z parametrem produktu
+      const panelPath = getUserPanelPath(role)
+      router.push(`${panelPath}?tab=available&product=${offer.id}`)
     } else {
       router.push('/login?from=offer')
     }

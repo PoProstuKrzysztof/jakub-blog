@@ -20,7 +20,12 @@ import {
   Calendar,
   Mail,
   ArrowLeft,
-  Package
+  Package,
+  ShoppingBag,
+  Clock,
+  Euro,
+  ChevronDown,
+  ChevronRight
 } from "lucide-react"
 import Link from "next/link"
 import {
@@ -35,6 +40,7 @@ import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { createClient } from "@/lib/supabase/supabase"
 import { useAdminUsers } from "@/hooks/use-admin-users"
+import { useProductManagement, type Product } from "@/hooks/use-product-management"
 import type { UserWithAccess, UserOrder } from "@/lib/services/admin-user-service"
 
 export default function AdminAccessManagementPage() {
@@ -48,17 +54,30 @@ export default function AdminAccessManagementPage() {
     loading, 
     error, 
     stats, 
-    grantAccess, 
-    revokeAccess,
-    searchUsers 
+    searchUsers,
+    fetchUsers
   } = useAdminUsers()
+  
+  // Use the product management hook
+  const {
+    products,
+    loading: productsLoading,
+    error: productsError,
+    grantProductAccess,
+    revokeProductAccess,
+    refreshProducts
+  } = useProductManagement()
   
   const [filteredUsers, setFilteredUsers] = useState<UserWithAccess[]>([])
   const [searchTerm, setSearchTerm] = useState("")
+  const [expandedUsers, setExpandedUsers] = useState<Set<string>>(new Set())
+  
+  // Product access management states
+  const [productAccessModalOpen, setProductAccessModalOpen] = useState(false)
   const [selectedUser, setSelectedUser] = useState<UserWithAccess | null>(null)
-  const [grantAccessModalOpen, setGrantAccessModalOpen] = useState(false)
-  const [accessDuration, setAccessDuration] = useState("30") // days
-  const [isGrantingAccess, setIsGrantingAccess] = useState(false)
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
+  const [productAccessDuration, setProductAccessDuration] = useState("30")
+  const [isGrantingProductAccess, setIsGrantingProductAccess] = useState(false)
 
   // Check authorization
   useEffect(() => {
@@ -103,43 +122,65 @@ export default function AdminAccessManagementPage() {
     }
   }, [searchTerm, users, searchUsers])
 
-  const handleGrantAccess = (user: UserWithAccess) => {
+  const handleGrantProductAccess = (user: UserWithAccess, product: Product) => {
     setSelectedUser(user)
-    setGrantAccessModalOpen(true)
+    setSelectedProduct(product)
+    setProductAccessModalOpen(true)
   }
 
-  const handleRevokeAccess = async (user: UserWithAccess) => {
-    if (confirm(`Czy na pewno chcesz odebrać dostęp do portfela użytkownikowi ${user.email}?`)) {
+  const handleRevokeProductAccess = async (user: UserWithAccess, product: Product) => {
+    if (confirm(`Czy na pewno chcesz odebrać dostęp do produktu "${product.name}" użytkownikowi ${user.email}?`)) {
       try {
-        const result = await revokeAccess(user.id)
-        if (!result.success) {
-          console.error('Failed to revoke access:', result.error)
+        const result = await revokeProductAccess(user.id, product.id)
+        if (result.success) {
+          // Refresh users to see updated data without page reload
+          await fetchUsers()
+        } else {
+          alert(result.error || 'Błąd podczas odbierania dostępu')
         }
       } catch (error) {
-        console.error('Error revoking access:', error)
+        console.error('Error revoking product access:', error)
+        alert('Błąd podczas odbierania dostępu do produktu')
       }
     }
   }
 
-  const confirmGrantAccess = async () => {
-    if (!selectedUser) return
+  const confirmGrantProductAccess = async () => {
+    if (!selectedUser || !selectedProduct) return
     
-    setIsGrantingAccess(true)
+    setIsGrantingProductAccess(true)
     try {
-      const result = await grantAccess(selectedUser.id, parseInt(accessDuration))
+      const result = await grantProductAccess(
+        selectedUser.id, 
+        selectedProduct.id, 
+        parseInt(productAccessDuration)
+      )
       
       if (result.success) {
-        setGrantAccessModalOpen(false)
+        setProductAccessModalOpen(false)
         setSelectedUser(null)
+        setSelectedProduct(null)
+        // Refresh users to see updated data without page reload
+        await fetchUsers()
       } else {
-        // Handle error from hook
-        console.error('Failed to grant access:', result.error)
+        alert(result.error || 'Błąd podczas przyznawania dostępu')
       }
     } catch (error) {
-      console.error('Error granting access:', error)
+      console.error('Error granting product access:', error)
+      alert('Błąd podczas przyznawania dostępu do produktu')
     } finally {
-      setIsGrantingAccess(false)
+      setIsGrantingProductAccess(false)
     }
+  }
+
+  const toggleUserExpansion = (userId: string) => {
+    const newExpanded = new Set(expandedUsers)
+    if (newExpanded.has(userId)) {
+      newExpanded.delete(userId)
+    } else {
+      newExpanded.add(userId)
+    }
+    setExpandedUsers(newExpanded)
   }
 
   const formatDate = (dateString: string | null) => {
@@ -151,6 +192,14 @@ export default function AdminAccessManagementPage() {
       hour: '2-digit',
       minute: '2-digit'
     })
+  }
+
+  const formatPrice = (priceCents: number, currency: string) => {
+    const price = priceCents / 100
+    return new Intl.NumberFormat('pl-PL', {
+      style: 'currency',
+      currency: currency.toUpperCase(),
+    }).format(price)
   }
 
   const getRoleBadge = (role: string | null) => {
@@ -166,17 +215,172 @@ export default function AdminAccessManagementPage() {
     }
   }
 
-  const getAccessBadge = (hasAccess: boolean) => {
-    return hasAccess ? (
-      <Badge className="bg-green-100 text-green-800 hover:bg-green-100">
-        <CheckCircle className="h-3 w-3 mr-1" />
-        Ma dostęp
-      </Badge>
-    ) : (
-      <Badge variant="secondary">
-        <XCircle className="h-3 w-3 mr-1" />
-        Brak dostępu
-      </Badge>
+  const getStatusBadge = (status: string) => {
+    switch (status) {
+      case 'paid':
+        return <Badge variant="secondary" className="text-xs text-white bg-gray-800">Opłacone</Badge>
+      case 'pending':
+        return <Badge variant="outline" className="text-xs">Oczekuje</Badge>
+      case 'cancelled':
+        return <Badge variant="destructive" className="text-xs">Anulowane</Badge>
+      default:
+        return <Badge variant="outline" className="text-xs">{status}</Badge>
+    }
+  }
+
+  const isProductExpired = (expiresAt: string | null) => {
+    if (!expiresAt) return false
+    return new Date(expiresAt) <= new Date()
+  }
+
+  const renderUserProducts = (userProducts: UserOrder[], user: UserWithAccess) => {
+    return (
+      <div className="space-y-4">
+        {/* Existing products */}
+        {userProducts.length > 0 && (
+          <div className="space-y-2">
+            <div className="flex items-center gap-2 text-sm font-medium text-foreground">
+              <Package className="h-4 w-4 text-primary" />
+              Zakupione produkty ({userProducts.length})
+            </div>
+            <div className="grid gap-2">
+              {userProducts.map((product) => {
+                const matchingProduct = products.find(p => p.slug === product.product_slug)
+                return (
+                  <div 
+                    key={product.id} 
+                    className="flex items-center justify-between p-3 bg-muted/30 rounded-lg border border-border/50"
+                  >
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className="font-medium text-sm truncate">{product.product_name}</span>
+                        {getStatusBadge(product.status)}
+                        {product.expires_at && isProductExpired(product.expires_at) && (
+                          <Badge variant="outline" className="text-xs">
+                            <Clock className="h-3 w-3 mr-1" />
+                            Wygasł
+                          </Badge>
+                        )}
+                      </div>
+                      <div className="flex items-center gap-4 text-xs text-muted-foreground">
+                        <span className="flex items-center gap-1">
+                          <Calendar className="h-3 w-3" />
+                          {formatDate(product.created_at)}
+                        </span>
+                        {product.expires_at && (
+                          <span className="flex items-center gap-1">
+                            <Clock className="h-3 w-3" />
+                            Wygasa: {formatDate(product.expires_at)}
+                          </span>
+                        )}
+                        <span className="flex items-center gap-1">
+                          <Euro className="h-3 w-3" />
+                          {formatPrice(product.price_cents, product.currency)}
+                        </span>
+                      </div>
+                    </div>
+                    {product.status === 'paid' && !isProductExpired(product.expires_at) && (
+                      <div className="flex items-center gap-2 ml-4">
+                        {matchingProduct && (
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => handleRevokeProductAccess(user, matchingProduct)}
+                            className="border-red-300 text-red-700 hover:bg-red-50 text-xs px-2 py-1 transition-all duration-200 hover:scale-105"
+                          >
+                            <XCircle className="h-3 w-3 mr-1" />
+                            Odbierz
+                          </Button>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                )
+              })}
+            </div>
+          </div>
+        )}
+
+        {/* Available products to grant access */}
+        <div className="space-y-3">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2 text-sm font-medium text-foreground">
+              <ShoppingBag className="h-4 w-4 text-primary" />
+              Zarządzanie dostępami do produktów
+            </div>
+          </div>
+          
+          {/* Products available to grant */}
+          {products.filter(product => 
+            product.is_active && 
+            !userProducts.some(userProduct => 
+              userProduct.product_slug === product.slug && 
+              userProduct.status === 'paid' && 
+              !isProductExpired(userProduct.expires_at)
+            )
+          ).length > 0 && (
+            <div className="space-y-2">
+              <h4 className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+                Dostępne do przyznania
+              </h4>
+              <div className="grid gap-2">
+                {products.filter(product => 
+                  product.is_active && 
+                  !userProducts.some(userProduct => 
+                    userProduct.product_slug === product.slug && 
+                    userProduct.status === 'paid' && 
+                    !isProductExpired(userProduct.expires_at)
+                  )
+                ).map((product) => (
+                  <div 
+                    key={product.id} 
+                    className="flex items-center justify-between p-3 bg-muted/30 rounded-lg border border-border/50 hover:bg-muted/50 transition-colors duration-200"
+                  >
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className="font-medium text-sm truncate">{product.name}</span>
+                        <Badge variant="outline" className="text-xs">
+                          {formatPrice(product.price_cents, product.currency)}
+                        </Badge>
+                      </div>
+                      {product.description && (
+                        <p className="text-xs text-muted-foreground truncate">
+                          {product.description}
+                        </p>
+                      )}
+                    </div>
+                    <div className="flex items-center gap-2 ml-4">
+                      <Button
+                        size="sm"
+                        onClick={() => handleGrantProductAccess(user, product)}
+                        className="text-xs px-3 py-1 transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-lg focus:scale-105 focus:shadow-lg active:scale-95"
+                      >
+                        <UserCheck className="h-3 w-3 mr-1 transition-transform duration-200" />
+                        Przyznaj dostęp
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+          
+          {/* Show message if user has access to everything */}
+          {products.filter(product => 
+            product.is_active && 
+            !userProducts.some(userProduct => 
+              userProduct.product_slug === product.slug && 
+              userProduct.status === 'paid' && 
+              !isProductExpired(userProduct.expires_at)
+            )
+          ).length === 0 && (
+            <div className="text-sm text-muted-foreground italic flex items-center gap-2 p-4 bg-muted/30 rounded-lg border border-border/50">
+              <CheckCircle className="h-4 w-4 text-muted-foreground" />
+              Użytkownik ma dostęp do wszystkich dostępnych produktów i usług
+            </div>
+          )}
+        </div>
+      </div>
     )
   }
 
@@ -226,64 +430,56 @@ export default function AdminAccessManagementPage() {
               Zarządzanie dostępami
             </h1>
             <p className="text-muted-foreground text-lg">
-              Przypisuj i zarządzaj dostępem użytkowników do portfela autora
+              Przypisuj i zarządzaj dostępem użytkowników do portfela autora oraz przeglądaj ich zakupy
             </p>
           </div>
 
           {/* Statistics Cards */}
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
             <Card>
-              <CardContent className="p-6">
-                <div className="flex items-center">
-                  <div className="p-2 bg-blue-100 rounded-lg">
-                    <Users className="h-6 w-6 text-blue-600" />
-                  </div>
-                  <div className="ml-4">
-                    <p className="text-sm font-medium text-muted-foreground">Wszyscy użytkownicy</p>
-                    <p className="text-2xl font-bold">{stats.totalUsers}</p>
-                  </div>
+              <CardContent className="p-6 flex items-center">
+                <div className="p-2 bg-blue-100 rounded-lg">
+                  <Users className="h-6 w-6 text-blue-600" />
+                </div>
+                <div className="ml-4">
+                  <p className="text-sm font-medium text-muted-foreground">Wszyscy użytkownicy</p>
+                  <p className="text-2xl font-bold">{stats.totalUsers}</p>
                 </div>
               </CardContent>
             </Card>
             
             <Card>
-              <CardContent className="p-6">
-                <div className="flex items-center">
-                  <div className="p-2 bg-green-100 rounded-lg">
-                    <CheckCircle className="h-6 w-6 text-green-600" />
-                  </div>
-                  <div className="ml-4">
-                    <p className="text-sm font-medium text-muted-foreground">Z dostępem do portfela</p>
-                    <p className="text-2xl font-bold">{stats.usersWithAccess}</p>
-                  </div>
+              <CardContent className="p-6 flex items-center">
+                <div className="p-2 bg-green-100 rounded-lg">
+                  <CheckCircle className="h-6 w-6 text-green-600" />
+                </div>
+                <div className="ml-4">
+                  <p className="text-sm font-medium text-muted-foreground">Z dostępem do portfela</p>
+                  <p className="text-2xl font-bold">{stats.usersWithAccess}</p>
                 </div>
               </CardContent>
             </Card>
             
             <Card>
-              <CardContent className="p-6">
-                <div className="flex items-center">
-                  <div className="p-2 bg-orange-100 rounded-lg">
-                    <UserCheck className="h-6 w-6 text-orange-600" />
-                  </div>
-                  <div className="ml-4">
-                    <p className="text-sm font-medium text-muted-foreground">Aktywni użytkownicy</p>
-                    <p className="text-2xl font-bold">{stats.activeUsers}</p>
-                  </div>
+              <CardContent className="p-6 flex items-center">
+                <div className="p-2 bg-orange-100 rounded-lg">
+                  <UserCheck className="h-6 w-6 text-orange-600" />
+                </div>
+                <div className="ml-4">
+                  <p className="text-sm font-medium text-muted-foreground">Aktywni użytkownicy</p>
+                  <p className="text-2xl font-bold">{stats.activeUsers}</p>
                 </div>
               </CardContent>
             </Card>
             
             <Card>
-              <CardContent className="p-6">
-                <div className="flex items-center">
-                  <div className="p-2 bg-purple-100 rounded-lg">
-                    <Calendar className="h-6 w-6 text-purple-600" />
-                  </div>
-                  <div className="ml-4">
-                    <p className="text-sm font-medium text-muted-foreground">Nowi (30 dni)</p>
-                    <p className="text-2xl font-bold">{stats.recentUsers}</p>
-                  </div>
+              <CardContent className="p-6 flex items-center">
+                <div className="p-2 bg-purple-100 rounded-lg">
+                  <Calendar className="h-6 w-6 text-purple-600" />
+                </div>
+                <div className="ml-4">
+                  <p className="text-sm font-medium text-muted-foreground">Nowi (30 dni)</p>
+                  <p className="text-2xl font-bold">{stats.recentUsers}</p>
                 </div>
               </CardContent>
             </Card>
@@ -309,7 +505,7 @@ export default function AdminAccessManagementPage() {
                     Użytkownicy systemu
                   </CardTitle>
                   <CardDescription className="text-muted-foreground mt-1">
-                    Przeglądaj użytkowników i zarządzaj ich dostępami do portfela
+                    Przeglądaj użytkowników, ich zakupy i zarządzaj dostępami do portfela
                   </CardDescription>
                 </div>
               </div>
@@ -337,24 +533,23 @@ export default function AdminAccessManagementPage() {
 
               {/* Users List */}
               {!loading && (
-                <div className="space-y-4">
+                <div className="space-y-6">
                   {filteredUsers.map((user) => (
                     <div
                       key={user.id}
-                      className="flex items-center justify-between p-6 bg-card/50 hover:bg-card/80 rounded-xl border border-border/50 hover:border-border transition-all duration-300"
+                      className="p-6 bg-card/50 hover:bg-card/80 rounded-xl border border-border/50 hover:border-border transition-all duration-300"
                     >
-                      <div className="flex items-center space-x-4 flex-1">
-                        {/* User Info */}
+                      {/* User Header */}
+                      <div className="flex items-start justify-between mb-4">
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-3 mb-2">
-                            <h3 className="font-semibold text-foreground">
+                            <h3 className="font-semibold text-foreground text-lg">
                               {user.full_name || user.username || 'Bez nazwy'}
                             </h3>
                             {getRoleBadge(user.role)}
-                            {getAccessBadge(user.hasPortfolioAccess)}
                           </div>
                           
-                          <div className="flex items-center space-x-4 text-sm text-muted-foreground">
+                          <div className="flex items-center space-x-4 text-sm text-muted-foreground mb-3">
                             <span className="flex items-center">
                               <Mail className="h-4 w-4 mr-1" />
                               {user.email}
@@ -370,57 +565,41 @@ export default function AdminAccessManagementPage() {
                               </span>
                             )}
                           </div>
-
-                          {/* User Orders */}
-                          {user.orders.length > 0 && (
-                            <div className="mt-2">
-                              <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                                <Package className="h-3 w-3" />
-                                Zamówienia ({user.orders.length}):
-                                {user.orders.slice(0, 2).map((order, idx) => (
-                                  <Badge key={order.id} variant="outline" className="text-xs">
-                                    {order.status} {order.expires_at && `(do ${formatDate(order.expires_at)})`}
-                                  </Badge>
-                                ))}
-                                {user.orders.length > 2 && (
-                                  <span className="text-muted-foreground">+{user.orders.length - 2} więcej</span>
-                                )}
-                              </div>
-                            </div>
-                          )}
                         </div>
+
+                        
                       </div>
 
-                      {/* Actions */}
-                      <div className="flex items-center space-x-2 ml-4">
-                        {!user.hasPortfolioAccess && (
-                          <Button
-                            size="sm"
-                            onClick={() => handleGrantAccess(user)}
-                            className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg"
-                            title="Przyznaj dostęp do portfela"
-                          >
-                            <UserCheck className="h-4 w-4 mr-1" />
-                            Przyznaj dostęp
-                          </Button>
-                        )}
-                        {user.hasPortfolioAccess && (
-                          <>
-                            <Badge className="bg-green-100 text-green-800 hover:bg-green-100">
-                              <CheckCircle className="h-3 w-3 mr-1" />
-                              Ma dostęp
+                      {/* Collapsible Products Section */}
+                      <div className="border-t border-border/50 pt-4">
+                        <button
+                          onClick={() => toggleUserExpansion(user.id)}
+                          className="flex items-center justify-between w-full p-3 bg-muted/20 hover:bg-muted/40 rounded-lg border border-border/30 transition-all duration-200 group"
+                        >
+                          <div className="flex items-center gap-3">
+                            {expandedUsers.has(user.id) ? (
+                              <ChevronDown className="h-4 w-4 text-muted-foreground group-hover:text-foreground transition-colors" />
+                            ) : (
+                              <ChevronRight className="h-4 w-4 text-muted-foreground group-hover:text-foreground transition-colors" />
+                            )}
+                            <div className="flex items-center gap-2">
+                              <Package className="h-4 w-4 text-primary" />
+                              <span className="font-medium text-foreground">
+                                Produkty i dostępy
+                              </span>
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <Badge variant="secondary">
+                              {user.purchasedProducts.length} zakupionych
                             </Badge>
-                            <Button
-                              size="sm"
-                              variant="outline"
-                              onClick={() => handleRevokeAccess(user)}
-                              className="border-red-300 text-red-700 hover:bg-red-50 rounded-lg"
-                              title="Odbierz dostęp do portfela"
-                            >
-                              <XCircle className="h-4 w-4 mr-1" />
-                              Odbierz dostęp
-                            </Button>
-                          </>
+                          </div>
+                        </button>
+                        
+                        {expandedUsers.has(user.id) && (
+                          <div className="mt-4 pl-4 border-l-2 border-primary/20">
+                            {renderUserProducts(user.purchasedProducts, user)}
+                          </div>
                         )}
                       </div>
                     </div>
@@ -442,19 +621,33 @@ export default function AdminAccessManagementPage() {
         </div>
       </main>
 
-      {/* Grant Access Modal */}
-      <Dialog open={grantAccessModalOpen} onOpenChange={setGrantAccessModalOpen}>
+      {/* Grant Product Access Modal */}
+      <Dialog open={productAccessModalOpen} onOpenChange={setProductAccessModalOpen}>
         <DialogContent className="rounded-xl">
           <DialogHeader>
-            <DialogTitle>Przyznaj dostęp do portfela</DialogTitle>
+            <DialogTitle>Przyznaj dostęp do produktu</DialogTitle>
             <DialogDescription>
-              Przyznaj użytkownikowi <strong>{selectedUser?.email}</strong> dostęp do portfela autora
+              Przyznaj użytkownikowi <strong>{selectedUser?.email}</strong> dostęp do produktu <strong>{selectedProduct?.name}</strong>
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4">
+            {selectedProduct && (
+              <div className="p-4 bg-muted/50 rounded-lg">
+                <h4 className="font-medium text-sm mb-2">{selectedProduct.name}</h4>
+                {selectedProduct.description && (
+                  <p className="text-sm text-muted-foreground mb-2">{selectedProduct.description}</p>
+                )}
+                <div className="flex items-center gap-2">
+                  <Badge variant="secondary">
+                    {formatPrice(selectedProduct.price_cents, selectedProduct.currency)}
+                  </Badge>
+                  <Badge variant="outline">{selectedProduct.slug}</Badge>
+                </div>
+              </div>
+            )}
             <div>
-              <Label htmlFor="duration">Czas dostępu (dni)</Label>
-              <Select value={accessDuration} onValueChange={setAccessDuration}>
+              <Label htmlFor="productDuration">Czas dostępu (dni)</Label>
+              <Select value={productAccessDuration} onValueChange={setProductAccessDuration}>
                 <SelectTrigger className="rounded-xl">
                   <SelectValue />
                 </SelectTrigger>
@@ -470,18 +663,18 @@ export default function AdminAccessManagementPage() {
           <DialogFooter>
             <Button 
               variant="outline" 
-              onClick={() => setGrantAccessModalOpen(false)} 
+              onClick={() => setProductAccessModalOpen(false)} 
               className="rounded-xl"
-              disabled={isGrantingAccess}
+              disabled={isGrantingProductAccess}
             >
               Anuluj
             </Button>
             <Button 
-              onClick={confirmGrantAccess} 
+              onClick={confirmGrantProductAccess} 
               className="rounded-xl"
-              disabled={isGrantingAccess}
+              disabled={isGrantingProductAccess}
             >
-              {isGrantingAccess && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              {isGrantingProductAccess && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               Przyznaj dostęp
             </Button>
           </DialogFooter>
