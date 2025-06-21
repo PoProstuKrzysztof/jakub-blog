@@ -340,7 +340,7 @@ export function HomePageClient({ initialPosts }: HomePageClientProps) {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
             {[
               {
                 icon: FileText,
@@ -385,16 +385,18 @@ export function HomePageClient({ initialPosts }: HomePageClientProps) {
                 cta: "Zapisz się",
               },
             ].map((service, index) => (
-              <Card key={index} className="border-0 shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:scale-105 group relative overflow-hidden flex flex-col touch-manipulation">
+              <Card key={index} className="border-0 shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:scale-105 group relative overflow-hidden h-full flex flex-col touch-manipulation">
                 <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-accent/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                <CardContent className="p-4 sm:p-6 lg:p-8 relative z-10 flex flex-col flex-grow">
+                
+                {/* Kontener z treścią - flex-1 zajmuje całą dostępną przestrzeń */}
+                <div className="p-4 sm:p-6 lg:p-8 relative z-10 flex-1 flex flex-col">
                   <div className="w-10 h-10 sm:w-12 sm:h-12 lg:w-16 lg:h-16 mx-auto mb-4 sm:mb-6 rounded-2xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors duration-300">
                     <service.icon className="h-5 w-5 sm:h-6 sm:w-6 lg:h-8 lg:w-8 text-primary" />
                   </div>
                   <h3 className="text-base sm:text-lg lg:text-xl font-semibold text-foreground mb-3 sm:mb-4 text-center">{service.title}</h3>
                   <p className="text-xs sm:text-sm lg:text-base text-muted-foreground mb-4 sm:mb-6 text-center leading-relaxed">{service.description}</p>
                   
-                  <div className="space-y-2 sm:space-y-3 mb-6 sm:mb-8 flex-grow">
+                  <div className="space-y-2 sm:space-y-3 flex-1">
                     {service.features.map((feature, idx) => (
                       <div key={idx} className="flex items-center text-xs sm:text-sm text-muted-foreground">
                         <CheckCircle className="h-3 w-3 sm:h-4 sm:w-4 text-green-500 mr-2 flex-shrink-0" />
@@ -402,14 +404,17 @@ export function HomePageClient({ initialPosts }: HomePageClientProps) {
                       </div>
                     ))}
                   </div>
+                </div>
 
-                  <Link href={service.href} className="block mt-auto">
+                {/* Kontener z przyciskiem - zawsze na dole */}
+                <div className="p-4 sm:p-6 lg:p-8 pt-0 relative z-10">
+                  <Link href={service.href} className="block">
                     <Button className="w-full bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl font-semibold group-hover:shadow-lg transition-all duration-300 text-xs sm:text-sm lg:text-base py-2 sm:py-2.5 lg:py-3 touch-manipulation tap-highlight-none">
                       {service.cta}
                       <ArrowRight className="ml-2 h-3 w-3 sm:h-4 sm:w-4 group-hover:translate-x-1 transition-transform duration-300" />
                     </Button>
                   </Link>
-                </CardContent>
+                </div>
               </Card>
             ))}
           </div>
