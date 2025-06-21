@@ -1,11 +1,12 @@
 "use client";
 
-import { useState, useMemo } from "react"
+import { useState, useEffect, useMemo } from "react"
+import { useRouter } from "next/navigation"
+import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { LoadingCard } from "@/components/ui/loading-card"
 import { PostSkeleton } from "@/components/ui/post-skeleton"
 import { SiteHeader } from "@/components/common/site-header"
@@ -31,12 +32,18 @@ import {
   FileText,
   Lightbulb,
   DollarSign,
-} from "lucide-react"
+  TrendingDown,
+  Zap,
+  PinIcon,
+  PinOffIcon,
+  } from "lucide-react"
 import Link from "next/link"
 import Image from "next/image"
 import { PostFull } from "@/lib/models/post"
 import { PinButton } from "@/components/common/pin-button"
 import { useAuth } from "@/hooks/use-auth"
+import { useUserRole } from "@/hooks/use-user-role"
+import { getUserPanelPath } from "@/lib/utils/user-role"
 import type { User } from '@supabase/supabase-js'
 
 interface HomePageClientProps {
@@ -52,6 +59,8 @@ export function HomePageClient({ initialPosts }: HomePageClientProps) {
   const [posts, setPosts] = useState(initialPosts);
   const [isFiltering, setIsFiltering] = useState(false);
   const [showBlogSection, setShowBlogSection] = useState(false);
+  const router = useRouter();
+  const { role } = useUserRole();
 
   const handlePinToggle = (postId: string, isPinned: boolean) => {
     setPosts((prevPosts) =>
@@ -78,6 +87,14 @@ export function HomePageClient({ initialPosts }: HomePageClientProps) {
     setSelectedCategory(value);
     setTimeout(() => setIsFiltering(false), 200);
   };
+
+  const handleOfferClick = () => {
+    if (user) {
+      router.push(getUserPanelPath(role))
+    } else {
+      router.push('/login?from=offer')
+    }
+  }
 
   const filteredAndSortedPosts = useMemo(() => {
     const filtered = posts.filter((post) => {
@@ -429,12 +446,13 @@ export function HomePageClient({ initialPosts }: HomePageClientProps) {
 
                     {/* Przycisk - zawsze na dole */}
                     <div>
-                      <Link href={service.href} className="block">
-                        <Button className="w-full bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl font-semibold group-hover:shadow-lg transition-all duration-300 py-3 touch-manipulation tap-highlight-none">
-                          {service.cta}
-                          <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform duration-300" />
-                        </Button>
-                      </Link>
+                      <Button 
+                        onClick={handleOfferClick}
+                        className="w-full bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl font-semibold group-hover:shadow-lg transition-all duration-300 py-3 touch-manipulation tap-highlight-none"
+                      >
+                        {service.cta}
+                        <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform duration-300" />
+                      </Button>
                     </div>
                   </div>
                 </Card>
