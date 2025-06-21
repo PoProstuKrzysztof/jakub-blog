@@ -152,47 +152,6 @@ export class AdminUserService {
   }
 
   /**
-   * Przyznaje dostęp do portfela użytkownikowi na określony czas
-   */
-  async grantPortfolioAccess(userId: string, durationDays: number): Promise<void> {
-    try {
-      // First, get the portfolio-access product using admin client
-      const { data: product, error: productError } = await this.adminClient
-        .from('products')
-        .select('*')
-        .eq('slug', 'portfolio-access')
-        .single()
-
-      if (productError || !product) {
-        throw new Error('Nie znaleziono produktu portfolio-access')
-      }
-
-      // Calculate expiry date
-      const expiryDate = new Date()
-      expiryDate.setDate(expiryDate.getDate() + durationDays)
-
-      // Create an order record to grant access using admin client
-      const { error: orderError } = await this.adminClient
-        .from('orders')
-        .insert({
-          user_id: userId,
-          product_id: product.id,
-          status: 'paid',
-          price_cents: 0, // Free admin grant
-          currency: product.currency,
-          expires_at: expiryDate.toISOString()
-        })
-
-      if (orderError) {
-        throw new Error(`Błąd przyznawania dostępu: ${orderError.message}`)
-      }
-    } catch (error) {
-      console.error('Error granting portfolio access:', error)
-      throw error
-    }
-  }
-
-  /**
    * Sprawdza czy użytkownik ma uprawnienia administratora
    */
   async checkAdminPermissions(userId: string): Promise<boolean> {
@@ -226,46 +185,6 @@ export class AdminUserService {
       (user.full_name && user.full_name.toLowerCase().includes(searchTerm)) ||
       (user.username && user.username.toLowerCase().includes(searchTerm))
     )
-  }
-
-  /**
-   * Anuluje dostęp użytkownika do portfela (oznacza zamówienia jako cancelled)
-   */
-  async revokePortfolioAccess(userId: string): Promise<void> {
-    try {
-      // Find active orders for portfolio access using admin client
-      const { data: orders, error: ordersError } = await this.adminClient
-        .from('orders')
-        .select(`
-          id,
-          products!inner (
-            slug
-          )
-        `)
-        .eq('user_id', userId)
-        .eq('products.slug', 'portfolio-access')
-        .eq('status', 'paid')
-
-      if (ordersError) {
-        throw new Error(`Błąd pobierania zamówień: ${ordersError.message}`)
-      }
-
-      // Cancel all active orders using admin client
-      if (orders && orders.length > 0) {
-        const orderIds = orders.map(order => order.id)
-        const { error: updateError } = await this.adminClient
-          .from('orders')
-          .update({ status: 'cancelled' })
-          .in('id', orderIds)
-
-        if (updateError) {
-          throw new Error(`Błąd anulowania dostępu: ${updateError.message}`)
-        }
-      }
-    } catch (error) {
-      console.error('Error revoking portfolio access:', error)
-      throw error
-    }
   }
 
   /**

@@ -45,60 +45,6 @@ export function useAdminUsers() {
     }
   }
 
-  const grantAccess = async (userId: string, durationDays: number) => {
-    try {
-      const response = await fetch('/api/admin/users/grant-access', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ userId, durationDays }),
-      })
-
-      if (!response.ok) {
-        const errorData = await response.json()
-        throw new Error(errorData.error || 'Błąd podczas przyznawania dostępu')
-      }
-
-      // Refresh data after granting access
-      await fetchUsers()
-      return { success: true }
-    } catch (err) {
-      console.error('Error granting access:', err)
-      return { 
-        success: false, 
-        error: err instanceof Error ? err.message : 'Wystąpił błąd podczas przyznawania dostępu' 
-      }
-    }
-  }
-
-  const revokeAccess = async (userId: string) => {
-    try {
-      const response = await fetch('/api/admin/users/revoke-access', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ userId }),
-      })
-
-      if (!response.ok) {
-        const errorData = await response.json()
-        throw new Error(errorData.error || 'Błąd podczas odbierania dostępu')
-      }
-
-      // Refresh data after revoking access
-      await fetchUsers()
-      return { success: true }
-    } catch (err) {
-      console.error('Error revoking access:', err)
-      return { 
-        success: false, 
-        error: err instanceof Error ? err.message : 'Wystąpił błąd podczas odbierania dostępu' 
-      }
-    }
-  }
-
   const searchUsers = (query: string) => {
     if (!query) return users
 
@@ -120,8 +66,6 @@ export function useAdminUsers() {
     error,
     stats,
     fetchUsers,
-    grantAccess,
-    revokeAccess,
     searchUsers
   }
 } 

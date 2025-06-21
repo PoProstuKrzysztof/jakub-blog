@@ -296,10 +296,10 @@ export default function AdminDashboard() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="text-center space-y-6">
             <div className="space-y-4">
-              <h1 className="text-4xl lg:text-5xl font-bold text-foreground leading-tight">
+              <h1 className="text-3xl lg:text-4xl xl:text-5xl font-bold text-foreground leading-tight">
                 Zarządzaj swoją <span className="text-primary">treścią</span>
               </h1>
-              <p className="text-xl text-muted-foreground leading-relaxed max-w-2xl mx-auto">
+              <p className="text-lg text-muted-foreground leading-relaxed max-w-2xl mx-auto sm:text-xl">
                 Profesjonalny panel administracyjny do zarządzania postami, analizami i treścią na Twoim blogu finansowym
               </p>
             </div>
@@ -308,9 +308,9 @@ export default function AdminDashboard() {
               <Link href="/admin/nowy-post">
                 <Button 
                   size="lg" 
-                  className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-4 rounded-xl text-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+                  className="bg-primary hover:bg-primary/90 text-primary-foreground px-6 py-3 rounded-xl text-base font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 sm:px-8 sm:py-4 sm:text-lg"
                 >
-                  <Plus className="mr-2 h-5 w-5" />
+                  <Plus className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
                   Nowy post
                 </Button>
               </Link>
@@ -318,9 +318,9 @@ export default function AdminDashboard() {
                 <Button 
                   size="lg" 
                   variant="outline" 
-                  className="border-2 border-border hover:border-primary px-8 py-4 rounded-xl text-lg font-semibold transition-all duration-300 hover:bg-primary/5"
+                  className="border-2 border-border hover:border-primary px-6 py-3 rounded-xl text-base font-semibold transition-all duration-300 hover:bg-primary/5 sm:px-8 sm:py-4 sm:text-lg"
                 >
-                  <BarChart3 className="mr-2 h-5 w-5" />
+                  <BarChart3 className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
                   Analytics
                 </Button>
               </Link>
@@ -333,10 +333,10 @@ export default function AdminDashboard() {
         {/* Statistics Cards */}
         <section className="mb-20">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-foreground mb-4">
+            <h2 className="text-2xl font-bold text-foreground mb-4 sm:text-3xl">
               Przegląd statystyk
             </h2>
-            <p className="text-xl text-muted-foreground">
+            <p className="text-lg text-muted-foreground sm:text-xl">
               Kluczowe metryki wydajności Twojego bloga
             </p>
           </div>
@@ -400,11 +400,11 @@ export default function AdminDashboard() {
             <CardHeader className="border-b border-border/50">
               <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                 <div>
-                  <CardTitle className="text-2xl font-bold text-foreground flex items-center">
-                    <FileText className="mr-2 h-6 w-6 text-primary" />
+                  <CardTitle className="text-xl font-bold text-foreground flex items-center sm:text-2xl">
+                    <FileText className="mr-2 h-5 w-5 sm:h-6 sm:w-6 text-primary" />
                     Zarządzanie postami
                   </CardTitle>
-                  <CardDescription className="text-muted-foreground mt-1">
+                  <CardDescription className="text-muted-foreground mt-1 text-sm sm:text-base">
                     Przeglądaj, edytuj i zarządzaj swoimi postami
                   </CardDescription>
                 </div>
@@ -412,17 +412,17 @@ export default function AdminDashboard() {
                   <Link href="/admin/analytics">
                     <Button 
                       variant="outline"
-                      className="border-2 border-border hover:border-primary hover:bg-primary/5 rounded-xl px-6 py-2.5 font-medium transition-all duration-300"
+                      className="border-2 border-border hover:border-primary hover:bg-primary/5 rounded-xl px-4 py-2 text-sm font-medium transition-all duration-300 sm:px-6 sm:py-2.5 sm:text-base"
                     >
-                      <BarChart3 className="h-4 w-4 mr-2" />
+                      <BarChart3 className="h-3 w-3 mr-2 sm:h-4 sm:w-4" />
                       Analytics
                     </Button>
                   </Link>
                   <Link href="/admin/nowy-post">
                     <Button 
-                      className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl px-6 py-2.5 font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+                      className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl px-4 py-2 text-sm font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 sm:px-6 sm:py-2.5 sm:text-base"
                     >
-                      <Plus className="h-4 w-4 mr-2" />
+                      <Plus className="h-3 w-3 mr-2 sm:h-4 sm:w-4" />
                       Nowy post
                     </Button>
                   </Link>
@@ -458,11 +458,11 @@ export default function AdminDashboard() {
                   {filteredPosts.map((post, index) => (
                     <div
                       key={post.id}
-                      className="flex items-center justify-between p-6 bg-card/50 hover:bg-card/80 rounded-xl border border-border/50 hover:border-border transition-all duration-300 transform hover:scale-[1.01]"
+                      className="flex flex-col sm:flex-row sm:items-center justify-between p-4 bg-card/50 hover:bg-card/80 rounded-xl border border-border/50 hover:border-border transition-all duration-300 transform hover:scale-[1.01] sm:p-6"
                     >
-                      <div className="flex items-center space-x-4 flex-1">
+                      <div className="flex items-start sm:items-center space-x-3 flex-1 sm:space-x-4">
                         {/* Thumbnail */}
-                        <div className="relative h-16 w-24 rounded-lg overflow-hidden flex-shrink-0 shadow-md">
+                        <div className="relative h-12 w-16 rounded-lg overflow-hidden flex-shrink-0 shadow-md sm:h-16 sm:w-24">
                           <Image 
                             src={getMainImage(post)} 
                             alt={post.title || "Post image"} 
@@ -473,23 +473,29 @@ export default function AdminDashboard() {
 
                         {/* Post Info */}
                         <div className="flex-1 min-w-0">
-                          <div className="flex items-center gap-3 mb-2">
-                            <h3 className="font-semibold text-foreground truncate">
+                          <div className="flex flex-col sm:flex-row sm:items-center gap-2 mb-2 sm:gap-3">
+                            <h3 className="text-sm font-semibold text-foreground truncate sm:text-base lg:text-lg">
                               {post.title}
                             </h3>
                             {getStatusBadge(post.status || 'draft')}
                           </div>
                           
-                          <div className="flex items-center space-x-4 text-sm text-muted-foreground">
+                          <div className="flex flex-wrap items-center gap-2 sm:gap-4 text-xs sm:text-sm text-muted-foreground">
                             <span className="flex items-center">
-                              <Calendar className="h-4 w-4 mr-1" />
-                              {formatDate(post.published_at)}
+                              <Calendar className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
+                              <span className="hidden sm:inline">
+                                {formatDate(post.published_at)}
+                              </span>
+                              <span className="sm:hidden">
+                                {formatDate(post.published_at)?.split(' ')[0]}
+                              </span>
                             </span>
                             <span className="flex items-center">
-                              <Eye className="h-4 w-4 mr-1" />
-                              {post.view_count || 0} wyświetleń
+                              <Eye className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
+                              {post.view_count || 0}
+                              <span className="hidden sm:inline ml-1">wyświetleń</span>
                             </span>
-                            <Badge variant="secondary" className="rounded-lg">
+                            <Badge variant="secondary" className="rounded-lg text-xs">
                               {getCategoryName(post)}
                             </Badge>
                           </div>
@@ -497,32 +503,32 @@ export default function AdminDashboard() {
                       </div>
 
                     {/* Actions */}
-                    <div className="flex items-center space-x-2 ml-4">
+                    <div className="flex items-center justify-end space-x-1 mt-3 sm:mt-0 sm:ml-2 sm:space-x-2 sm:ml-4">
                       <Button
                         size="sm"
                         variant="outline"
                         onClick={() => handleEditPost(post)}
-                        className="rounded-lg hover:bg-primary/5 hover:border-primary transition-all duration-300"
+                        className="rounded-lg hover:bg-primary/5 hover:border-primary transition-all duration-300 p-1.5 sm:p-2"
                         title="Edytuj post"
                       >
-                        <Edit className="h-4 w-4" />
+                        <Edit className="h-3 w-3 sm:h-4 sm:w-4" />
                       </Button>
                       <Button
                         size="sm"
                         variant="outline"
-                        className="rounded-lg hover:bg-muted hover:border-border hover:text-muted-foreground transition-all duration-300"
+                        className="rounded-lg hover:bg-muted hover:border-border hover:text-muted-foreground transition-all duration-300 p-1.5 sm:p-2"
                         title="Podgląd posta"
                       >
-                        <Eye className="h-4 w-4" />
+                        <Eye className="h-3 w-3 sm:h-4 sm:w-4" />
                       </Button>
                       <Button
                         size="sm"
                         variant="outline"
                         onClick={() => handleDeletePost(post)}
-                        className="rounded-lg hover:bg-destructive/10 hover:border-destructive hover:text-destructive transition-all duration-300"
+                        className="rounded-lg hover:bg-destructive/10 hover:border-destructive hover:text-destructive transition-all duration-300 p-1.5 sm:p-2"
                         title="Usuń post"
                       >
-                        <Trash2 className="h-4 w-4" />
+                        <Trash2 className="h-3 w-3 sm:h-4 sm:w-4" />
                       </Button>
                     </div>
                   </div>
@@ -552,10 +558,10 @@ export default function AdminDashboard() {
         {/* Quick Actions */}
         <section className="mt-20">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-foreground mb-4">
+            <h2 className="text-2xl font-bold text-foreground mb-4 sm:text-3xl">
               Szybkie akcje
             </h2>
-            <p className="text-xl text-muted-foreground">
+            <p className="text-lg text-muted-foreground sm:text-xl">
               Najczęściej używane funkcje w panelu administracyjnym
             </p>
           </div>
@@ -614,9 +620,9 @@ export default function AdminDashboard() {
                     <div className={`w-16 h-16 mx-auto mb-6 rounded-2xl ${action.bgColor} flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}>
                       <action.icon className={`h-8 w-8 ${action.iconColor}`} />
                     </div>
-                    <h3 className="text-xl font-semibold text-foreground mb-3">{action.title}</h3>
-                    <p className="text-muted-foreground mb-6">{action.description}</p>
-                    <div className="flex items-center justify-center text-primary font-medium">
+                    <h3 className="text-lg font-semibold text-foreground mb-3 sm:text-xl">{action.title}</h3>
+                    <p className="text-sm text-muted-foreground mb-6 sm:text-base">{action.description}</p>
+                    <div className="flex items-center justify-center text-primary font-medium text-sm sm:text-base">
                       Przejdź
                       <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform duration-300" />
                     </div>
