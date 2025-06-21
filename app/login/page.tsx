@@ -215,7 +215,7 @@ export default function LoginPage() {
             {authLoading ? 'Sprawdzanie autoryzacji...' : 'Przekierowywanie...'}
           </div>
           {successMessage && (
-            <div className="text-sm text-green-600 font-medium">
+            <div className="text-sm text-primary font-medium">
               {successMessage}
             </div>
           )}
@@ -381,9 +381,9 @@ export default function LoginPage() {
                 )}
 
                 {showResendEmail && (
-                  <Alert className="border-blue-200 bg-blue-50 text-blue-800">
-                    <Mail className="h-4 w-4 text-blue-600" />
-                    <AlertDescription className="text-blue-800">
+                  <Alert className="border-muted bg-muted/50 text-foreground">
+                    <Mail className="h-4 w-4 text-primary" />
+                    <AlertDescription className="text-foreground">
                       <div className="space-y-3">
                         <p className="font-medium">Potwierdź swój adres email</p>
                         <p className="text-sm">
@@ -397,7 +397,7 @@ export default function LoginPage() {
                           onClick={handleResendConfirmation}
                           disabled={isResending}
                           className="
-                            bg-blue-100 hover:bg-blue-200 border-blue-300 text-blue-800 font-medium
+                            bg-muted hover:bg-muted/80 border-border text-foreground font-medium
                             transition-all duration-200 ease-in-out
                             focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500
                             motion-safe:hover:scale-[1.02] motion-safe:active:scale-[0.98]
@@ -424,9 +424,9 @@ export default function LoginPage() {
                 )}
 
                 {successMessage && (
-                  <Alert className="border-green-200 bg-green-50 text-green-800">
-                    <CheckCircle className="h-4 w-4 text-green-600" />
-                    <AlertDescription className="text-green-800">
+                  <Alert className="border-primary/20 bg-primary/5 text-primary">
+                    <CheckCircle className="h-4 w-4 text-primary" />
+                    <AlertDescription className="text-primary">
                       <div className="space-y-2">
                         <p className="font-medium">Sukces!</p>
                         <p className="text-sm">{successMessage}</p>
@@ -542,9 +542,9 @@ export default function LoginPage() {
                 )}
 
                 {successMessage && (
-                  <Alert className="border-green-200 bg-green-50 text-green-800">
-                    <CheckCircle className="h-4 w-4 text-green-600" />
-                    <AlertDescription className="text-green-800">
+                  <Alert className="border-primary/20 bg-primary/5 text-primary">
+                    <CheckCircle className="h-4 w-4 text-primary" />
+                    <AlertDescription className="text-primary">
                       <div className="space-y-2">
                         <p className="font-medium">Sukces!</p>
                         <p className="text-sm">{successMessage}</p>

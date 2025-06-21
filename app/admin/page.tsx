@@ -25,6 +25,7 @@ import {
   Loader2,
   AlertCircle,
   UserCheck,
+  Briefcase,
 } from "lucide-react"
 import Link from "next/link"
 import Image from "next/image"
@@ -188,27 +189,27 @@ export default function AdminDashboard() {
       value: adminStats.publishedPosts.toString(),
       change: "+3", // Mock change for now
       icon: FileText,
-      color: "from-green-500 to-green-600",
-      bgColor: "bg-green-50",
-      iconColor: "text-green-600"
+      color: "from-primary to-primary",
+      bgColor: "bg-primary/10",
+      iconColor: "text-primary"
     },
     {
       title: "Szkice",
       value: adminStats.draftPosts.toString(),
       change: "+2", // Mock change for now
       icon: Edit,
-      color: "from-orange-500 to-orange-600", 
-      bgColor: "bg-orange-50",
-      iconColor: "text-orange-600"
+      color: "from-primary to-primary", 
+      bgColor: "bg-primary/10",
+      iconColor: "text-primary"
     },
     {
       title: "Średnie wyświetlenia",
       value: formatNumber(adminStats.averageViews),
       change: "+8%", // Mock change for now
       icon: TrendingUp,
-      color: "from-purple-500 to-purple-600",
-      bgColor: "bg-purple-50",
-      iconColor: "text-purple-600"
+      color: "from-primary to-primary",
+      bgColor: "bg-primary/10",
+      iconColor: "text-primary"
     },
   ] : []
 
@@ -220,11 +221,11 @@ export default function AdminDashboard() {
   const getStatusBadge = (status: string) => {
     switch (status) {
       case "published":
-        return <Badge className="bg-green-100 text-green-800 hover:bg-green-100 rounded-xl">Opublikowany</Badge>
+        return <Badge className="bg-primary/10 text-primary hover:bg-primary/20 rounded-xl">Opublikowany</Badge>
       case "draft":
         return <Badge variant="secondary" className="rounded-xl">Szkic</Badge>
       case "scheduled":
-        return <Badge className="bg-blue-100 text-blue-800 hover:bg-blue-100 rounded-xl">Zaplanowany</Badge>
+        return <Badge className="bg-muted text-muted-foreground hover:bg-muted/80 rounded-xl">Zaplanowany</Badge>
       case "archived":
         return <Badge variant="outline" className="rounded-xl">Zarchiwizowany</Badge>
       default:
@@ -377,7 +378,7 @@ export default function AdminDashboard() {
                         <stat.icon className={`h-6 w-6 ${stat.iconColor}`} />
                       </div>
                       <Badge 
-                        className={`${stat.change.startsWith('+') ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'} rounded-lg`}
+                        className={`${stat.change.startsWith('+') ? 'bg-primary/10 text-primary' : 'bg-destructive/10 text-destructive'} rounded-lg`}
                       >
                         {stat.change}
                       </Badge>
@@ -509,7 +510,7 @@ export default function AdminDashboard() {
                       <Button
                         size="sm"
                         variant="outline"
-                        className="rounded-lg hover:bg-green-50 hover:border-green-300 hover:text-green-700 transition-all duration-300"
+                        className="rounded-lg hover:bg-muted hover:border-border hover:text-muted-foreground transition-all duration-300"
                         title="Podgląd posta"
                       >
                         <Eye className="h-4 w-4" />
@@ -518,7 +519,7 @@ export default function AdminDashboard() {
                         size="sm"
                         variant="outline"
                         onClick={() => handleDeletePost(post)}
-                        className="rounded-lg hover:bg-red-50 hover:border-red-300 hover:text-red-700 transition-all duration-300"
+                        className="rounded-lg hover:bg-destructive/10 hover:border-destructive hover:text-destructive transition-all duration-300"
                         title="Usuń post"
                       >
                         <Trash2 className="h-4 w-4" />
@@ -567,8 +568,8 @@ export default function AdminDashboard() {
                 description: "Utwórz nową analizę lub artykuł edukacyjny",
                 href: "/admin/nowy-post",
                 color: "from-blue-500 to-blue-600",
-                bgColor: "bg-blue-50",
-                iconColor: "text-blue-600"
+                bgColor: "bg-primary/10",
+                iconColor: "text-primary"
               },
               {
                 icon: BarChart3,
@@ -576,8 +577,8 @@ export default function AdminDashboard() {
                 description: "Przegląd statystyk i analityki bloga",
                 href: "/admin/analytics",
                 color: "from-green-500 to-green-600",
-                bgColor: "bg-green-50",
-                iconColor: "text-green-600"
+                bgColor: "bg-primary/10",
+                iconColor: "text-primary"
               },
               {
                 icon: MessageCircle,
@@ -593,9 +594,9 @@ export default function AdminDashboard() {
                 title: "Portfel autora",
                 description: "Zarządzaj portfelem i publikuj analizy",
                 href: "/admin/portfel",
-                color: "from-yellow-500 to-yellow-600",
-                bgColor: "bg-yellow-50",
-                iconColor: "text-yellow-600"
+                                                    color: "from-primary to-primary",
+                  bgColor: "bg-primary/10",
+                  iconColor: "text-primary"
               },
               {
                 icon: UserCheck,
