@@ -2,11 +2,12 @@ import { NextRequest, NextResponse } from 'next/server'
 import { AdminUserService } from '@/lib/services/admin-user-service'
 import { createServerClient } from '@supabase/ssr'
 import { cookies } from 'next/headers'
+import { supabaseAdmin } from '@/lib/supabase/supabase-admin'
 
 /**
  * Sprawdza czy użytkownik ma uprawnienia administratora
  */
-async function checkAdminPermissions(): Promise<{ isAdmin: boolean; userId?: string }> {
+async function checkAdminPermissions(request: NextRequest): Promise<{ isAdmin: boolean; userId?: string }> {
   try {
     const cookieStore = await cookies()
     const supabase = createServerClient(
@@ -46,11 +47,11 @@ async function checkAdminPermissions(): Promise<{ isAdmin: boolean; userId?: str
 }
 
 /**
- * POST /api/admin/users/revoke-access - Odbiera dostęp do portfela
+ * GET /api/admin/products - Pobiera listę wszystkich produktów
  */
-export async function POST(request: NextRequest) {
+export async function GET(request: NextRequest) {
   try {
-    const { isAdmin } = await checkAdminPermissions()
+    const { isAdmin } = await checkAdminPermissions(request)
     
     if (!isAdmin) {
       return NextResponse.json(
@@ -59,24 +60,24 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    const body = await request.json()
-    const { userId } = body
+    const { data: products, error } = await supabaseAdmin
+      .from('products')
+      .select('*')
+      .order('name')
 
-    if (!userId) {
+    if (error) {
+      console.error('Error fetching products:', error)
       return NextResponse.json(
-        { error: 'Brak ID użytkownika' },
-        { status: 400 }
+        { error: 'Błąd podczas pobierania produktów' },
+        { status: 500 }
       )
     }
 
-    const adminUserService = new AdminUserService()
-    await adminUserService.revokePortfolioAccess(userId)
-    
-    return NextResponse.json({ success: true })
+    return NextResponse.json({ products })
   } catch (error) {
-    console.error('Error revoking portfolio access:', error)
+    console.error('Error fetching products:', error)
     return NextResponse.json(
-      { error: 'Błąd podczas odbierania dostępu' },
+      { error: 'Błąd podczas pobierania produktów' },
       { status: 500 }
     )
   }
