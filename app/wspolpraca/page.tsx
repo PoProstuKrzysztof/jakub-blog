@@ -1,11 +1,15 @@
 "use client"
 
 import { useState } from "react"
+import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Switch } from "@/components/ui/switch"
 import { SiteHeader } from "@/components/common/site-header"
+import { useAuth } from "@/hooks/use-auth"
+import { useUserRole } from "@/hooks/use-user-role"
+import { getUserPanelPath } from "@/lib/utils/user-role"
 import {
   Users,
   TrendingUp,
@@ -57,7 +61,7 @@ interface Service {
 }
 
 // Service Item Component
-function ServiceItem({ service }: { service: Service }) {
+function ServiceItem({ service, onOfferClick }: { service: Service; onOfferClick: (service: Service) => void }) {
   return (
     <Card className="border-0 shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:scale-105 group relative overflow-hidden h-full flex flex-col touch-manipulation">
       {service.badge && (
@@ -116,12 +120,13 @@ function ServiceItem({ service }: { service: Service }) {
             )}
           </div>
 
-          <Link href="/kontakt" className="block">
-            <Button className="w-full bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl font-semibold group-hover:shadow-lg transition-all duration-300 py-3 touch-manipulation tap-highlight-none">
-              {service.ctaText}
-              <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform duration-300" />
-            </Button>
-          </Link>
+          <Button 
+            onClick={() => onOfferClick(service)}
+            className="w-full bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl font-semibold group-hover:shadow-lg transition-all duration-300 py-3 touch-manipulation tap-highlight-none"
+          >
+            {service.ctaText}
+            <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform duration-300" />
+          </Button>
         </div>
       </div>
     </Card>
@@ -130,6 +135,9 @@ function ServiceItem({ service }: { service: Service }) {
 
 export default function CooperationPage() {
   const [showSubscriptions, setShowSubscriptions] = useState(false)
+  const router = useRouter()
+  const { user } = useAuth()
+  const { role } = useUserRole()
 
   const jednorazoweServices: Service[] = [
     {
@@ -278,6 +286,14 @@ export default function CooperationPage() {
       description: "Zamiast godzin poszukiwań, otrzymujesz skondensowaną porcję najważniejszych informacji."
     }
   ]
+
+  const handleOfferClick = (offer: Service) => {
+    if (user) {
+      router.push(getUserPanelPath(role))
+    } else {
+      router.push('/login?from=offer')
+    }
+  }
 
   return (
     <div className="min-h-screen bg-background">
@@ -441,7 +457,7 @@ export default function CooperationPage() {
               {/* Górny rząd - Konsultacja Majątkowa (wyróżniona) */}
               <div className="flex justify-center">
                 <div className="w-full max-w-md">
-                  <ServiceItem service={jednorazoweServices.find(s => s.title === "Konsultacja Majątkowa-Edukacyjna")!} />
+                  <ServiceItem service={jednorazoweServices.find(s => s.title === "Konsultacja Majątkowa-Edukacyjna")!} onOfferClick={handleOfferClick} />
                 </div>
               </div>
               
@@ -451,7 +467,7 @@ export default function CooperationPage() {
                   .filter(service => service.title !== "Konsultacja Majątkowa-Edukacyjna")
                   .map((service) => (
                     <div key={service.id} className="min-h-[600px]">
-                      <ServiceItem service={service} />
+                      <ServiceItem service={service} onOfferClick={handleOfferClick} />
                     </div>
                   ))}
               </div>
@@ -462,7 +478,7 @@ export default function CooperationPage() {
           {showSubscriptions && (
             <div className="flex justify-center">
               <div className="w-full max-w-md min-h-[600px]">
-                <ServiceItem service={subskrypcyjneServices[0]} />
+                <ServiceItem service={subskrypcyjneServices[0]} onOfferClick={handleOfferClick} />
               </div>
             </div>
           )}

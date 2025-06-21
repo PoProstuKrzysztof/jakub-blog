@@ -29,6 +29,9 @@ export default function LoginPage() {
   const { toast } = useToast()
   const supabase = createClient()
 
+  // Sprawdź czy użytkownik został przekierowany z ofert
+  const isFromOffer = searchParams.get('from') === 'offer'
+
   // Hook dla logowania
   const loginForm = useAuthForm({
     preserveFormOnError: true,
@@ -263,8 +266,20 @@ export default function LoginPage() {
             Witaj!
           </CardTitle>
           <CardDescription className="text-base">
-            Zaloguj się lub utwórz nowe konto
+            {isFromOffer ? 'Zaloguj się aby zakupić wybrany produkt' : 'Zaloguj się lub utwórz nowe konto'}
           </CardDescription>
+          
+          {/* Komunikat o konieczności logowania dla zakupu */}
+          {isFromOffer && (
+            <div className="mt-4 p-4 bg-primary/10 border border-primary/20 rounded-lg">
+              <div className="flex items-center justify-center space-x-2 text-primary">
+                <LogIn className="h-4 w-4" />
+                <span className="text-sm font-medium">
+                  Aby zakupić wybrany produkt, musisz się najpierw zalogować lub utworzyć konto
+                </span>
+              </div>
+            </div>
+          )}
         </CardHeader>
         <CardContent>
           <Tabs value={activeTab} onValueChange={(value) => {
